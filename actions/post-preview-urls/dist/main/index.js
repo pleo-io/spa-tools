@@ -9610,22 +9610,12 @@ const utils_1 = __nccwpck_require__(691);
 (0, utils_1.runAction)(() => __awaiter(void 0, void 0, void 0, function* () {
     const token = core.getInput('token', { required: true });
     const domain = core.getInput('domain', { required: true });
-    const appName = core.getInput('app_name', { required: true });
-    const appEmoji = core.getInput('app_emoji', { required: true });
-    const treeHash = core.getInput('tree_hash');
+    const permalink = core.getInput('permalink');
     const repo = github.context.repo;
     const pr = github.context.payload.pull_request;
-    yield postPreviewUrls({
-        domain,
-        appName,
-        appEmoji,
-        treeHash,
-        token,
-        pr,
-        repo
-    });
+    yield postPreviewUrls({ domain, permalink, token, pr, repo });
 }));
-function postPreviewUrls({ token, domain, repo, pr, appEmoji, appName, treeHash }) {
+function postPreviewUrls({ token, domain, repo, pr, permalink }) {
     var _a, _b, _c, _d, _e, _f, _g;
     return __awaiter(this, void 0, void 0, function* () {
         if (!pr) {
@@ -9633,17 +9623,17 @@ function postPreviewUrls({ token, domain, repo, pr, appEmoji, appName, treeHash 
         }
         const octokit = github.getOctokit(token);
         const branchName = (0, utils_1.getSanitizedBranchName)(pr.head.ref);
-        const markerStart = `<!--${appName.toLowerCase()}-preview-urls-do-not-change-below-->`;
-        const markerEnd = `<!--${appName.toLowerCase()}-preview-urls-do-not-change-above-->`;
+        const markerStart = `<!--${domain}-preview-urls-do-not-change-below-->`;
+        const markerEnd = `<!--${domain}-preview-urls-do-not-change-above-->`;
         const freshPR = !((_a = pr.body) === null || _a === void 0 ? void 0 : _a.includes(markerStart));
         const prDescriptionAbove = (_d = (_c = (_b = pr.body) === null || _b === void 0 ? void 0 : _b.split(markerStart)[0]) === null || _c === void 0 ? void 0 : _c.trim()) !== null && _d !== void 0 ? _d : '';
         const prDescriptionBelow = (_g = (_f = (_e = pr.body) === null || _e === void 0 ? void 0 : _e.split(markerEnd).pop()) === null || _f === void 0 ? void 0 : _f.trim()) !== null && _g !== void 0 ? _g : '';
         const body = `${prDescriptionAbove}
 ${markerStart}
 ---
-${appEmoji} **${appName} preview links**
-_Latest_: https://${branchName}.${domain}${freshPR ? ' (Deploying... 🚧)' : ''}
-_Current permalink_: ${treeHash ? `https://preview-${treeHash}.${domain}` : '(Deploying... 🚧)'}
+🤖 **${domain} preview links**
+_Latest_: https://${branchName}.${domain}${!permalink && freshPR ? ' (Deploying... 🚧)' : ''}
+_Current permalink_: ${permalink !== null && permalink !== void 0 ? permalink : '(Deploying... 🚧)'}
 ${markerEnd}
 ${freshPR ? '' : prDescriptionBelow}`;
         yield octokit.request('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', Object.assign(Object.assign({}, repo), { pull_number: pr.number, body }));

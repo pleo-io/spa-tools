@@ -14,17 +14,23 @@ Append the URLs for branch app and storybook preview deployments to the PR descr
 
 ## Example Use
 
+```yml
+- name: Update PR Description
+  uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1
+  with:
+      domain: app.example.com
+      permalink: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
+```
+
 <!-- action-docs-inputs -->
 
 ## Inputs
 
-| parameter | description                                                               | required | default             |
-| --------- | ------------------------------------------------------------------------- | -------- | ------------------- |
-| token     | GitHub token used to update the PR description                            | `false`  | ${{ github.token }} |
-| app_name  | Name of the app (e.g. if you're deploying multiple SPAs in the same repo) | `false`  | app                 |
-| app_emoji | Emoji for the app                                                         | `false`  | 📱                  |
-| domain    | The domain for the app deployments                                        | `true`   |                     |
-| tree_hash | The tree hash of the current deployment                                   | `false`  |                     |
+| parameter | description                                     | required | default             |
+| --------- | ----------------------------------------------- | -------- | ------------------- |
+| token     | GitHub token used to update the PR description  | `false`  | ${{ github.token }} |
+| domain    | The domain for the app deployments              | `true`   |                     |
+| permalink | The permalink to the current preview deployment | `false`  |                     |
 
 <!-- action-docs-inputs -->
 
