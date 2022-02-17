@@ -12,19 +12,19 @@ Append the URLs for branch app and storybook preview deployments to the PR descr
 
 <!-- action-docs-description -->
 
-Optionally, also includes a link to storybook deployment. You only need to run this action once,
-when the PR is opened (see [Example Use](#example-use)).
+## Example Use
 
 <!-- action-docs-inputs -->
 
 ## Inputs
 
-| parameter                | description                                    | required | default                                 |
-| ------------------------ | ---------------------------------------------- | -------- | --------------------------------------- |
-| token                    | GitHub token used to update the PR description | `false`  | ${{ github.token }}                     |
-| marker                   | HTML comment marker for the appended content   | `false`  | <!--preview-urls-do-not-change-below--> |
-| app_domain               | The domain for the app deployments             | `true`   |                                         |
-| storybook_stories_domain | The domain for the storybook deployments       | `false`  |                                         |
+| parameter | description                                                               | required | default             |
+| --------- | ------------------------------------------------------------------------- | -------- | ------------------- |
+| token     | GitHub token used to update the PR description                            | `false`  | ${{ github.token }} |
+| app_name  | Name of the app (e.g. if you're deploying multiple SPAs in the same repo) | `false`  | app                 |
+| app_emoji | Emoji for the app                                                         | `false`  | 📱                  |
+| domain    | The domain for the app deployments                                        | `true`   |                     |
+| tree_hash | The tree hash of the current deployment                                   | `false`  |                     |
 
 <!-- action-docs-inputs -->
 
