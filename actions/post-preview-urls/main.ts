@@ -9,59 +9,53 @@ import {getSanitizedBranchName, runAction} from '../utils'
 
 runAction(async () => {
     const token = core.getInput('token', {required: true})
-    const marker = core.getInput('marker', {required: true})
-    const appDomain = core.getInput('app_domain', {required: true})
-    const storiesDomain = core.getInput('storybook_stories_domain', {required: false})
+    const domain = core.getInput('domain', {required: true})
+    const permalink = core.getInput('permalink')
+    const repo = github.context.repo
+    const pr = github.context.payload.pull_request
 
-    await postPreviewUrls({
-        marker,
-        appDomain,
-        storiesDomain,
-        token,
-        context: github.context
-    })
+    await postPreviewUrls({domain, permalink, token, pr, repo})
 })
 
 interface PostPreviewUrlsActionArgs {
     token: string
-    marker: string
-    context: typeof github.context
-    appDomain: string
-    storiesDomain?: string
+    domain: string
+    pr: typeof github.context.payload.pull_request
+    repo: typeof github.context.repo
+    permalink?: string
 }
 
 export async function postPreviewUrls({
     token,
-    marker,
-    context,
-    appDomain,
-    storiesDomain
+    domain,
+    repo,
+    pr,
+    permalink
 }: PostPreviewUrlsActionArgs) {
-    const pr = context.payload.pull_request
-
     if (!pr) {
         throw new Error('Called outside of a PR context.')
     }
 
-    if (pr?.body?.includes(marker)) {
-        core.info(`PR already contains the link`)
-        return
-    }
-
     const octokit = github.getOctokit(token)
     const branchName = getSanitizedBranchName(pr.head.ref)
-    const body = `${pr.body ?? ''}
-  ${marker}
-  ---
-  🖥 **Latest app preview**: https://${branchName}.${appDomain}
-  ${storiesDomain ? `📒 **Latest storybook preview**: https://${branchName}.${storiesDomain}` : ''}
-  
-  Preview deployment for each commit is available via "View Deployment" buttons.
-  ❤, 🤖
-  `
+
+    const markerStart = `<!--${domain}-preview-urls-do-not-change-below-->`
+    const markerEnd = `<!--${domain}-preview-urls-do-not-change-above-->`
+    const freshPR = !pr.body?.includes(markerStart)
+    const prDescriptionAbove = pr.body?.split(markerStart)[0]?.trim() ?? ''
+    const prDescriptionBelow = pr.body?.split(markerEnd).pop()?.trim() ?? ''
+
+    const body = `${prDescriptionAbove}
+${markerStart}
+---
+🤖 **${domain} preview links**
+_Latest_: https://${branchName}.${domain}${!permalink && freshPR ? ' (Deploying... 🚧)' : ''}
+_Current permalink_: ${permalink ?? '(Deploying... 🚧)'}
+${markerEnd}
+${freshPR ? '' : prDescriptionBelow}`
 
     await octokit.request('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
-        ...context.repo,
+        ...repo,
         pull_number: pr.number,
         body
     })

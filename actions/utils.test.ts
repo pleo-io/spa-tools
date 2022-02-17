@@ -9,7 +9,7 @@ jest.mock('@actions/exec')
 const mockedExec = exec as jest.MockedFunction<typeof exec>
 
 // reset the counter on mock fn calls after every test
-afterEach(() => jest.clearAllMocks())
+beforeEach(() => jest.clearAllMocks())
 
 describe(`Actions Utils`, () => {
     test(`isHeadAncestor uses git CLI to check if the commit is part of the current branch, returns true when it is`, async () => {

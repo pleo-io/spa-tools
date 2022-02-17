@@ -128,6 +128,13 @@ jobs:
            --exclude "static/*"
 
       - name: Update Cursor File
-        uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1.0.0
+        uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1.1.0
         with:
           bucket_name: ${{ inputs.bucket_name }}
+
+      - name: Update PR Description
+        uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1.1.0
+        if: github.event_name == 'pull_request'
+        with:
+          domain: ${{ inputs.domain_name }}
+          permalink: ${{ steps.deployment-url.outputs.url }}

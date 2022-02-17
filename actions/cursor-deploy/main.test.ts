@@ -9,7 +9,7 @@ jest.mock('@actions/github')
 const mockedUtils = utils as jest.Mocked<typeof utils>
 
 // reset the counter on mock fn calls after every test
-afterEach(() => jest.clearAllMocks())
+beforeEach(() => jest.clearAllMocks())
 
 // use the actual method for sanitizing branch names
 const originalUtils = jest.requireActual('../utils')

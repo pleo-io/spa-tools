@@ -5,7 +5,7 @@ const mockedUtils = utils as jest.Mocked<typeof utils>
 
 jest.mock('../utils')
 
-afterEach(() => jest.clearAllMocks())
+beforeEach(() => jest.clearAllMocks())
 
 describe(`S3 Cache Action - Save cache`, () => {
     test(`
