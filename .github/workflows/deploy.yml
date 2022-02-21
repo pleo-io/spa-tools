@@ -7,6 +7,10 @@ on:
         required: true
         description: "Name of the deployment environment"
         type: string
+      app_name:
+        required: false
+        description: "Name of the app, displayed in PR description"
+        type: string
       bundle_uri:
         required: true
         description: "S3 URI of the bundle in the registry bucket"
@@ -128,12 +132,12 @@ jobs:
            --exclude "static/*"
 
       - name: Update Cursor File
-        uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1.1.1
+        uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1.2.0
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1.1.1
+        uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1.2.0
         if: github.event_name == 'pull_request'
         with:
           domain: ${{ inputs.domain_name }}

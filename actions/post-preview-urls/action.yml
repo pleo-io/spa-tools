@@ -13,6 +13,10 @@ inputs:
     permalink:
         description: The permalink to the current preview deployment
         required: false
+    app_name:
+        description: The name displayed in the link section title
+        required: false
+        default: 🤖 App
 runs:
     using: 'node16'
     main: 'dist/main/index.js'

@@ -41,7 +41,8 @@ describe(`Post Preview URLs action`, () => {
                 domain: 'app.example.com',
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
-                prNumber: 1
+                prNumber: 1,
+                appName: '🤖 App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -50,7 +51,7 @@ describe(`Post Preview URLs action`, () => {
                     Hello World!
                     <!--app.example.com-preview-urls-do-not-change-below-->
                     ---
-                    🤖 **app.example.com preview links**
+                    **🤖 App preview links**
                     _Latest_: https://lol-my-feature-branch-30-better.app.example.com (Deploying... 🚧)
                     _Current permalink_: (Deploying... 🚧)
                     <!--app.example.com-preview-urls-do-not-change-above-->
@@ -78,7 +79,7 @@ describe(`Post Preview URLs action`, () => {
                         Hello World!
                         <!--app.example.com-preview-urls-do-not-change-below-->
                         ---
-                        🤖 **app.example.com preview links**
+                        **🤖 App preview links**
                         _Latest_: https://lol-my-feature-branch-30-better.app.example.com (Deploying... 🚧)
                         _Current permalink_: (Deploying... 🚧)
                         <!--app.example.com-preview-urls-do-not-change-above-->
@@ -92,7 +93,8 @@ describe(`Post Preview URLs action`, () => {
                 domain: 'app.example.com',
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
-                prNumber: 1
+                prNumber: 1,
+                appName: '🤖 App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -101,7 +103,7 @@ describe(`Post Preview URLs action`, () => {
                     Hello World!
                     <!--app.example.com-preview-urls-do-not-change-below-->
                     ---
-                    🤖 **app.example.com preview links**
+                    **🤖 App preview links**
                     _Latest_: https://lol-my-feature-branch-30-better.app.example.com
                     _Current permalink_: (Deploying... 🚧)
                     <!--app.example.com-preview-urls-do-not-change-above-->
@@ -131,7 +133,7 @@ describe(`Post Preview URLs action`, () => {
                         Hello World!
                         <!--app.example.com-preview-urls-do-not-change-below-->
                         ---
-                        🤖 **app.example.com preview links**
+                        **🤖 App preview links**
                         _Latest_: https://lol-my-feature-branch-30-better.app.example.com
                         _Current permalink_: (Deploying... 🚧)
                         <!--app.example.com-preview-urls-do-not-change-above-->
@@ -146,7 +148,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 permalink,
                 repo: {owner: 'my-org', repo: 'my-repo'},
-                prNumber: 1
+                prNumber: 1,
+                appName: '🤖 App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -155,7 +158,7 @@ describe(`Post Preview URLs action`, () => {
                     Hello World!
                     <!--app.example.com-preview-urls-do-not-change-below-->
                     ---
-                    🤖 **app.example.com preview links**
+                    **🤖 App preview links**
                     _Latest_: https://lol-my-feature-branch-30-better.app.example.com
                     _Current permalink_: ${permalink}
                     <!--app.example.com-preview-urls-do-not-change-above-->
@@ -183,7 +186,7 @@ describe(`Post Preview URLs action`, () => {
                         Hello World!
                         <!--app.example.com-preview-urls-do-not-change-below-->
                         ---
-                        🤖 **app.example.com preview links**
+                        **🤖 App preview links**
                         _Latest_: https://lol-my-feature-branch-30-better.app.example.com
                         _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
                         <!--app.example.com-preview-urls-do-not-change-above-->
@@ -198,7 +201,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 permalink,
                 repo: {owner: 'my-org', repo: 'my-repo'},
-                prNumber: 1
+                prNumber: 1,
+                appName: '🤖 Storybook'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -207,13 +211,13 @@ describe(`Post Preview URLs action`, () => {
                         Hello World!
                         <!--app.example.com-preview-urls-do-not-change-below-->
                         ---
-                        🤖 **app.example.com preview links**
+                        **🤖 App preview links**
                         _Latest_: https://lol-my-feature-branch-30-better.app.example.com
                         _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
                         <!--app.example.com-preview-urls-do-not-change-above-->
                         <!--storybook.example.com-preview-urls-do-not-change-below-->
                         ---
-                        🤖 **storybook.example.com preview links**
+                        **🤖 Storybook preview links**
                         _Latest_: https://lol-my-feature-branch-30-better.storybook.example.com
                         _Current permalink_: ${permalink}
                         <!--storybook.example.com-preview-urls-do-not-change-above-->
@@ -240,13 +244,13 @@ describe(`Post Preview URLs action`, () => {
                     Hello World!
                     <!--storybook.example.com-preview-urls-do-not-change-below-->
                     ---
-                    🤖 **storybook.example.com preview links**
+                    **🤖 Storybook preview links**
                     _Latest_: https://lol-my-feature-branch-30-better.storybook.example.com
                     _Current permalink_:https://preview-0ce99f79fa377f39248fa0633b21bdb130728674.storybook.example.com
                     <!--storybook.example.com-preview-urls-do-not-change-above-->
                     <!--app.example.com-preview-urls-do-not-change-below-->
                     ---
-                    🤖 **app.example.com preview links**
+                    **🤖 App preview links**
                     _Latest_: https://lol-my-feature-branch-30-better.app.example.com
                     _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
                     <!--app.example.com-preview-urls-do-not-change-above-->
@@ -261,7 +265,8 @@ describe(`Post Preview URLs action`, () => {
             token,
             permalink,
             repo: {owner: 'my-org', repo: 'my-repo'},
-            prNumber: 1
+            prNumber: 1,
+            appName: '📚 Storybook'
         })
 
         expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -270,13 +275,13 @@ describe(`Post Preview URLs action`, () => {
                 Hello World!
                 <!--storybook.example.com-preview-urls-do-not-change-below-->
                 ---
-                🤖 **storybook.example.com preview links**
+                **📚 Storybook preview links**
                 _Latest_: https://lol-my-feature-branch-30-better.storybook.example.com
                 _Current permalink_: ${permalink}
                 <!--storybook.example.com-preview-urls-do-not-change-above-->
                 <!--app.example.com-preview-urls-do-not-change-below-->
                 ---
-                🤖 **app.example.com preview links**
+                **🤖 App preview links**
                 _Latest_: https://lol-my-feature-branch-30-better.app.example.com
                 _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
                 <!--app.example.com-preview-urls-do-not-change-above-->
