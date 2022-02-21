@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.1.0...v1.1.1) (2022-02-21)
+
+
+### Bug Fixes
+
+* Fix description posting ([#3](https://github.com/pleo-oss/pleo-spa-cicd/issues/3)) ([60d4335](https://github.com/pleo-oss/pleo-spa-cicd/commit/60d4335388fdbbca418a1f0bca15d93049736cf3))
+
 # [1.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.0.0...v1.1.0) (2022-02-17)
 
 
