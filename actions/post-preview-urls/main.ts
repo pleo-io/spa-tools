@@ -53,6 +53,8 @@ export async function postPreviewUrls({
     const prDescriptionAbove = prBody?.split(markerStart)[0]?.trim() ?? ''
     const prDescriptionBelow = prBody?.split(markerEnd).pop()?.trim() ?? ''
 
+    core.info(prBody ?? '')
+
     const body = strip`
         ${prDescriptionAbove}
         ${markerStart}
