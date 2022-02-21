@@ -11343,6 +11343,7 @@ function postPreviewUrls({ token, domain, repo, prNumber, permalink }) {
         const isDeploying = !permalink && isFreshPR;
         const prDescriptionAbove = (_b = (_a = prBody === null || prBody === void 0 ? void 0 : prBody.split(markerStart)[0]) === null || _a === void 0 ? void 0 : _a.trim()) !== null && _b !== void 0 ? _b : '';
         const prDescriptionBelow = (_d = (_c = prBody === null || prBody === void 0 ? void 0 : prBody.split(markerEnd).pop()) === null || _c === void 0 ? void 0 : _c.trim()) !== null && _d !== void 0 ? _d : '';
+        core.info(prBody !== null && prBody !== void 0 ? prBody : '');
         const body = (0, common_tags_1.stripIndents) `
         ${prDescriptionAbove}
         ${markerStart}
