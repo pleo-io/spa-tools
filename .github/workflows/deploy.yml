@@ -128,12 +128,12 @@ jobs:
            --exclude "static/*"
 
       - name: Update Cursor File
-        uses: ../../actions/cursor-deploy
+        uses: ./actions/cursor-deploy
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: ../../post-preview-urls
+        uses: ./actions/post-preview-urls
         if: github.event_name == 'pull_request'
         with:
           domain: ${{ inputs.domain_name }}
