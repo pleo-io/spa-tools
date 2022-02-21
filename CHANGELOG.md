@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.1.1...v1.2.0) (2022-02-21)
+
+
+### Features
+
+* Add an option to pass app name when deploying ([#4](https://github.com/pleo-oss/pleo-spa-cicd/issues/4)) ([e3042ba](https://github.com/pleo-oss/pleo-spa-cicd/commit/e3042ba8a2886550fb67601ee09da959e9f5d779))
+
 ## [1.1.1](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.1.0...v1.1.1) (2022-02-21)
 
 
