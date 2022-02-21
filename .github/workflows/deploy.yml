@@ -141,4 +141,5 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           domain: ${{ inputs.domain_name }}
+          app_name: ${{ inputs.app_name }}
           permalink: ${{ steps.deployment-url.outputs.url }}
