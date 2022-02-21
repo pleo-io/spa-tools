@@ -31,6 +31,7 @@ Append the URLs for branch app and storybook preview deployments to the PR descr
 | token     | GitHub token used to update the PR description  | `false`  | ${{ github.token }} |
 | domain    | The domain for the app deployments              | `true`   |                     |
 | permalink | The permalink to the current preview deployment | `false`  |                     |
+| app_name  | The name displayed in the link section title    | `false`  | 🤖 App              |
 
 <!-- action-docs-inputs -->
 

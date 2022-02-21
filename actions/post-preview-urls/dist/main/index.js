@@ -11323,11 +11323,12 @@ const utils_1 = __nccwpck_require__(691);
     const token = core.getInput('token', { required: true });
     const domain = core.getInput('domain', { required: true });
     const permalink = core.getInput('permalink');
+    const appName = core.getInput('app_name', { required: true });
     const repo = github.context.repo;
     const prNumber = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number;
-    yield postPreviewUrls({ domain, permalink, token, prNumber, repo });
+    yield postPreviewUrls({ domain, permalink, token, prNumber, repo, appName });
 }));
-function postPreviewUrls({ token, domain, repo, prNumber, permalink }) {
+function postPreviewUrls({ token, domain, repo, prNumber, permalink, appName }) {
     var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         if (!prNumber) {
@@ -11347,7 +11348,7 @@ function postPreviewUrls({ token, domain, repo, prNumber, permalink }) {
         ${prDescriptionAbove}
         ${markerStart}
         ---
-        🤖 **${domain} preview links**
+        **${appName} preview links**
         _Latest_: https://${branchName}.${domain}${isDeploying ? ' (Deploying... 🚧)' : ''}
         _Current permalink_: ${permalink !== null && permalink !== void 0 ? permalink : '(Deploying... 🚧)'}
         ${markerEnd}

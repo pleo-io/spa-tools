@@ -12,10 +12,11 @@ runAction(async () => {
     const token = core.getInput('token', {required: true})
     const domain = core.getInput('domain', {required: true})
     const permalink = core.getInput('permalink')
+    const appName = core.getInput('app_name', {required: true})
     const repo = github.context.repo
     const prNumber = github.context.payload.pull_request?.number
 
-    await postPreviewUrls({domain, permalink, token, prNumber, repo})
+    await postPreviewUrls({domain, permalink, token, prNumber, repo, appName})
 })
 
 interface PostPreviewUrlsActionArgs {
@@ -24,6 +25,7 @@ interface PostPreviewUrlsActionArgs {
     prNumber?: number
     repo: typeof github.context.repo
     permalink?: string
+    appName: string
 }
 
 export async function postPreviewUrls({
@@ -31,7 +33,8 @@ export async function postPreviewUrls({
     domain,
     repo,
     prNumber,
-    permalink
+    permalink,
+    appName
 }: PostPreviewUrlsActionArgs) {
     if (!prNumber) {
         throw new Error('Called outside of a PR context.')
@@ -57,7 +60,7 @@ export async function postPreviewUrls({
         ${prDescriptionAbove}
         ${markerStart}
         ---
-        🤖 **${domain} preview links**
+        **${appName} preview links**
         _Latest_: https://${branchName}.${domain}${isDeploying ? ' (Deploying... 🚧)' : ''}
         _Current permalink_: ${permalink ?? '(Deploying... 🚧)'}
         ${markerEnd}
