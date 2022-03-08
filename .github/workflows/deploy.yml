@@ -54,9 +54,6 @@ on:
         required: true
         description:
           "Secret of a AWS key that allows read access to the registry bucket"
-      GH_REGISTRY_NPM_TOKEN:
-        required: true
-        description: "Token for NPM package registry"
     outputs:
       deployment_url:
         description: "URL where the deployment can be accessed"
@@ -103,15 +100,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
-
-      - name: Install Dependencies
-        uses: bahmutov/npm-install@v1.7.11
-        if: inputs.apply_config
-        with:
-          useRollingCache: true
-          install-command: yarn --frozen-lockfile --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
 
       - name: Apply Environment Config
         if: inputs.apply_config
