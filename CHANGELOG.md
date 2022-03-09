@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.2.0...v1.3.0) (2022-03-09)
+
+
+### Features
+
+* Remove yarn install from the deploy action ([#5](https://github.com/pleo-oss/pleo-spa-cicd/issues/5)) ([45ab255](https://github.com/pleo-oss/pleo-spa-cicd/commit/45ab2554813b7a9ba24006756c87e63ac90b94b3))
+
 # [1.2.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.1.1...v1.2.0) (2022-02-21)
 
 
