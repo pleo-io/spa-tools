@@ -1,4 +1,4 @@
-import {stripIndents as strip} from 'common-tags'
+import {stripIndent as strip} from 'common-tags'
 import {postPreviewUrls} from './main'
 import * as utils from '../utils'
 import * as github from '@actions/github'
@@ -31,7 +31,7 @@ describe(`Post Preview URLs action`, () => {
             const token = '1234'
             const mockRequest = jest.fn().mockResolvedValueOnce({
                 data: {
-                    body: 'Hello World!',
+                    body: 'Hello World!\n Some indent',
                     head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
                 }
             })
@@ -49,6 +49,7 @@ describe(`Post Preview URLs action`, () => {
             expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
                 body: strip`
                     Hello World!
+                     Some indent
                     <!--app.example.com-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
@@ -229,18 +230,20 @@ describe(`Post Preview URLs action`, () => {
         }
     )
 
-    test(`
-    When the PR already has the preview links for another app
-    And there is are preview links for the current app
-    It updates the links for the current app
-    And keeps the links for the other app intact
-    `, async () => {
-        const token = '1234'
-        const permalink =
-            'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com'
-        const mockRequest = jest.fn().mockResolvedValueOnce({
-            data: {
-                body: strip`
+    test(
+        strip`
+        When the PR already has the preview links for another app
+        And there is are preview links for the current app
+        It updates the links for the current app
+        And keeps the links for the other app intact
+        `,
+        async () => {
+            const token = '1234'
+            const permalink =
+                'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com'
+            const mockRequest = jest.fn().mockResolvedValueOnce({
+                data: {
+                    body: strip`
                     Hello World!
                     <!--storybook.example.com-preview-urls-do-not-change-below-->
                     ---
@@ -255,23 +258,23 @@ describe(`Post Preview URLs action`, () => {
                     _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
                     <!--app.example.com-preview-urls-do-not-change-above-->
                 `,
-                head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
-            }
-        })
-        mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
+                    head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
+                }
+            })
+            mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
 
-        await postPreviewUrls({
-            domain: 'storybook.example.com',
-            token,
-            permalink,
-            repo: {owner: 'my-org', repo: 'my-repo'},
-            prNumber: 1,
-            appName: '📚 Storybook'
-        })
+            await postPreviewUrls({
+                domain: 'storybook.example.com',
+                token,
+                permalink,
+                repo: {owner: 'my-org', repo: 'my-repo'},
+                prNumber: 1,
+                appName: '📚 Storybook'
+            })
 
-        expect(mockedGithub.getOctokit).toBeCalledWith(token)
-        expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
-            body: strip`
+            expect(mockedGithub.getOctokit).toBeCalledWith(token)
+            expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
+                body: strip`
                 Hello World!
                 <!--storybook.example.com-preview-urls-do-not-change-below-->
                 ---
@@ -286,9 +289,10 @@ describe(`Post Preview URLs action`, () => {
                 _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
                 <!--app.example.com-preview-urls-do-not-change-above-->
             `,
-            owner: 'my-org',
-            pull_number: 1,
-            repo: 'my-repo'
-        })
-    })
+                owner: 'my-org',
+                pull_number: 1,
+                repo: 'my-repo'
+            })
+        }
+    )
 })
