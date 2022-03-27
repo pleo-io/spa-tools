@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.3.0...v1.3.1) (2022-03-27)
+
+
+### Bug Fixes
+
+* Preserve PR indentation ([#6](https://github.com/pleo-oss/pleo-spa-cicd/issues/6)) ([1e4ab12](https://github.com/pleo-oss/pleo-spa-cicd/commit/1e4ab1205644dbb18bdc789a6fe188f66c6cc61d))
+
 # [1.3.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.2.0...v1.3.0) (2022-03-09)
 
 
