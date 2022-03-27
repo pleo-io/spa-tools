@@ -20,7 +20,3 @@ Each action is written in TypeScript and bundled into a single JS file using
 repo, so you need to run the build locally and include the changes to the built actions in your PR.
 
 To build the actions, run `make build`. Tests, written in Jest, you can run them with `make test`.
-
-Currently we need to manually update the version (to the next version) for actions in the
-`.workflows` folder. `git grep 'pleo.*@v' .github/workflows/*.yml` will highligh the places to
-change.
