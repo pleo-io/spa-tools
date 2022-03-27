@@ -4,7 +4,6 @@
 
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {stripIndents as strip} from 'common-tags'
 
 import {getSanitizedBranchName, runAction} from '../utils'
 
@@ -56,16 +55,14 @@ export async function postPreviewUrls({
     const prDescriptionAbove = prBody?.split(markerStart)[0]?.trim() ?? ''
     const prDescriptionBelow = prBody?.split(markerEnd).pop()?.trim() ?? ''
 
-    const body = strip`
-        ${prDescriptionAbove}
-        ${markerStart}
-        ---
-        **${appName} preview links**
-        _Latest_: https://${branchName}.${domain}${isDeploying ? ' (Deploying... 🚧)' : ''}
-        _Current permalink_: ${permalink ?? '(Deploying... 🚧)'}
-        ${markerEnd}
-        ${isFreshPR ? '' : prDescriptionBelow}
-    `
+    const body = `${prDescriptionAbove}
+${markerStart}
+---
+**${appName} preview links**
+_Latest_: https://${branchName}.${domain}${isDeploying ? ' (Deploying... 🚧)' : ''}
+_Current permalink_: ${permalink ?? '(Deploying... 🚧)'}
+${markerEnd}
+${isFreshPR ? '' : prDescriptionBelow}`.trimEnd()
 
     await octokit.request('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
         ...repo,
