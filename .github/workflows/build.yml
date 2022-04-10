@@ -75,18 +75,22 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           scope: ${{ inputs.registry_scope }}
 
-      - name: Install Dependencies
-        if: steps.s3-cache.outputs.processed == 'false'
-        uses: bahmutov/npm-install@v1.7.11
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
         with:
-          useRollingCache: true
-          install-command: yarn --frozen-lockfile --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6
+          run_install: true
 
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'
-        run: yarn ${{ inputs.build_script }}
+        run: pnpm run ${{ inputs.build_script }}
 
       - name: Get Bundle S3 URI
         id: bundle-uri
