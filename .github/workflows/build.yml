@@ -77,6 +77,7 @@ jobs:
 
       - name: Cache pnpm modules
         uses: actions/cache@v2
+        if: steps.s3-cache.outputs.processed == 'false'
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -84,6 +85,9 @@ jobs:
             ${{ runner.os }}-
 
       - uses: pnpm/action-setup@v2.2.1
+        if: steps.s3-cache.outputs.processed == 'false'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
         with:
           version: 6
           run_install: true
