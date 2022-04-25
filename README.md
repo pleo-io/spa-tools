@@ -5,7 +5,7 @@
 💡 A collection of reusable GitHub Actions and Workflows helpful while building
 a complete CI/CD pipeline for a Single Page Application using the cursor files.
 
-👨‍🔧 This repository is lovingly stewarded by Pleo Frontend Ops.
+👨‍🔧 This repository is lovingly stewarded by Pleo's Web Core team.
 
 🐛 Issues should be reported
 [in the repository](https://github.com/pleo-oss/pleo-spa-cicd/issues) or via
