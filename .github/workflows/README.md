@@ -41,11 +41,15 @@ uploads the result to an S3 registry bucket.
 
 #### Secrets
 
-| Name                             | Description                                                       | Required |
-| -------------------------------- | ----------------------------------------------------------------- | :------: |
-| `AWS_ACCESS_KEY_ID_REGISTRY`     | ID of a AWS key that allows r/w access to the registry bucket     |   yes    |
-| `AWS_SECRET_ACCESS_KEY_REGISTRY` | Secret of a AWS key that allows r/w access to the registry bucket |   yes    |
-| `GH_REGISTRY_NPM_TOKEN`          | Token for NPM package registry                                    |   yes    |
+Use the
+[`secrets: inherit`](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_callsecretsinherit)
+options when using the workflow.
+
+| Name                                      | Description                                                       | Required |
+| ----------------------------------------- | ----------------------------------------------------------------- | :------: |
+| `AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY`     | ID of a AWS key that allows r/w access to the registry bucket     |   yes    |
+| `AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY` | Secret of a AWS key that allows r/w access to the registry bucket |   yes    |
+| `GH_REGISTRY_NPM_TOKEN`                   | Token for NPM package registry                                    |   yes    |
 
 #### Outputs
 
@@ -58,17 +62,13 @@ uploads the result to an S3 registry bucket.
 
 ```yml
 build:
-  uses: pleo-oss/pleo-spa-cicd/workflows/build.yml@v1
+  uses: pleo-oss/pleo-spa-cicd/workflows/build.yml@v2
+  secrets: inherit
   with:
     app_name: my-app
     build_script: build:app
     build_dir: dist
     bucket_name: my-registry-bucket
-  secrets:
-    GH_REGISTRY_NPM_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
-    AWS_ACCESS_KEY_ID_REGISTRY: ${{ secrets.AWS_ACCESS_KEY_ID_REGISTRY }}
-    AWS_SECRET_ACCESS_KEY_REGISTRY:
-      ${{ secrets.AWS_SECRET_ACCESS_KEY_REGISTRY }}
 ```
 
 ### Deploy
@@ -90,13 +90,16 @@ the cursor file for the current branch.
 
 #### Secrets
 
-| Name                             | Description                                                        | Required |
-| -------------------------------- | ------------------------------------------------------------------ | :------: |
-| `AWS_ACCESS_KEY_ID_REGISTRY`     | ID of a AWS key that allows read access to the registry bucket     |   yes    |
-| `AWS_SECRET_ACCESS_KEY_REGISTRY` | Secret of a AWS key that allows read access to the registry bucket |   yes    |
-| `AWS_ACCESS_KEY_ID_ORIGIN`       | ID of a AWS key that allows r/w access to the origin bucket        |   yes    |
-| `AWS_SECRET_ACCESS_KEY_ORIGIN`   | Secret of a AWS key that allows r/w access to the origin bucket    |   yes    |
-| `GH_REGISTRY_NPM_TOKEN`          | Token for NPM package registry                                     |   yes    |
+Use the
+[`secrets: inherit`](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_callsecretsinherit)
+options when using the workflow.
+
+| Name                                      | Description                                                        | Required |
+| ----------------------------------------- | ------------------------------------------------------------------ | :------: |
+| `AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY`     | ID of a AWS key that allows read access to the registry bucket     |   yes    |
+| `AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY` | Secret of a AWS key that allows read access to the registry bucket |   yes    |
+| `AWS_ACCESS_KEY_ID_ORIGIN`                | ID of a AWS key that allows r/w access to the origin bucket        |   yes    |
+| `AWS_SECRET_ACCESS_KEY_ORIGIN`            | Secret of a AWS key that allows r/w access to the origin bucket    |   yes    |
 
 #### Outputs
 
@@ -108,8 +111,9 @@ the cursor file for the current branch.
 
 ```yml
 deploy:
-  uses: pleo-oss/pleo-spa-cicd/workflows/deploy.yml@v1
+  uses: pleo-oss/pleo-spa-cicd/workflows/deploy.yml@v2
   needs: build
+  secrets: inherit
   with:
     environment: staging
     bundle_uri: ${{ needs.build.outputs.bundle_uri }}
@@ -117,11 +121,4 @@ deploy:
     bucket_name: my-origin-bucket
     domain_name: app.staging.example.com
     apply_config: true
-  secrets:
-    GH_REGISTRY_NPM_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
-    AWS_ACCESS_KEY_ID_ORIGIN: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    AWS_SECRET_ACCESS_KEY_ORIGIN: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    AWS_ACCESS_KEY_ID_REGISTRY: ${{ secrets.AWS_ACCESS_KEY_ID_REGISTRY }}
-    AWS_SECRET_ACCESS_KEY_REGISTRY:
-      ${{ secrets.AWS_SECRET_ACCESS_KEY_REGISTRY }}
 ```
