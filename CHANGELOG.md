@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.3.1...v2.0.0) (2022-05-23)
+
+
+### Features
+
+* Use the new GitHub reusable workflow secret inherit feature ([#10](https://github.com/pleo-oss/pleo-spa-cicd/issues/10)) ([e644e4a](https://github.com/pleo-oss/pleo-spa-cicd/commit/e644e4ada1b96ed862cdc1418b66079d3f4610a2))
+
+
+### BREAKING CHANGES
+
+* The reusable workflow need to be used with secrets: inherit option
+
 ## [1.3.1](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.3.0...v1.3.1) (2022-03-27)
 
 
