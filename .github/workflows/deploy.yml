@@ -37,23 +37,6 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-        description:
-          "ID of a AWS key that allows r/w access to the origin bucket"
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-        description:
-          "Secret of a AWS key that allows r/w access to the origin bucket"
-      AWS_ACCESS_KEY_ID_REGISTRY:
-        required: true
-        description:
-          "ID of a AWS key that allows read access to the registry bucket"
-      AWS_SECRET_ACCESS_KEY_REGISTRY:
-        required: true
-        description:
-          "Secret of a AWS key that allows read access to the registry bucket"
     outputs:
       deployment_url:
         description: "URL where the deployment can be accessed"
@@ -85,8 +68,9 @@ jobs:
       - name: Setup AWS Credentials for Registry Bucket Access
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_REGISTRY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_REGISTRY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
       - name: Download & Unpack Bundle

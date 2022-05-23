@@ -26,18 +26,6 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        description:
-          "ID of a AWS key that allows r/w access to the registry bucket"
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        description:
-          "Secret of a AWS key that allows r/w access to the registry bucket"
-        required: true
-      GH_REGISTRY_NPM_TOKEN:
-        required: true
-        description: "Token for NPM package registry"
     outputs:
       tree_hash:
         description: "Tree hash of the code built"
@@ -57,8 +45,9 @@ jobs:
       - uses: actions/checkout@v2.4.0
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
       - name: Check S3 Cache
