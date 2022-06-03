@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v2.0.0...v2.1.0) (2022-06-03)
+
+
+### Features
+
+* Upload deployed artifact for debugging ([#11](https://github.com/pleo-oss/pleo-spa-cicd/issues/11)) ([950f359](https://github.com/pleo-oss/pleo-spa-cicd/commit/950f3598e0b59d82994d14db2fd6c8ae2cecfa19))
+
 # [2.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v1.3.1...v2.0.0) (2022-05-23)
 
 
