@@ -119,5 +119,5 @@ jobs:
       - name: Upload Deployed Bundle as Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: bundle
+          name: bundle-${{ inputs.tree_hash }}
           path: bundle.tar.gz
