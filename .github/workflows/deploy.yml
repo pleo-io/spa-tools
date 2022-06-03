@@ -115,3 +115,9 @@ jobs:
           domain: ${{ inputs.domain_name }}
           app_name: ${{ inputs.app_name }}
           permalink: ${{ steps.deployment-url.outputs.url }}
+
+      - name: Upload Deployed Bundle as Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: bundle
+          path: bundle.tar.gz
