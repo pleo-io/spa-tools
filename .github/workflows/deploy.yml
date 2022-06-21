@@ -37,6 +37,28 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
+      is_translation_files:
+        required: false
+        default: false
+        description: "True when deploy translation files, not the app"
+        type: boolean
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+        description:
+          "ID of a AWS key that allows r/w access to the origin bucket"
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+        description:
+          "Secret of a AWS key that allows r/w access to the origin bucket"
+      AWS_ACCESS_KEY_ID_REGISTRY:
+        required: true
+        description:
+          "ID of a AWS key that allows read access to the registry bucket"
+      AWS_SECRET_ACCESS_KEY_REGISTRY:
+        required: true
+        description:
+          "Secret of a AWS key that allows read access to the registry bucket"
     outputs:
       deployment_url:
         description: "URL where the deployment can be accessed"
@@ -68,9 +90,8 @@ jobs:
       - name: Setup AWS Credentials for Registry Bucket Access
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_REGISTRY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_REGISTRY }}
           aws-region: eu-west-1
 
       - name: Download & Unpack Bundle
@@ -105,8 +126,16 @@ jobs:
 
       - name: Update Cursor File
         uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1.3.1
+        if: inputs.is_translation_files == false
         with:
           bucket_name: ${{ inputs.bucket_name }}
+
+      - name: Update Translation Cursor File
+        uses: pleo-io/pleo-spa-cicd/actions/translation-cursor-deploy@8f448cc666461aae07551240364b5c418df93863
+        if: inputs.is_translation_files == true
+        with:
+          bucket_name: ${{ inputs.bucket_name }}
+          hash: ${{ github.run_id }}
 
       - name: Update PR Description
         uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1.3.1
@@ -115,9 +144,3 @@ jobs:
           domain: ${{ inputs.domain_name }}
           app_name: ${{ inputs.app_name }}
           permalink: ${{ steps.deployment-url.outputs.url }}
-
-      - name: Upload Deployed Bundle as Artifact
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: bundle-${{ inputs.tree_hash }}
-          path: bundle.tar.gz

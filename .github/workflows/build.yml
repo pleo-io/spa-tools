@@ -26,6 +26,29 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
+      fetch_messages:
+        required: false
+        default: false
+        description: "Fetch messages"
+        type: boolean
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description:
+          "ID of a AWS key that allows r/w access to the registry bucket"
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description:
+          "Secret of a AWS key that allows r/w access to the registry bucket"
+        required: true
+      GH_REGISTRY_NPM_TOKEN:
+        required: true
+        description: "Token for NPM package registry"
+      LOCALIZE_TOKEN:
+        required: false
+        description: "Localise token"
+      LOCALIZE_PROJECT:
+        required: false
+        description: "Localise project"
     outputs:
       tree_hash:
         description: "Tree hash of the code built"
@@ -45,9 +68,8 @@ jobs:
       - uses: actions/checkout@v2.4.0
       - uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-1
 
       - name: Check S3 Cache
@@ -72,6 +94,31 @@ jobs:
           install-command: yarn --frozen-lockfile --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
+
+      - name: Lokalise file pull
+        if: inputs.fetch_messages == true
+        uses: pleo-io/actions/lokalise-file-pull@v10.0.0
+        with:
+          # Api token for the Lokalise account
+          # with read/write access to the project
+          api-token: ${{ secrets.LOCALIZE_TOKEN }}
+
+          # ID of the project to sync
+          project-id: ${{ secrets.LOCALIZE_PROJECT }}
+
+          # The relative file path where language files will be found
+          file-path: app/locales/%LANG_ISO%/messages.%FORMAT%
+
+          # Download options for https://app.lokalise.com/api2docs/curl/#transition-download-files-post
+          download-options: '{"format":"po", "export_sort": "a_z", "include_comments": true, "include_description": true, "original_filenames": false}'
+
+      - name: Checking for wrong symbols
+        if: inputs.fetch_messages == true
+        run: grep -r --include=\*.po -e '< [[:digit:]]' -e '< / [[:digit:]]' -e '[[:digit:]] >' ./ && exit 1 || exit 0
+
+      - name: Compile messages
+        if: inputs.fetch_messages == true
+        run: yarn compile-messages
 
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'
