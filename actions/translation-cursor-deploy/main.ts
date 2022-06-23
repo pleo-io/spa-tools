@@ -44,8 +44,8 @@ export async function cursorDeploy({bucket, hash}: CursorDeployActionArgs) {
         const isLatestFileExists = await fileExistsInS3({bucket, key: 'translation-deploy/latest'})
         if (isLatestFileExists) {
             await exec('aws s3 rm ', [latestPath])
-            await exec('aws s3 cp ', [previousPath, latestPath])
         }
+        await exec('aws s3 cp ', [previousPath, latestPath])
     } else {
         const isPreviosFileExists = await fileExistsInS3({
             bucket,
