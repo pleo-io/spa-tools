@@ -6,7 +6,6 @@ all: test build
 build: cursor-deploy/README.md cursor-deploy/dist/main/index.js
 build: translation-cursor-deploy/README.md translation-cursor-deploy/dist/main/index.js 
 build: s3-cache/README.md s3-cache/dist/restore/index.js s3-cache/dist/save/index.js
-build: translation-cursor-deploy/README.md translation-cursor-deploy/dist/main/index.js
 build: post-preview-urls/README.md post-preview-urls/dist/main/index.js
 build:
 	./node_modules/.bin/prettier -w .
