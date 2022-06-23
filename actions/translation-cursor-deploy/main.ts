@@ -20,7 +20,7 @@ runAction(async () => {
     })
 })
 
-const PREVIOUS_HASH_COMMAND = 'previous'
+const PREVIOUS_HASH_COMMAND = 'previous' // special command for rollback to hash from /previous
 
 interface CursorDeployActionArgs {
     bucket: string

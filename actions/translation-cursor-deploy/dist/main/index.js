@@ -2874,7 +2874,7 @@ const utils_1 = __nccwpck_require__(691);
         hash
     });
 }));
-const PREVIOUS_HASH_COMMAND = 'previous';
+const PREVIOUS_HASH_COMMAND = 'previous'; // special command for rollback to hash from /previous
 function cursorDeploy({ bucket, hash }) {
     return __awaiter(this, void 0, void 0, function* () {
         const previousPath = `s3://${bucket}/translation-deploy/previous`;
@@ -2891,8 +2891,8 @@ function cursorDeploy({ bucket, hash }) {
             const isLatestFileExists = yield (0, utils_1.fileExistsInS3)({ bucket, key: 'translation-deploy/latest' });
             if (isLatestFileExists) {
                 yield (0, exec_1.exec)('aws s3 rm ', [latestPath]);
-                yield (0, exec_1.exec)('aws s3 cp ', [previousPath, latestPath]);
             }
+            yield (0, exec_1.exec)('aws s3 cp ', [previousPath, latestPath]);
         }
         else {
             const isPreviosFileExists = yield (0, utils_1.fileExistsInS3)({
