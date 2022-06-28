@@ -13,10 +13,10 @@ criteria:
   production version, i.e. a bundle without any baked-in configuration that
   differs between environments. The way to accomplish this will vary depending
   on the build tooling you use.
-- if your SPA is deployed to different environments you need to provide a a
-  command which can inject the config for a selected environment into the
-  bundle. If provided, this workflow will invoke that command before uploading
-  files to S3
+- if your SPA is deployed to different environments, you need to provide a
+  command which can inject the config for the selected environment into the
+  bundle. If provided, the deploy workflow will invoke that command before
+  uploading files to S3
 - all the long-cacheable assets like JS/CSS/images need to have a cache buster
   string in their name and they need to be placed in a `${build_dir}/static`
   directory when the production version is built.
