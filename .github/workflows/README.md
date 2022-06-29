@@ -85,6 +85,7 @@ the cursor file for the current branch.
 | `bucket_name`       | Name of the S3 origin bucket                    | `string` | n/a        |   yes    |
 | `domain_name`       | Domain name for the app (e.g. app.example.com)  | `string` | n/a        |   yes    |
 | `inject_config_cmd` | Command to run to inject the environment config | `string` | n/a        |    no    |
+| `bundle_dir`        | Directory where the bundle should be unpacked   | `string` | `dist`     |    no    |
 | `registry_scope`    | Org scope for the GitHub Package Registry       | `string` | `@pleo-io` |    no    |
 
 #### Secrets
