@@ -91,7 +91,9 @@ jobs:
 
       - name: Inject Environment Config
         if: inputs.inject_config_cmd
-        run: ${{ inputs.inject_config_cmd }}
+        run: |
+          SPA_BUNDLE_DIR=${{ inputs.bundle_dir }} SPA_ENV=${{inputs.environment}} SPA_TREE_HASH=${{ inputs.tree_hash}} \
+            ${{inputs.inject_config_cmd }}
 
       - name: Copy Static Files
         run: |

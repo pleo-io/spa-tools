@@ -16,7 +16,9 @@ criteria:
 - if your SPA is deployed to different environments, you need to provide a
   command which can inject the config for the selected environment into the
   bundle. If provided, the deploy workflow will invoke that command before
-  uploading files to S3
+  uploading files to S3. For convenience, the command will be called with
+  SPA_BUNDLE_DIR, SPA_ENV and SPA_TREE_HASH environment variables set to the
+  corresponding workflow input values
 - all the long-cacheable assets like JS/CSS/images need to have a cache buster
   string in their name and they need to be placed in a `${build_dir}/static`
   directory when the production version is built.
@@ -120,5 +122,5 @@ deploy:
     tree_hash: ${{ needs.build.outputs.tree_hash }}
     bucket_name: my-origin-bucket
     domain_name: app.staging.example.com
-    inject_config_cmd: yarn apply:config --env staging
+    inject_config_cmd: yarn apply:config
 ```
