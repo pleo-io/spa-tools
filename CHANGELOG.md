@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v3.0.0...v3.1.0) (2022-07-01)
+
+
+### Features
+
+* Invoke injection script with env variables for bundle dir, env and tree hash ([#15](https://github.com/pleo-oss/pleo-spa-cicd/issues/15)) ([f88df4b](https://github.com/pleo-oss/pleo-spa-cicd/commit/f88df4b4be8002d8ea423dfd16bea1365866ac11))
+
 # [3.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v2.1.0...v3.0.0) (2022-06-29)
 
 
