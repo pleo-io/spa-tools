@@ -13,12 +13,11 @@ on:
         type: string
       build_dir:
         required: true
-        description:
-          "Name of the directory where the production output is built"
+        description: "Location of the deploy bundle after build"
         type: string
       build_cmd:
         required: true
-        description: "Command for building the production output"
+        description: "Command for building the deploy bundle"
         type: string
       registry_scope:
         required: false
