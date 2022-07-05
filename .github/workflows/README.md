@@ -10,9 +10,9 @@ criteria:
 
 - if your SPA is deployed to different environments with a varying config (like
   API keys, urls etc.), it needs to be able to build an environment agnostic
-  production version, i.e. a bundle without any baked-in configuration that
-  differs between environments. The way to accomplish this will vary depending
-  on the build tooling you use.
+  deploy bundle, i.e. a bundle which allows injecting a specific environment
+  configuration if necessary. The way to accomplish this will vary depending on
+  the build tooling you use.
 - if your SPA is deployed to different environments, you need to provide a
   command which can inject the config for the selected environment into the
   bundle. If provided, the deploy workflow will invoke that command before
@@ -32,13 +32,13 @@ uploads the result to an S3 registry bucket.
 
 #### Inputs
 
-| Name             | Description                                                                | Type     | Default    | Required |
-| ---------------- | -------------------------------------------------------------------------- | -------- | ---------- | :------: |
-| `app_name`       | Name of the app, unique for the repo, kebab-cased                          | `string` | n/a        |   yes    |
-| `bucket_name`    | Name of the S3 registry bucket                                             | `string` | n/a        |   yes    |
-| `build_dir`      | Name of the directory where the production output is built                 | `string` | n/a        |   yes    |
-| `build_script`   | Name of the script in package.json used for building the production output | `string` | n/a        |   yes    |
-| `registry_scope` | Org scope for the GitHub Package Registry                                  | `string` | `@pleo-io` |    no    |
+| Name             | Description                                       | Type     | Default    | Required |
+| ---------------- | ------------------------------------------------- | -------- | ---------- | :------: |
+| `app_name`       | Name of the app, unique for the repo, kebab-cased | `string` | n/a        |   yes    |
+| `bucket_name`    | Name of the S3 registry bucket                    | `string` | n/a        |   yes    |
+| `build_dir`      | Location of the deploy bundle after build         | `string` | n/a        |   yes    |
+| `build_cmd`      | Command for building the deploy bundle            | `string` | n/a        |   yes    |
+| `registry_scope` | Org scope for the GitHub Package Registry         | `string` | `@pleo-io` |    no    |
 
 #### Secrets
 
@@ -67,7 +67,7 @@ build:
   secrets: inherit
   with:
     app_name: my-app
-    build_script: build:app
+    build_cmd: yarn build:app
     build_dir: dist
     bucket_name: my-registry-bucket
 ```
