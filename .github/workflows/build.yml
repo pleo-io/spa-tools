@@ -16,10 +16,9 @@ on:
         description:
           "Name of the directory where the production output is built"
         type: string
-      build_script:
+      build_cmd:
         required: true
-        description:
-          "Script in package.json used for building the production output"
+        description: "Command for building the production output"
         type: string
       registry_scope:
         required: false
@@ -75,7 +74,7 @@ jobs:
 
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'
-        run: yarn ${{ inputs.build_script }}
+        run: ${{ inputs.build_cmd }}
 
       - name: Get Bundle S3 URI
         id: bundle-uri

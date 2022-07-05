@@ -32,13 +32,13 @@ uploads the result to an S3 registry bucket.
 
 #### Inputs
 
-| Name             | Description                                                                | Type     | Default    | Required |
-| ---------------- | -------------------------------------------------------------------------- | -------- | ---------- | :------: |
-| `app_name`       | Name of the app, unique for the repo, kebab-cased                          | `string` | n/a        |   yes    |
-| `bucket_name`    | Name of the S3 registry bucket                                             | `string` | n/a        |   yes    |
-| `build_dir`      | Name of the directory where the production output is built                 | `string` | n/a        |   yes    |
-| `build_script`   | Name of the script in package.json used for building the production output | `string` | n/a        |   yes    |
-| `registry_scope` | Org scope for the GitHub Package Registry                                  | `string` | `@pleo-io` |    no    |
+| Name             | Description                                                | Type     | Default    | Required |
+| ---------------- | ---------------------------------------------------------- | -------- | ---------- | :------: |
+| `app_name`       | Name of the app, unique for the repo, kebab-cased          | `string` | n/a        |   yes    |
+| `bucket_name`    | Name of the S3 registry bucket                             | `string` | n/a        |   yes    |
+| `build_dir`      | Name of the directory where the production output is built | `string` | n/a        |   yes    |
+| `build_cmd`      | Command for building the production output                 | `string` | n/a        |   yes    |
+| `registry_scope` | Org scope for the GitHub Package Registry                  | `string` | `@pleo-io` |    no    |
 
 #### Secrets
 
@@ -67,7 +67,7 @@ build:
   secrets: inherit
   with:
     app_name: my-app
-    build_script: build:app
+    build_cmd: yarn build:app
     build_dir: dist
     bucket_name: my-registry-bucket
 ```
