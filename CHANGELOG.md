@@ -1,3 +1,19 @@
+# [4.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v3.1.0...v4.0.0) (2022-07-05)
+
+
+### Features
+
+* Switch from passing build_script to passing build_cmd in the build workflow ([#16](https://github.com/pleo-oss/pleo-spa-cicd/issues/16)) ([4739578](https://github.com/pleo-oss/pleo-spa-cicd/commit/473957859311558fb8c1649c9cd53872d2940b58))
+
+
+### BREAKING CHANGES
+
+* The reusable build workflow now requires to pass a build_cmd input
+which is the entire command ran to build the deployable app bundle. This replaces the
+previous build_script input which assumed using a script defined in package.json
+
+* docs: Slight clarification in docs
+
 # [3.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v3.0.0...v3.1.0) (2022-07-01)
 
 
