@@ -1,3 +1,50 @@
+# [4.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v3.1.0...v4.0.0) (2022-07-05)
+
+
+### Features
+
+* Switch from passing build_script to passing build_cmd in the build workflow ([#16](https://github.com/pleo-oss/pleo-spa-cicd/issues/16)) ([4739578](https://github.com/pleo-oss/pleo-spa-cicd/commit/473957859311558fb8c1649c9cd53872d2940b58))
+
+
+### BREAKING CHANGES
+
+* The reusable build workflow now requires to pass a build_cmd input
+which is the entire command ran to build the deployable app bundle. This replaces the
+previous build_script input which assumed using a script defined in package.json
+
+* docs: Slight clarification in docs
+
+# [3.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v3.0.0...v3.1.0) (2022-07-01)
+
+
+### Features
+
+* Invoke injection script with env variables for bundle dir, env and tree hash ([#15](https://github.com/pleo-oss/pleo-spa-cicd/issues/15)) ([f88df4b](https://github.com/pleo-oss/pleo-spa-cicd/commit/f88df4b4be8002d8ea423dfd16bea1365866ac11))
+
+# [3.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v2.1.0...v3.0.0) (2022-06-29)
+
+
+### Features
+
+* Inversion of control for how injecting config works in deploy workflow ([#14](https://github.com/pleo-oss/pleo-spa-cicd/issues/14)) ([fe4edba](https://github.com/pleo-oss/pleo-spa-cicd/commit/fe4edbad406ac3920f5e26a31b7bd56186dd1625))
+
+
+### BREAKING CHANGES
+
+* Instead of passing a boolean input called "apply_config" that
+would cause the deploy workflow to run a predefined script in package.json, we
+now allow the workflow consumer to pass the entire command, including the
+paramaters in order and fashion that fits the usecase best.
+This allows to pass additional arguments to those scripts, not related to
+cursor deployment, without the deploy workflow needing to support them explicitly.
+
+* docs: Fix wording in readme
+
+* feat: Adds `bundle_dir` input to the deploy workfow
+
+`bundle_dir` allows to specify where the directory where the bundle should be unpacked.
+This is especially relevant for the script that injects the configuration.
+
 # [2.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v2.0.0...v2.1.0) (2022-06-03)
 
 
