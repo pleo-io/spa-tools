@@ -2831,7 +2831,7 @@ exports.debug = debug; // for test
  * Custom Cursor Deploy GitHub action
  * @see {@link https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action}
  *
- * Updates the deployment translation cursor file in the S3 bucket.
+ * Updates the 'latest' and 'previous' translation cursor files with the latest and previous hash
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -2862,56 +2862,72 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.cursorDeploy = void 0;
+exports.cursorDeploy = exports.latestKey = exports.previousKey = void 0;
 const core = __importStar(__nccwpck_require__(186));
-const exec_1 = __nccwpck_require__(514);
 const utils_1 = __nccwpck_require__(691);
 (0, utils_1.runAction)(() => __awaiter(void 0, void 0, void 0, function* () {
     const bucket = core.getInput('bucket_name', { required: true });
-    const hash = core.getInput('hash', { required: true });
+    const hash = core.getInput('hash', { required: false });
+    const modeInput = core.getInput('mode', { required: true });
     yield cursorDeploy({
         bucket,
-        hash
+        hash,
+        modeInput
     });
 }));
-const PREVIOUS_HASH_COMMAND = 'previous'; // special command for rollback to hash from /previous
-function cursorDeploy({ bucket, hash }) {
+const modes = ['default', 'previous'];
+exports.previousKey = `translation-deploy/previous`;
+exports.latestKey = `translation-deploy/latest`;
+function cursorDeploy({ bucket, hash, modeInput }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const previousPath = `s3://${bucket}/translation-deploy/previous`;
-        const latestPath = `s3://${bucket}/translation-deploy/latest`;
-        if (hash === PREVIOUS_HASH_COMMAND) {
+        const mode = getMode(modeInput);
+        const previousPath = `s3://${bucket}/${exports.previousKey}`;
+        const latestPath = `s3://${bucket}/${exports.latestKey}`;
+        if (mode === 'previous' && Boolean(hash)) {
+            throw new Error('Previous mode should be run without specified hash, otherwise it is ambiouty what should be used hash from param or hash from previous.');
+        }
+        if (mode === 'previous') {
             const isPreviosFileExists = yield (0, utils_1.fileExistsInS3)({
                 bucket,
                 key: 'translation-deploy/previous'
             });
             if (!isPreviosFileExists) {
-                core.setFailed('Previous cursor is empty');
-                return;
+                throw new Error('Previous cursor is empty, please specify the hash');
             }
-            const isLatestFileExists = yield (0, utils_1.fileExistsInS3)({ bucket, key: 'translation-deploy/latest' });
-            if (isLatestFileExists) {
-                yield (0, exec_1.exec)('aws s3 rm ', [latestPath]);
-            }
-            yield (0, exec_1.exec)('aws s3 cp ', [previousPath, latestPath]);
+            yield (0, utils_1.copyFileToS3)({ path: previousPath, bucket, key: exports.latestKey });
+            yield (0, utils_1.removeFileFromS3)({ bucket, key: exports.previousKey });
+            return { success: true };
         }
-        else {
-            const isPreviosFileExists = yield (0, utils_1.fileExistsInS3)({
-                bucket,
-                key: 'translation-deploy/previous'
-            });
-            if (isPreviosFileExists) {
-                yield (0, exec_1.exec)('aws s3 rm ', [previousPath]);
-            }
-            const isLatestFileExists = yield (0, utils_1.fileExistsInS3)({ bucket, key: 'translation-deploy/latest' });
-            if (isLatestFileExists) {
-                yield (0, exec_1.exec)('aws s3 cp ', [latestPath, previousPath]);
-            }
-            yield (0, utils_1.writeLineToFile)({ text: hash, path: 'latest' });
-            yield (0, exec_1.exec)('aws s3 cp ', ['latest', latestPath]);
+        if (!hash) {
+            throw new Error('Hash should be speficied with the default mode');
         }
+        const isLatestFileExists = yield (0, utils_1.fileExistsInS3)({ bucket, key: 'translation-deploy/latest' });
+        if (isLatestFileExists) {
+            yield (0, utils_1.copyFileToS3)({ path: latestPath, bucket, key: exports.previousKey });
+        }
+        yield (0, utils_1.writeLineToFile)({ text: hash, path: 'latest' });
+        yield (0, utils_1.copyFileToS3)({ path: 'latest', bucket, key: exports.latestKey });
+        return { success: true };
     });
 }
 exports.cursorDeploy = cursorDeploy;
+/**
+ * Retrieve the deploy mode from action input, and set a correct enum type
+ * Deploy mode can one of the following:
+ * - default - a regular deployment, updating latest cursor with hash from params & previous cursor with the value from latest if latest exists
+ * - previous - an emergency deployment, updateing latest cursor with the previous cursor & removing previous
+ * @param Mode - Deployment mode
+ * @returns mode
+ */
+function getMode(mode) {
+    function assertDeployMode(value) {
+        if (!modes.includes(value)) {
+            throw new Error(`Incorrect deploy mode (${value})`);
+        }
+    }
+    assertDeployMode(mode);
+    return mode;
+}
 
 
 /***/ }),

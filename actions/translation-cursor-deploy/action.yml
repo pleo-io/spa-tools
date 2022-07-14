@@ -3,12 +3,19 @@ description:
     'Deploy the new version of the translation files by modifying a cursor file in S3 bucket.'
 author: 'Pleo'
 inputs:
-    hash:
-        description: Hash which is equal to run id
-        required: false
     bucket_name:
         description: Bucket to use for deployments
         required: true
+    hash:
+        description: Unique identifier of the deployment.
+        required: false
+    mode:
+        description:
+            The deployment mode (default / previous)'. When mode is 'previous', hash should be
+            empty. When mode is 'default', hash should be specified.
+        required: true
+        default: 'default'
+
 runs:
     using: 'node16'
     main: 'dist/main/index.js'
