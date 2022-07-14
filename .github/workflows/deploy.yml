@@ -41,16 +41,6 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
-      is_translation_files:
-        required: false
-        default: false
-        description: "True when deploy translation files, not the app"
-        type: boolean
-      translation_cursor_mode:
-        required: false
-        default: 'default'
-        description: "Mode for deployment for translation cursors"
-        type: string
     outputs:
       deployment_url:
         description: "URL where the deployment can be accessed"
@@ -120,17 +110,8 @@ jobs:
 
       - name: Update Cursor File
         uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1.3.1
-        if: inputs.is_translation_files == false
         with:
           bucket_name: ${{ inputs.bucket_name }}
-
-      - name: Update Translation Cursor File
-        uses: pleo-io/pleo-spa-cicd/actions/translation-cursor-deploy@9618e03138fe773664f77e0cc4d1f17ea2a04ee2
-        if: inputs.is_translation_files == true
-        with:
-          bucket_name: ${{ inputs.bucket_name }}
-          hash: ${{ inputs.translation_cursor_mode == 'default' && github.run_id }}
-          mode: ${{ inputs.translation_cursor_mode }}
 
       - name: Update PR Description
         uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1.3.1
