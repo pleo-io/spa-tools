@@ -46,6 +46,11 @@ on:
         default: false
         description: "True when deploy translation files, not the app"
         type: boolean
+      translation_cursor_mode:
+        required: false
+        default: 'default'
+        description: "Mode for deployment for translation cursors"
+        type: string
     outputs:
       deployment_url:
         description: "URL where the deployment can be accessed"
@@ -124,7 +129,8 @@ jobs:
         if: inputs.is_translation_files == true
         with:
           bucket_name: ${{ inputs.bucket_name }}
-          hash: ${{ github.run_id }}
+          hash: ${{ inputs.translation_cursor_mode == 'default' && github.run_id }}
+          mode: ${{ inputs.translation_cursor_mode }}
 
       - name: Update PR Description
         uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1.3.1
