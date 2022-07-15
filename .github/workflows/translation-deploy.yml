@@ -28,8 +28,8 @@ on:
 
 jobs:
   translation-deploy:
-    name: Translation deploy
-    runs-on: [self-hosted, universal]
+    name: Build & Upload
+    runs-on: [universal]
     steps:
       - uses: actions/checkout@v2.4.0
 
