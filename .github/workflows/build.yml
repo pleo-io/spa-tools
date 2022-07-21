@@ -24,11 +24,6 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
-      fetch_messages:
-        required: false
-        default: false
-        description: "Fetch messages"
-        type: boolean
     outputs:
       tree_hash:
         description: "Tree hash of the code built"
@@ -75,31 +70,6 @@ jobs:
           install-command: yarn --frozen-lockfile --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
-
-      - name: Lokalise file pull
-        if: inputs.fetch_messages == true
-        uses: pleo-io/actions/lokalise-file-pull@v10.0.0
-        with:
-          # Api token for the Lokalise account
-          # with read/write access to the project
-          api-token: ${{ secrets.LOCALIZE_TOKEN }}
-
-          # ID of the project to sync
-          project-id: ${{ secrets.LOCALIZE_PROJECT }}
-
-          # The relative file path where language files will be found
-          file-path: app/locales/%LANG_ISO%/messages.%FORMAT%
-
-          # Download options for https://app.lokalise.com/api2docs/curl/#transition-download-files-post
-          download-options: '{"format":"po", "export_sort": "a_z", "include_comments": true, "include_description": true, "original_filenames": false}'
-
-      - name: Checking for wrong symbols
-        if: inputs.fetch_messages == true
-        run: grep -r --include=\*.po -e '< [[:digit:]]' -e '< / [[:digit:]]' -e '[[:digit:]] >' ./ && exit 1 || exit 0
-
-      - name: Compile messages
-        if: inputs.fetch_messages == true
-        run: yarn compile-messages
 
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'

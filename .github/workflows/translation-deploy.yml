@@ -1,0 +1,97 @@
+name: Translation Deploy
+
+on:
+  workflow_call:
+    inputs:
+      bucket_name:
+        required: true
+        description: "Name of the S3 registry bucket"
+        type: string
+      build_cmd:
+        required: true
+        description: "Command for building the deploy bundle"
+        type: string
+      build_dir:
+        required: true
+        description: "Location of the deploy bundle after build"
+        type: string
+      registry_scope:
+        required: false
+        default: "@pleo-io"
+        description: "Org scope for the GitHub Package Registry"
+        type: string
+      translation_cursor_mode:
+        required: false
+        default: 'default'
+        description: "Mode for deployment for translation cursors"
+        type: string
+
+jobs:
+  translation-deploy:
+    name: Build & Upload
+    runs-on: [universal]
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - uses: actions/setup-node@v2.5.1
+        if: steps.s3-cache.outputs.processed == 'false'
+        with:
+          node-version: "16"
+          registry-url: "https://npm.pkg.github.com"
+          scope: ${{ inputs.registry_scope }}
+
+      - name: Install Dependencies
+        if: steps.s3-cache.outputs.processed == 'false'
+        uses: bahmutov/npm-install@v1.7.11
+        with:
+          useRollingCache: true
+          install-command: yarn --frozen-lockfile --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
+
+      - name: Lokalise file pull
+        uses: pleo-io/actions/lokalise-file-pull@v10.0.0
+        with:
+          # Api token for the Lokalise account
+          # with read/write access to the project
+          api-token: ${{ secrets.LOCALIZE_TOKEN }}
+
+          # ID of the project to sync
+          project-id: ${{ secrets.LOCALIZE_PROJECT }}
+
+          # The relative file path where language files will be found
+          file-path: app/locales/%LANG_ISO%/messages.%FORMAT%
+
+          # Download options for https://app.lokalise.com/api2docs/curl/#transition-download-files-post
+          download-options: '{"format":"po", "export_sort": "a_z", "include_comments": true, "include_description": true, "original_filenames": false}'
+
+      - name: Checking for wrong symbols
+        run: grep -r --include=\*.po -e '< [[:digit:]]' -e '< / [[:digit:]]' -e '[[:digit:]] >' ./ && exit 1 || exit 0
+
+      - name: Compile messages
+        run: yarn compile-messages
+
+      - name: Build
+        if: steps.s3-cache.outputs.processed == 'false'
+        run: ${{ inputs.build_cmd }}
+
+      - name: Setup AWS Credentials for Origin Bucket Access
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Copy Static Files
+        run: |
+          aws s3 cp ${{ inputs.build_dir }}/static s3://${{ inputs.bucket_name }}/static \
+            --cache-control 'public,max-age=31536000,immutable' \
+            --recursive
+
+      - name: Update Translation Cursor File
+        uses: pleo-io/pleo-spa-cicd/actions/translation-cursor-deploy@9618e03138fe773664f77e0cc4d1f17ea2a04ee2
+        with:
+          bucket_name: ${{ inputs.bucket_name }}
+          hash: ${{ inputs.translation_cursor_mode == 'default' && github.run_id }}
+          mode: ${{ inputs.translation_cursor_mode }}
+
