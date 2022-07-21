@@ -21,9 +21,6 @@ runAction(async () => {
     })
 })
 
-const modes = ['default', 'previous'] as const
-type Mode = typeof modes[number]
-
 interface CursorDeployActionArgs {
     bucket: string
     hash?: string
@@ -79,11 +76,12 @@ export async function cursorDeploy({
  * Deploy mode can one of the following:
  * - default - a regular deployment, updating latest cursor with hash from params & previous cursor with the value from latest if latest exists
  * - previous - an emergency deployment, updateing latest cursor with the previous cursor & removing previous
- * @param Mode - Deployment mode
+ * @param mode - Deployment mode
  * @returns mode
  */
 function getMode(mode: string) {
-    function assertDeployMode(value: any): asserts value is Mode {
+    const modes = ['default', 'previous']
+    function assertDeployMode(value: any) {
         if (!modes.includes(value)) {
             throw new Error(`Incorrect deploy mode (${value})`)
         }
