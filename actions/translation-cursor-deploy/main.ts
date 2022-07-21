@@ -7,7 +7,15 @@
 
 import * as core from '@actions/core'
 
-import {writeLineToFile, runAction, fileExistsInS3, copyFileToS3, removeFileFromS3} from '../utils'
+import {
+    writeLineToFile,
+    runAction,
+    fileExistsInS3,
+    copyFileToS3,
+    removeFileFromS3,
+    previousKey,
+    latestKey
+} from '../utils'
 
 runAction(async () => {
     const bucket = core.getInput('bucket_name', {required: true})
@@ -27,9 +35,6 @@ interface CursorDeployActionArgs {
     modeInput: string
 }
 
-export const previousKey = `translation-deploy/previous`
-export const latestKey = `translation-deploy/latest`
-
 export async function cursorDeploy({
     bucket,
     hash,
@@ -48,7 +53,7 @@ export async function cursorDeploy({
     if (mode === 'previous') {
         const isPreviosFileExists = await fileExistsInS3({
             bucket,
-            key: 'translation-deploy/previous'
+            key: previousKey
         })
         if (!isPreviosFileExists) {
             throw new Error('Previous cursor is empty, please specify the hash')
@@ -62,7 +67,7 @@ export async function cursorDeploy({
         throw new Error('Hash should be speficied with the default mode')
     }
 
-    const isLatestFileExists = await fileExistsInS3({bucket, key: 'translation-deploy/latest'})
+    const isLatestFileExists = await fileExistsInS3({bucket, key: latestKey})
     if (isLatestFileExists) {
         await copyFileToS3({path: latestPath, bucket, key: previousKey})
     }

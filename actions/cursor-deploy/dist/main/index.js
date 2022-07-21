@@ -9750,7 +9750,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getCurrentRepoTreeHash = exports.getTreeHashForCommitHash = exports.isHeadAncestor = exports.getSanitizedBranchName = exports.runAction = exports.removeFileFromS3 = exports.copyFileToS3 = exports.writeLineToFile = exports.fileExistsInS3 = exports.execIsSuccessful = exports.execReadOutput = void 0;
+exports.latestKey = exports.previousKey = exports.getCurrentRepoTreeHash = exports.getTreeHashForCommitHash = exports.isHeadAncestor = exports.getSanitizedBranchName = exports.runAction = exports.removeFileFromS3 = exports.copyFileToS3 = exports.writeLineToFile = exports.fileExistsInS3 = exports.execIsSuccessful = exports.execReadOutput = void 0;
 const exec_1 = __nccwpck_require__(1514);
 const core = __importStar(__nccwpck_require__(2186));
 /**
@@ -9913,6 +9913,11 @@ function getCurrentRepoTreeHash() {
     });
 }
 exports.getCurrentRepoTreeHash = getCurrentRepoTreeHash;
+/**
+ * Keys for 'latest' and 'previous' cursor for translation files
+ */
+exports.previousKey = `translation-deploy/previous`;
+exports.latestKey = `translation-deploy/latest`;
 
 
 /***/ }),

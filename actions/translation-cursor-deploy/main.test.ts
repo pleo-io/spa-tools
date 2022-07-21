@@ -1,5 +1,5 @@
 import {stripIndents as strip} from 'common-tags'
-import {cursorDeploy, previousKey, latestKey} from './main'
+import {cursorDeploy} from './main'
 import * as utils from '../utils'
 
 jest.mock('../utils')
@@ -32,15 +32,15 @@ describe(`Translation Cursor Deploy Action`, () => {
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledTimes(2)
 
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledWith({
-                path: `s3://${bucket}/${latestKey}`,
+                path: `s3://${bucket}/${utils.latestKey}`,
                 bucket: bucket,
-                key: previousKey
+                key: utils.previousKey
             })
 
             expect(mockedUtils.copyFileToS3).toHaveBeenLastCalledWith({
                 path: 'latest',
                 bucket,
-                key: latestKey
+                key: utils.latestKey
             })
 
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledTimes(1)
@@ -69,7 +69,7 @@ describe(`Translation Cursor Deploy Action`, () => {
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledWith({
                 path: 'latest',
                 bucket,
-                key: latestKey
+                key: utils.latestKey
             })
 
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledTimes(1)
@@ -94,14 +94,14 @@ describe(`Translation Cursor Deploy Action`, () => {
 
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledTimes(1)
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledWith({
-                path: `s3://${bucket}/${previousKey}`,
+                path: `s3://${bucket}/${utils.previousKey}`,
                 bucket,
-                key: latestKey
+                key: utils.latestKey
             })
             expect(mockedUtils.removeFileFromS3).toHaveBeenCalledTimes(1)
             expect(mockedUtils.removeFileFromS3).toHaveBeenCalledWith({
                 bucket,
-                key: previousKey
+                key: utils.previousKey
             })
         }
     )
