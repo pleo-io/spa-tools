@@ -2875,7 +2875,6 @@ const utils_1 = __nccwpck_require__(691);
         modeInput
     });
 }));
-const modes = ['default', 'previous'];
 exports.previousKey = `translation-deploy/previous`;
 exports.latestKey = `translation-deploy/latest`;
 function cursorDeploy({ bucket, hash, modeInput }) {
@@ -2916,10 +2915,11 @@ exports.cursorDeploy = cursorDeploy;
  * Deploy mode can one of the following:
  * - default - a regular deployment, updating latest cursor with hash from params & previous cursor with the value from latest if latest exists
  * - previous - an emergency deployment, updateing latest cursor with the previous cursor & removing previous
- * @param Mode - Deployment mode
+ * @param mode - Deployment mode
  * @returns mode
  */
 function getMode(mode) {
+    const modes = ['default', 'previous'];
     function assertDeployMode(value) {
         if (!modes.includes(value)) {
             throw new Error(`Incorrect deploy mode (${value})`);
