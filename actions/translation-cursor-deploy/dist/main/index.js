@@ -2897,10 +2897,10 @@ function cursorDeploy({ bucket, hash, modeInput }) {
         const mode = getMode(modeInput);
         const previousPath = `s3://${bucket}/${helpers_1.previousKey}`;
         const latestPath = `s3://${bucket}/${helpers_1.latestKey}`;
-        if (mode === 'previous' && Boolean(hash)) {
-            throw new Error('Previous mode should be run without specified hash, otherwise it is ambiouty what should be used hash from param or hash from previous.');
+        if (mode === 'rollback' && Boolean(hash)) {
+            throw new Error('Rollback mode should be run without specified hash, otherwise it is ambiouty what should be used hash from param or hash from previous.');
         }
-        if (mode === 'previous') {
+        if (mode === 'rollback') {
             const isPreviosFileExists = yield (0, utils_1.fileExistsInS3)({
                 bucket,
                 key: helpers_1.previousKey
@@ -2934,7 +2934,7 @@ exports.cursorDeploy = cursorDeploy;
  * @returns mode
  */
 function getMode(mode) {
-    const modes = ['default', 'previous'];
+    const modes = ['default', 'rollback'];
     function assertDeployMode(value) {
         if (!modes.includes(value)) {
             throw new Error(`Incorrect deploy mode (${value})`);

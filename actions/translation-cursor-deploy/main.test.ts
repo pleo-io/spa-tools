@@ -80,7 +80,7 @@ describe(`Translation Cursor Deploy Action`, () => {
 
     test(
         strip`
-        When mode is 'previous' without 'hash', but with existent previous cursor
+        When mode is 'rollback' without 'hash', but with existent previous cursor
         Latest cursor is updated with previous cursor
         And previous cursor is deleted
     `,
@@ -90,7 +90,7 @@ describe(`Translation Cursor Deploy Action`, () => {
 
             await cursorDeploy({
                 bucket,
-                modeInput: 'previous'
+                modeInput: 'rollback'
             })
 
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledTimes(1)
@@ -109,7 +109,7 @@ describe(`Translation Cursor Deploy Action`, () => {
 
     test(
         strip`        
-        When mode is 'previous' without 'hash' and without existent previous cursor
+        When mode is 'rollback' without 'hash' and without existent previous cursor
         Latest cursor is NOT updated
         Error is thrown
         `,
@@ -119,7 +119,7 @@ describe(`Translation Cursor Deploy Action`, () => {
 
             const promise = cursorDeploy({
                 bucket,
-                modeInput: 'previous'
+                modeInput: 'rollback'
             })
 
             expect(promise).rejects.toEqual(
@@ -135,7 +135,7 @@ describe(`Translation Cursor Deploy Action`, () => {
 
     test(
         strip`        
-        When mode is 'previous' with 'hash' from params,
+        When mode is 'rollback' with 'hash' from params,
         Latest cursor is NOT updated
         It makes the situation ambigious
         What should be used hash from param or hash from 'previous' cursor
@@ -147,13 +147,13 @@ describe(`Translation Cursor Deploy Action`, () => {
 
             const promise = cursorDeploy({
                 bucket,
-                modeInput: 'previous',
+                modeInput: 'rollback',
                 hash: '2354'
             })
 
             expect(promise).rejects.toEqual(
                 new Error(
-                    'Previous mode should be run without specified hash, otherwise it is ambiouty what should be used hash from param or hash from previous.'
+                    'Rollback mode should be run without specified hash, otherwise it is ambiouty what should be used hash from param or hash from previous.'
                 )
             )
 

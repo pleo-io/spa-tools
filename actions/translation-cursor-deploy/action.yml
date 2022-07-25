@@ -11,7 +11,7 @@ inputs:
         required: false
     mode:
         description:
-            The deployment mode (default / previous)'. When mode is 'previous', hash should be
+            The deployment mode (default / rollback)'. When mode is 'rollback', hash should be
             empty. When mode is 'default', hash should be specified.
         required: true
         default: 'default'
