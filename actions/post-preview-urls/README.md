@@ -5,10 +5,10 @@
 ![](./screenshot.png)
 
 <!-- action-docs-description -->
+
 ## Description
 
 Append the URLs for branch app and storybook preview deployments to the PR description.
-
 
 <!-- action-docs-description -->
 
@@ -23,16 +23,15 @@ Append the URLs for branch app and storybook preview deployments to the PR descr
 ```
 
 <!-- action-docs-inputs -->
+
 ## Inputs
 
-| parameter | description | required | default |
-| - | - | - | - |
-| token | GitHub token used to update the PR description | `false` | ${{ github.token }} |
-| domain | The domain for the app deployments | `true` |  |
-| permalink | The permalink to the current preview deployment | `false` |  |
-| app_name | The name displayed in the link section title | `false` | 🤖 App |
-
-
+| parameter | description                                     | required | default             |
+| --------- | ----------------------------------------------- | -------- | ------------------- |
+| token     | GitHub token used to update the PR description  | `false`  | ${{ github.token }} |
+| domain    | The domain for the app deployments              | `true`   |                     |
+| permalink | The permalink to the current preview deployment | `false`  |                     |
+| app_name  | The name displayed in the link section title    | `false`  | 🤖 App              |
 
 <!-- action-docs-inputs -->
 
@@ -41,9 +40,9 @@ Append the URLs for branch app and storybook preview deployments to the PR descr
 <!-- action-docs-outputs -->
 
 <!-- action-docs-runs -->
+
 ## Runs
 
 This action is a `node16` action.
-
 
 <!-- action-docs-runs -->
