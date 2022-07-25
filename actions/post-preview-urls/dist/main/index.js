@@ -10335,7 +10335,7 @@ const utils_1 = __nccwpck_require__(691);
     const token = core.getInput('token', { required: true });
     const domain = core.getInput('domain', { required: true });
     const permalink = core.getInput('permalink');
-    const appName = core.getInput('app_name', { required: true });
+    const appName = core.getInput('app-name', { required: true });
     const repo = github.context.repo;
     const prNumber = (_a = github.context.payload.pull_request) === null || _a === void 0 ? void 0 : _a.number;
     yield postPreviewUrls({ domain, permalink, token, prNumber, repo, appName });
@@ -10410,49 +10410,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getCurrentRepoTreeHash = exports.getTreeHashForCommitHash = exports.isHeadAncestor = exports.getSanitizedBranchName = exports.runAction = exports.removeFileFromS3 = exports.copyFileToS3 = exports.writeLineToFile = exports.fileExistsInS3 = exports.execIsSuccessful = exports.execReadOutput = void 0;
+exports.getCurrentRepoTreeHash = exports.getSanitizedBranchName = exports.runAction = exports.removeFileFromS3 = exports.getFileFromS3 = exports.saveTextAsFileInS3 = exports.fileExistsInS3 = void 0;
 const exec_1 = __nccwpck_require__(1514);
 const core = __importStar(__nccwpck_require__(2186));
-/**
- * Wraps "@actions/exec" exec method to return the stdout output as a string string
- * @param commandLine - command to execute
- * @param command -  optional arguments for tool
- * @returns stdout
- */
-function execReadOutput(commandLine, args) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let output = '';
-        yield (0, exec_1.exec)(commandLine, args, {
-            listeners: { stdout: (data) => (output += data.toString()) }
-        });
-        return output.trim();
-    });
-}
-exports.execReadOutput = execReadOutput;
-/**
- * Wraps "@actions/exec" exec method to return a boolean indicating if the
- * command exited successfully
- * @param commandLine - command to execute
- * @param command -  optional arguments for tool
- * @returns isSuccessful
- */
-function execIsSuccessful(commandLine, args) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield (0, exec_1.exec)(commandLine, args);
-            return true;
-        }
-        catch (e) {
-            return false;
-        }
-    });
-}
-exports.execIsSuccessful = execIsSuccessful;
 /**
  * Checks if a file with a given key exists in the specified S3 bucket
  * Uses "aws s3api head-object"
  * @param options.key - The key of a file in the S3 bucket
- * @param options.bucket - The name of the S3 bucket (globally unique)
+ * @param options.bucket - The name of the S3 bucket
  * @returns fileExists - boolean indicating if the file exists
  */
 function fileExistsInS3({ key, bucket }) {
@@ -10462,38 +10427,41 @@ function fileExistsInS3({ key, bucket }) {
 }
 exports.fileExistsInS3 = fileExistsInS3;
 /**
- * Writes a line of text into a file at a specified path, replacing any existing content
- * Executes "echo "my text" > ./some/file"
- * @param options.text - A string saved to the file
- * @param options.path - The local path of the file (relative to working dir)
- * @returns exitCode - shell command exit code
+ * Creates a file with provided content and uploads it to the provided S3 bucket at the provided key
+ * @param options.text The content of the uploaded file
+ * @param options.key - The key of the file in the S3 bucket
+ * @param options.bucket - The name of the S3 bucket
  */
-function writeLineToFile({ text, path }) {
+function saveTextAsFileInS3({ text, key, bucket }) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)(`/bin/bash -c "echo ${text} > ${path}"`);
+        const tempPath = '.temp';
+        yield writeTextToFile({ text, path: tempPath });
+        yield copyFileToS3({ path: tempPath, bucket, key });
+        yield (0, exec_1.exec)('rm', [tempPath]);
     });
 }
-exports.writeLineToFile = writeLineToFile;
+exports.saveTextAsFileInS3 = saveTextAsFileInS3;
 /**
- * Uploads a local file at a specified path to a S3 bucket at a given given
- * Executes "aws s3 cp"
- * @param options.path - The local path of the file (relative to working dir)
- * @param options.key - The key of a file to create in the S3 bucket
- * @param options.bucket - The name of the S3 bucket (globally unique)
- * @returns exitCode - shell command exit code
+ *
+ * @param options.key - The key of a file to remove in the S3 bucket
+ * @param options.bucket - The name of the S3 bucket
+ * @returns Content of the file from S3 as a string
  */
-function copyFileToS3({ path, key, bucket }) {
+function getFileFromS3({ key, bucket }) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)('aws s3 cp', [path, `s3://${bucket}/${key}`]);
+        const tempPath = '.temp';
+        yield (0, exec_1.exec)('aws s3 cp', [`s3://${bucket}/${key}`, tempPath]);
+        const output = yield execReadOutput('cat', [tempPath]);
+        yield (0, exec_1.exec)('rm', [tempPath]);
+        return output;
     });
 }
-exports.copyFileToS3 = copyFileToS3;
+exports.getFileFromS3 = getFileFromS3;
 /**
  * Deletes a file at a specified key from a given S3 bucket
  * Executes "aws s3 rm"
  * @param options.key - The key of a file to remove in the S3 bucket
- * @param options.bucket - The name of the S3 bucket (globally unique)
- * @returns exitCode - shell command exit code
+ * @param options.bucket - The name of the S3 bucket
  */
 function removeFileFromS3({ key, bucket }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -10526,7 +10494,8 @@ exports.runAction = runAction;
 /**
  * Retrieve and convert the current git branch name to a string that is safe
  * for use as a S3 file key and a URL segment
- * @returns branchName
+ * @param ref Git ref name (e.g. "refs/heads/my-branch")
+ * @returns Sanitized branch name as a string
  */
 function getSanitizedBranchName(ref) {
     var _a;
@@ -10540,28 +10509,6 @@ function getSanitizedBranchName(ref) {
 }
 exports.getSanitizedBranchName = getSanitizedBranchName;
 /**
- * Validate if the passed git commit hash is present on the current branch
- * @param commitHash - commit hash to validate
- * @returns isHeadAncestor
- */
-function isHeadAncestor(commitHash) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return execIsSuccessful('git merge-base', [`--is-ancestor`, commitHash, `HEAD`]);
-    });
-}
-exports.isHeadAncestor = isHeadAncestor;
-/**
- * Retrieve the root tree hash for the provided commit identifier
- * @param commit - commit identifier to lookup
- * @returns treeHash
- */
-function getTreeHashForCommitHash(commit) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return execReadOutput('git rev-parse', [`${commit}:`]);
-    });
-}
-exports.getTreeHashForCommitHash = getTreeHashForCommitHash;
-/**
  * Retrieves the current root tree hash of the git repository
  * Tree hash captures the state of the whole directory tree
  * of all the files in the repository.
@@ -10569,10 +10516,55 @@ exports.getTreeHashForCommitHash = getTreeHashForCommitHash;
  */
 function getCurrentRepoTreeHash() {
     return __awaiter(this, void 0, void 0, function* () {
-        return getTreeHashForCommitHash('HEAD');
+        return execReadOutput('git rev-parse', ['HEAD:']);
     });
 }
 exports.getCurrentRepoTreeHash = getCurrentRepoTreeHash;
+/**
+ * Uploads a local file at a specified path to a S3 bucket at a given given
+ * Executes "aws s3 cp"
+ */
+function copyFileToS3({ path, key, bucket }) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, exec_1.exec)('aws s3 cp', [path, `s3://${bucket}/${key}`]);
+    });
+}
+/**
+ * Writes a line of text into a file at a specified path, replacing any existing content
+ * Executes "echo "my text" > ./some/file"
+ */
+function writeTextToFile({ text, path }) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, exec_1.exec)(`/bin/bash -c "echo ${text} > ${path}"`);
+    });
+}
+/**
+ * Wraps "@actions/exec" exec method to return the stdout output as a string string
+ */
+function execReadOutput(commandLine, args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let output = '';
+        yield (0, exec_1.exec)(commandLine, args, {
+            listeners: { stdout: (data) => (output += data.toString()) }
+        });
+        return output.trim();
+    });
+}
+/**
+ * Wraps "@actions/exec" exec method to return a boolean indicating if the
+ * command exited successfully
+ */
+function execIsSuccessful(commandLine, args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield (0, exec_1.exec)(commandLine, args);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    });
+}
 
 
 /***/ }),

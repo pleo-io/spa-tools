@@ -11,7 +11,7 @@ runAction(async () => {
     const token = core.getInput('token', {required: true})
     const domain = core.getInput('domain', {required: true})
     const permalink = core.getInput('permalink')
-    const appName = core.getInput('app_name', {required: true})
+    const appName = core.getInput('app-name', {required: true})
     const repo = github.context.repo
     const prNumber = github.context.payload.pull_request?.number
 

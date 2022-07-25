@@ -5,65 +5,74 @@
 ![](./screenshot.png)
 
 <!-- action-docs-description -->
+
 ## Description
 
-Deploy the new version of the app by modifying a cursor file in S3 bucket for the given branch.
-
+Deploy a new version of the app by modifying a cursor file in S3 bucket.
 
 <!-- action-docs-description -->
 
 Performs a deployment by updating a cursor file in an S3 bucket. This relies on infrastructure that
-uses the cursor files to serve the correct markup to the user.
+uses the cursor files to serve the correct version of an app to the user.
 
 Note that the action assumes that the AWS credentials has already been configured for the job, and
 allow to read and write to the S3 bucket provided as input. Use the `configure-aws-credentials`
 action in a step prior to running this action to ensure that's the case.
 
 <!-- action-docs-inputs -->
+
 ## Inputs
 
-| parameter | description | required | default |
-| - | - | - | - |
-| rollback_commit_hash | Commit hash to roll back to, defaults to the previous commit on the branch | `false` |  |
-| bucket_name | Bucket to use for deployments | `true` |  |
-| deploy_mode | The deployment mode (default / rollback / unblock) | `false` | default |
-
-
+| parameter         | description                                                                            | required | default |
+| ----------------- | -------------------------------------------------------------------------------------- | -------- | ------- |
+| bucket-name       | Bucket to use for deployments                                                          | `true`   |         |
+| deploy-mode       | The deployment mode (default / rollback / unblock)                                     | `false`  | default |
+| requested-version | Version of the deployed app - defaults to the current repo tree hash                   | `false`  |         |
+| feature-branches  | Should the action keep independent deployment version per git branch                   | `false`  | true    |
+| app-name          | Name of the deployed app - useful for projects with multiple deployed apps             | `false`  |         |
+| rollback-jump     | Controls how many versions back should be rolled back (only relevant in rollback mode) | `false`  | 1       |
+| history-count     | How many versions should be kept in the cursor file                                    | `false`  | 20      |
 
 <!-- action-docs-inputs -->
 
 <!-- action-docs-outputs -->
+
 ## Outputs
 
-| parameter | description |
-| - | - |
-| tree_hash | The tree hash of the performed deployment |
-
-
+| parameter        | description                                 |
+| ---------------- | ------------------------------------------- |
+| deployed-version | Current active version after the deployment |
 
 <!-- action-docs-outputs -->
 
 ## Example Use
 
+Using the current repo tree hash as deployed version, with support for feature branches:
+
 ```yml
-- name: Update the cursor file
-  id: deployment
-  uses: 'pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1'
+- uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v5
   with:
-      bucket_name: my-s3-bucket
+      bucket-name: my-s3-bucket
+```
+
+Using the a custom version, with a named app and no feature branches:
+
+```yml
+- uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v5
+  with:
+      bucket-name: my-s3-bucket
+      app-name: translations
+      feature-branches: false
+      requested-version: v10
 ```
 
 ## Rollbacks
 
 The action supports rollbacks with blocking of automatic deployments until an explicit action is
-taken to undo the rollback.
+taken to undo the rollback. You can either rollback a given number of versions back (using
+`rollbackJump` input), or to a specific version (which was deployed in the past 20 deployments).
 
-> Note that this will rollback to any commit that existed in the current branch history. It doesn't
-> guarantee that the the tree hash you're rolling back to was successfully deployed before or that
-> it doesn't suffer from the same issue as the reason for rollback. The developer performing the
-> manual rollback is responsible for ensuring that the rollback is to a safe commit.
-
-You can create rollback and unblock GitHub workflows triggered via repository dispatch, e.g.
+You can create a rollback GitHub workflows triggered via repository dispatch, e.g.
 
 ```yml
 name: Rollback
@@ -76,24 +85,20 @@ jobs:
     rollback:
         runs-on: ubuntu-22.04
         steps:
-            - uses: actions/checkout@v3
-              with:
-                  fetch-depth: 10
             - uses: aws-actions/configure-aws-credentials@v1
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             - name: Update Cursor File
-              uses: 'pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1'
+              uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v5
               with:
-                  bucket_name: my-origin-bucket
-                  rollback_commit_hash: ${{ github.event.inputs.sha }}
-                  deploy_mode: rollback
+                  bucket-name: my-origin-bucket
+                  deploy-mode: rollback
+                  rollback-jump: ${{ github.event.inputs.jump }}
+                  rollback-jump: ${{ github.event.inputs.jump }}
 ```
 
-Note that we use `fetch-depth: 10` for the checkout action. This is required because the action
-checks if the selected SHA exists on the branch history, to avoid rollbacks to arbitrary commits.
-You can create a similar workflow for unblocking (here you don't need `fetch-depth: 10`)
+You can create a similar workflow for unblocking:
 
 ```yml
 name: Unblock
@@ -108,16 +113,16 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             - name: Update Cursor File
-              uses: 'pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1'
+              uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v5
               with:
-                  bucket_name: my-origin-bucket
-                  deploy_mode: update
+                  bucket-name: my-origin-bucket
+                  deploy-mode: update
 ```
 
 <!-- action-docs-runs -->
+
 ## Runs
 
 This action is a `node16` action.
-
 
 <!-- action-docs-runs -->

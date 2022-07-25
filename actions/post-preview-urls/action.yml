@@ -13,7 +13,7 @@ inputs:
     permalink:
         description: The permalink to the current preview deployment
         required: false
-    app_name:
+    app-name:
         description: The name displayed in the link section title
         required: false
         default: 🤖 App

@@ -10294,8 +10294,8 @@ function wrappy (fn, cb) {
  * Custom Cursor Deploy GitHub action
  * @see {@link https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action}
  *
- * Updates the deployment cursor file in the S3 bucket and optionally updates
- * the rollback file (in the rollback and unblock deployment modes).
+ * Updates the deployment cursor file in an S3 bucket with the currently deployed version
+ * Optionally creates or deletes a rollback file to indicate getting in and out of a rollback.
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -10331,62 +10331,76 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.cursorDeploy = void 0;
+const path = __importStar(__nccwpck_require__(1017));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const utils_1 = __nccwpck_require__(691);
-const deployModes = ['default', 'rollback', 'unblock'];
+const DEFAULT_HISTORY_COUNT = 20;
+// Dependency injection which helps with testing. Takes input from GitHub Actions SDK
+// and passes to the function that executes the action logic. Takes function's output and uses
+// GitHub Actions SDK to set it as the action's output
 (0, utils_1.runAction)(() => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
-    const bucket = core.getInput('bucket_name', { required: true });
-    const deployModeInput = core.getInput('deploy_mode', { required: true });
-    const rollbackCommitHash = core.getInput('rollback_commit_hash');
     const output = yield cursorDeploy({
-        bucket,
-        deployModeInput,
-        rollbackCommitHash,
+        bucket: core.getInput('bucket-name', { required: true }),
+        deployMode: core.getInput('deploy-mode', { required: true }),
+        appName: core.getInput('app-name', { required: true }),
+        featureBranches: core.getInput('use-branches') === 'true',
+        requestedVersion: core.getInput('deploy-version'),
+        rollbackJump: parseInt(core.getInput('rollback-jump'), 10),
+        historyCount: parseInt(core.getInput('history-count'), 10),
         ref: (_c = (_b = (_a = github.context.payload) === null || _a === void 0 ? void 0 : _a.pull_request) === null || _b === void 0 ? void 0 : _b.head.ref) !== null && _c !== void 0 ? _c : github.context.ref
     });
-    core.setOutput('tree_hash', output.treeHash);
+    core.setOutput('deployed-version', output.deployedVersion);
 }));
-function cursorDeploy({ ref, bucket, deployModeInput, rollbackCommitHash }) {
+function cursorDeploy(input) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const deployMode = getDeployMode(deployModeInput);
-        const branchName = (0, utils_1.getSanitizedBranchName)(ref);
-        const treeHash = yield getDeploymentHash(deployMode, rollbackCommitHash);
-        const rollbackKey = `rollbacks/${branchName}`;
-        const deployKey = `deploys/${branchName}`;
+        const { appName, ref, bucket, rollbackJump, requestedVersion, featureBranches } = input;
+        const historyCount = (_a = input.historyCount) !== null && _a !== void 0 ? _a : DEFAULT_HISTORY_COUNT;
+        // Get the deployment name which is used for
+        const deploymentKeys = getDeploymentKeys({ appName, ref, featureBranches });
+        const deployMode = getDeployMode(input.deployMode);
+        const cursorHistory = (yield (0, utils_1.getFileFromS3)({ key: deploymentKeys.deploy, bucket })).split('\n');
+        const deployedVersion = yield getDeployedVersion({
+            deployMode,
+            requestedVersion,
+            cursorHistory,
+            rollbackJump,
+            historyCount
+        });
         if (deployMode === 'default' || deployMode === 'unblock') {
-            const rollbackFileExists = yield (0, utils_1.fileExistsInS3)({ bucket, key: rollbackKey });
+            const rollbackFileExists = yield (0, utils_1.fileExistsInS3)({ bucket, key: deploymentKeys.rollback });
             // If we're doing a regular deployment, we need to make sure there isn't an active
             // rollback for the branch we're deploying. Active rollback prevents automatic
             // deployments and requires an explicit unblocking deployment to resume them.
             if (deployMode === 'default' && rollbackFileExists) {
-                throw new Error(`${branchName} is currently blocked due to an active rollback.`);
+                throw new Error(`${deploymentKeys.deploy} is currently blocked due to an active rollback.`);
             }
             // If we're unblocking a branch after a rollback, it only makes sense if there is an
             // active rollback
             if (deployMode === 'unblock' && !rollbackFileExists) {
-                throw new Error(`${branchName} does not have an active rollback, you can't unblock.`);
+                throw new Error(`${deploymentKeys.deploy} does not have an active rollback, you can't unblock.`);
             }
         }
         // Perform the deployment by updating the cursor file for the current branch to point
         // to the desired tree hash
-        yield (0, utils_1.writeLineToFile)({ text: treeHash, path: branchName });
-        yield (0, utils_1.copyFileToS3)({ path: branchName, bucket, key: deployKey });
-        core.info(`Tree hash ${treeHash} is now the active deployment for ${branchName}.`);
+        const updatedCursorFile = [deployedVersion, ...cursorHistory].slice(0, historyCount).join('\n');
+        yield (0, utils_1.saveTextAsFileInS3)({ text: updatedCursorFile, bucket, key: deploymentKeys.deploy });
+        core.info(`${deploymentKeys.deploy} is now deployed with version ${deployedVersion}`);
         // If we're doing a rollback deployment we create a rollback file that blocks any following
         // deployments from going through.
         if (deployMode === 'rollback') {
-            yield (0, utils_1.copyFileToS3)({ path: branchName, bucket, key: rollbackKey });
-            core.info(`${branchName} marked as rolled back, automatic deploys paused.`);
+            yield (0, utils_1.saveTextAsFileInS3)({ text: deployedVersion, bucket, key: deploymentKeys.rollback });
+            core.info(`${deploymentKeys.deploy} marked as rolled back, automatic deploys paused.`);
         }
         // If we're doing an unblock deployment, we delete the rollback file to allow the following
         // deployments to go through
         if (deployMode === 'unblock') {
-            yield (0, utils_1.removeFileFromS3)({ bucket, key: rollbackKey });
-            core.info(`${branchName} has automatic deploys resumed.`);
+            yield (0, utils_1.removeFileFromS3)({ bucket, key: deploymentKeys.rollback });
+            core.info(`${deploymentKeys.deploy} has automatic deploys resumed.`);
         }
-        return { treeHash };
+        return { deployedVersion };
     });
 }
 exports.cursorDeploy = cursorDeploy;
@@ -10402,14 +10416,16 @@ exports.cursorDeploy = cursorDeploy;
 function getDeployMode(deployMode) {
     function assertDeployMode(value) {
         if (!deployModes.includes(value)) {
-            throw new Error(`Incorrect deploy mode (${value})`);
+            throw new Error(`Incorrect deploy mode provided (${value})`);
         }
     }
     assertDeployMode(deployMode);
     return deployMode;
 }
+const deployModes = ['default', 'rollback', 'unblock'];
 /**
- * Establish the tree hash of the code to be deployed. If we're doing a rollback,
+ * Establish the version of the code to be deployed.
+ * If we're doing a rollback,
  * we figure out the tree hash from the explicitly passed commit hash or the previous
  * commit on the branch. We additionally validate if the input commit hash is a commit from
  * the current branch, to make sure we can only rollback within the branch.
@@ -10418,22 +10434,73 @@ function getDeployMode(deployMode) {
  * @param rollbackCommitHash - In rollback deploy mode, optional explicit commit hash to roll back to
  * @returns treeHash
  */
-function getDeploymentHash(deployMode, rollbackCommitHash) {
+function getDeployedVersion({ deployMode, requestedVersion, cursorHistory, rollbackJump, historyCount }) {
     return __awaiter(this, void 0, void 0, function* () {
         if (deployMode === 'rollback') {
-            if (!!rollbackCommitHash && !(yield (0, utils_1.isHeadAncestor)(rollbackCommitHash))) {
-                throw new Error('The selected rollback commit is not present on the branch');
+            if (requestedVersion) {
+                if (!cursorHistory.includes(requestedVersion)) {
+                    throw new Error(`The requested version ${requestedVersion} has not been deployed in the last ${historyCount} deploys. Preventing rollback to avoid serving invalid version.`);
+                }
+                core.info(`Rolling back to requested version ${requestedVersion}`);
+                return requestedVersion;
             }
-            // If no rollback commit is provided, we default to the previous commit on the branch
-            const commit = rollbackCommitHash || 'HEAD^';
-            const treeHash = yield (0, utils_1.getTreeHashForCommitHash)(commit);
-            core.info(`Rolling back to tree hash ${treeHash} (commit ${commit})`);
-            return treeHash;
+            if (!rollbackJump) {
+                throw new Error('Expected a rollback jump or version for rollback deployment mode.');
+            }
+            const rollbackVersion = cursorHistory[rollbackJump];
+            if (!rollbackVersion) {
+                throw new Error(`The is no deployment history for ${rollbackJump} versions back. Cannot roll back.`);
+            }
+            core.info(`Rolling back to version ${rollbackVersion}`);
+            return rollbackVersion;
         }
+        if (requestedVersion) {
+            core.info(`Deploying requested version ${requestedVersion}`);
+            return requestedVersion;
+        }
+        // Defaulting to the version being the current tree hash of the root of the repo
         const treeHash = yield (0, utils_1.getCurrentRepoTreeHash)();
         core.info(`Using current root tree hash ${treeHash}`);
         return treeHash;
     });
+}
+/**
+ * Get the location of the cursor and rollback files in S3, based on the
+ * configuration passed to the action. Two options matter here:
+ *      - app name: for project where there are multiple separately deployed pieces
+ *      we need a way to store more than one set of rollback/deploy cursors. The app
+ *      name can be used to namespace those. If app name is omitted, we fall back to
+ *      the original behavior of using keys with "deploys" and "rollbacks" prefixes. If
+ *      it's provided, we use the app name as the prefix, i.e. "my-app/deploys" and
+ *      "my-app/rollbacks"
+ *      - use feature branches: for deployments tied to the data in the repository, we enable
+ *      feature branch support by having a rollback and deploy cursor files per git repo
+ *      branch name. If this behavior is turned off, we only use a cursor called "master"
+ * @param options.ref Git ref name (e.g. "refs/heads/my-branch")
+ * @param options.featureBranches Switch for using current branch name (based on ref) to scope cursors
+ * @param options.appName Name of the app for namespacing cursor files (e.g. "my-app")
+ * @returns An object containing "rollback" and "deploy" S3 keys as strings
+ */
+function getDeploymentKeys({ ref, appName, featureBranches }) {
+    let deployKeySegments = ['deploys'];
+    let rollbackKeySegments = ['rollbacks'];
+    if (featureBranches) {
+        const deploymentName = (0, utils_1.getSanitizedBranchName)(ref);
+        deployKeySegments.push(deploymentName);
+        rollbackKeySegments.push(deploymentName);
+    }
+    else {
+        deployKeySegments.push('master');
+        rollbackKeySegments.push('master');
+    }
+    if (appName) {
+        deployKeySegments.unshift(appName);
+        rollbackKeySegments.unshift(appName);
+    }
+    return {
+        deploy: path.join(...deployKeySegments),
+        rollback: path.join(...rollbackKeySegments)
+    };
 }
 
 
@@ -10477,49 +10544,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getCurrentRepoTreeHash = exports.getTreeHashForCommitHash = exports.isHeadAncestor = exports.getSanitizedBranchName = exports.runAction = exports.removeFileFromS3 = exports.copyFileToS3 = exports.writeLineToFile = exports.fileExistsInS3 = exports.execIsSuccessful = exports.execReadOutput = void 0;
+exports.getCurrentRepoTreeHash = exports.getSanitizedBranchName = exports.runAction = exports.removeFileFromS3 = exports.getFileFromS3 = exports.saveTextAsFileInS3 = exports.fileExistsInS3 = void 0;
 const exec_1 = __nccwpck_require__(1514);
 const core = __importStar(__nccwpck_require__(2186));
-/**
- * Wraps "@actions/exec" exec method to return the stdout output as a string string
- * @param commandLine - command to execute
- * @param command -  optional arguments for tool
- * @returns stdout
- */
-function execReadOutput(commandLine, args) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let output = '';
-        yield (0, exec_1.exec)(commandLine, args, {
-            listeners: { stdout: (data) => (output += data.toString()) }
-        });
-        return output.trim();
-    });
-}
-exports.execReadOutput = execReadOutput;
-/**
- * Wraps "@actions/exec" exec method to return a boolean indicating if the
- * command exited successfully
- * @param commandLine - command to execute
- * @param command -  optional arguments for tool
- * @returns isSuccessful
- */
-function execIsSuccessful(commandLine, args) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield (0, exec_1.exec)(commandLine, args);
-            return true;
-        }
-        catch (e) {
-            return false;
-        }
-    });
-}
-exports.execIsSuccessful = execIsSuccessful;
 /**
  * Checks if a file with a given key exists in the specified S3 bucket
  * Uses "aws s3api head-object"
  * @param options.key - The key of a file in the S3 bucket
- * @param options.bucket - The name of the S3 bucket (globally unique)
+ * @param options.bucket - The name of the S3 bucket
  * @returns fileExists - boolean indicating if the file exists
  */
 function fileExistsInS3({ key, bucket }) {
@@ -10529,38 +10561,41 @@ function fileExistsInS3({ key, bucket }) {
 }
 exports.fileExistsInS3 = fileExistsInS3;
 /**
- * Writes a line of text into a file at a specified path, replacing any existing content
- * Executes "echo "my text" > ./some/file"
- * @param options.text - A string saved to the file
- * @param options.path - The local path of the file (relative to working dir)
- * @returns exitCode - shell command exit code
+ * Creates a file with provided content and uploads it to the provided S3 bucket at the provided key
+ * @param options.text The content of the uploaded file
+ * @param options.key - The key of the file in the S3 bucket
+ * @param options.bucket - The name of the S3 bucket
  */
-function writeLineToFile({ text, path }) {
+function saveTextAsFileInS3({ text, key, bucket }) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)(`/bin/bash -c "echo ${text} > ${path}"`);
+        const tempPath = '.temp';
+        yield writeTextToFile({ text, path: tempPath });
+        yield copyFileToS3({ path: tempPath, bucket, key });
+        yield (0, exec_1.exec)('rm', [tempPath]);
     });
 }
-exports.writeLineToFile = writeLineToFile;
+exports.saveTextAsFileInS3 = saveTextAsFileInS3;
 /**
- * Uploads a local file at a specified path to a S3 bucket at a given given
- * Executes "aws s3 cp"
- * @param options.path - The local path of the file (relative to working dir)
- * @param options.key - The key of a file to create in the S3 bucket
- * @param options.bucket - The name of the S3 bucket (globally unique)
- * @returns exitCode - shell command exit code
+ *
+ * @param options.key - The key of a file to remove in the S3 bucket
+ * @param options.bucket - The name of the S3 bucket
+ * @returns Content of the file from S3 as a string
  */
-function copyFileToS3({ path, key, bucket }) {
+function getFileFromS3({ key, bucket }) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, exec_1.exec)('aws s3 cp', [path, `s3://${bucket}/${key}`]);
+        const tempPath = '.temp';
+        yield (0, exec_1.exec)('aws s3 cp', [`s3://${bucket}/${key}`, tempPath]);
+        const output = yield execReadOutput('cat', [tempPath]);
+        yield (0, exec_1.exec)('rm', [tempPath]);
+        return output;
     });
 }
-exports.copyFileToS3 = copyFileToS3;
+exports.getFileFromS3 = getFileFromS3;
 /**
  * Deletes a file at a specified key from a given S3 bucket
  * Executes "aws s3 rm"
  * @param options.key - The key of a file to remove in the S3 bucket
- * @param options.bucket - The name of the S3 bucket (globally unique)
- * @returns exitCode - shell command exit code
+ * @param options.bucket - The name of the S3 bucket
  */
 function removeFileFromS3({ key, bucket }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -10593,7 +10628,8 @@ exports.runAction = runAction;
 /**
  * Retrieve and convert the current git branch name to a string that is safe
  * for use as a S3 file key and a URL segment
- * @returns branchName
+ * @param ref Git ref name (e.g. "refs/heads/my-branch")
+ * @returns Sanitized branch name as a string
  */
 function getSanitizedBranchName(ref) {
     var _a;
@@ -10607,28 +10643,6 @@ function getSanitizedBranchName(ref) {
 }
 exports.getSanitizedBranchName = getSanitizedBranchName;
 /**
- * Validate if the passed git commit hash is present on the current branch
- * @param commitHash - commit hash to validate
- * @returns isHeadAncestor
- */
-function isHeadAncestor(commitHash) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return execIsSuccessful('git merge-base', [`--is-ancestor`, commitHash, `HEAD`]);
-    });
-}
-exports.isHeadAncestor = isHeadAncestor;
-/**
- * Retrieve the root tree hash for the provided commit identifier
- * @param commit - commit identifier to lookup
- * @returns treeHash
- */
-function getTreeHashForCommitHash(commit) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return execReadOutput('git rev-parse', [`${commit}:`]);
-    });
-}
-exports.getTreeHashForCommitHash = getTreeHashForCommitHash;
-/**
  * Retrieves the current root tree hash of the git repository
  * Tree hash captures the state of the whole directory tree
  * of all the files in the repository.
@@ -10636,10 +10650,55 @@ exports.getTreeHashForCommitHash = getTreeHashForCommitHash;
  */
 function getCurrentRepoTreeHash() {
     return __awaiter(this, void 0, void 0, function* () {
-        return getTreeHashForCommitHash('HEAD');
+        return execReadOutput('git rev-parse', ['HEAD:']);
     });
 }
 exports.getCurrentRepoTreeHash = getCurrentRepoTreeHash;
+/**
+ * Uploads a local file at a specified path to a S3 bucket at a given given
+ * Executes "aws s3 cp"
+ */
+function copyFileToS3({ path, key, bucket }) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, exec_1.exec)('aws s3 cp', [path, `s3://${bucket}/${key}`]);
+    });
+}
+/**
+ * Writes a line of text into a file at a specified path, replacing any existing content
+ * Executes "echo "my text" > ./some/file"
+ */
+function writeTextToFile({ text, path }) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, exec_1.exec)(`/bin/bash -c "echo ${text} > ${path}"`);
+    });
+}
+/**
+ * Wraps "@actions/exec" exec method to return the stdout output as a string string
+ */
+function execReadOutput(commandLine, args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let output = '';
+        yield (0, exec_1.exec)(commandLine, args, {
+            listeners: { stdout: (data) => (output += data.toString()) }
+        });
+        return output.trim();
+    });
+}
+/**
+ * Wraps "@actions/exec" exec method to return a boolean indicating if the
+ * command exited successfully
+ */
+function execIsSuccessful(commandLine, args) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield (0, exec_1.exec)(commandLine, args);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    });
+}
 
 
 /***/ }),

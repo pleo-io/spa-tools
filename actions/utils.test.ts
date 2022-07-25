@@ -1,47 +1,14 @@
 import * as utils from './utils'
 import {exec} from '@actions/exec'
-import * as core from '@actions/core'
 
 jest.mock('@actions/core')
 jest.mock('@actions/exec')
-
-// just making sure the mock methods are correctly typed
-const mockedExec = exec as jest.MockedFunction<typeof exec>
+const mockedExec = jest.mocked(exec)
 
 // reset the counter on mock fn calls after every test
 beforeEach(() => jest.clearAllMocks())
 
 describe(`Actions Utils`, () => {
-    test(`isHeadAncestor uses git CLI to check if the commit is part of the current branch, returns true when it is`, async () => {
-        mockedExec.mockResolvedValue(0)
-        const hash = '5265ef99f1c8e18bcd282a11a4b752731cad5665'
-        const output = await utils.isHeadAncestor(hash)
-        expect(mockedExec).toHaveBeenCalledWith('git merge-base', ['--is-ancestor', hash, 'HEAD'])
-        expect(output).toBe(true)
-    })
-
-    test(`isHeadAncestor uses git CLI to check if the commit is part of the current branch, returns false when it is not`, async () => {
-        mockedExec.mockRejectedValue(128)
-        const hash = '5265ef99f1c8e18bcd282a11a4b752731cad5665'
-        const output = await utils.isHeadAncestor(hash)
-        expect(mockedExec).toHaveBeenCalledWith('git merge-base', ['--is-ancestor', hash, 'HEAD'])
-        expect(output).toBe(false)
-    })
-
-    test(`getTreeHashForCommitHash uses git CLI to check if the commit is part of the current branch, returns false when it is not`, async () => {
-        mockedExec.mockResolvedValue(0)
-        const hash = '5265ef99f1c8e18bcd282a11a4b752731cad5665'
-        const output = await utils.getTreeHashForCommitHash(hash)
-        expect(mockedExec).toHaveBeenCalledWith(
-            'git rev-parse',
-            ['5265ef99f1c8e18bcd282a11a4b752731cad5665:'],
-            {
-                listeners: {stdout: expect.any(Function)}
-            }
-        )
-        expect(output).toBe('')
-    })
-
     test(`getCurrentRepoTreeHash uses git CLI to return the latest tree hash of the root of the repo`, async () => {
         mockedExec.mockResolvedValue(0)
         const output = await utils.getCurrentRepoTreeHash()
@@ -49,12 +16,6 @@ describe(`Actions Utils`, () => {
             listeners: {stdout: expect.any(Function)}
         })
         expect(output).toBe('')
-    })
-
-    test(`writeLineToFile creates a file using a shell script`, async () => {
-        mockedExec.mockResolvedValue(0)
-        await utils.writeLineToFile({path: '/some/file', text: 'hello world'})
-        expect(mockedExec).toHaveBeenCalledWith(`/bin/bash -c "echo hello world > /some/file"`)
     })
 
     describe('S3 Utils', () => {
@@ -78,19 +39,35 @@ describe(`Actions Utils`, () => {
             expect(output).toBe(false)
         })
 
-        test(`copyFileToS3 uses AWS CLI to copy a local file to S3 bucket`, async () => {
-            mockedExec.mockResolvedValue(0)
-            await utils.copyFileToS3({path: '/some/file', key: 'my/key', bucket: 'my-bucket'})
-            expect(mockedExec).toHaveBeenCalledWith('aws s3 cp', [
-                '/some/file',
-                's3://my-bucket/my/key'
-            ])
-        })
-
         test(`removeFileFromS3 uses AWS CLI to delete a file from S3 bucket`, async () => {
             mockedExec.mockResolvedValue(0)
             await utils.removeFileFromS3({key: 'my/key', bucket: 'my-bucket'})
             expect(mockedExec).toHaveBeenCalledWith('aws s3 rm', ['s3://my-bucket/my/key'])
+        })
+
+        test(`saveTextAsFileInS3 uses AWS CLI to save a file with a provided content in S3 bucket`, async () => {
+            mockedExec.mockResolvedValue(0)
+            await utils.saveTextAsFileInS3({
+                text: 'Hello\nWorld!',
+                key: 'my/key',
+                bucket: 'my-bucket'
+            })
+            expect(mockedExec).toHaveBeenCalledWith(`/bin/bash -c "echo Hello\nWorld! > .temp"`)
+            expect(mockedExec).toHaveBeenCalledWith('aws s3 cp', ['.temp', 's3://my-bucket/my/key'])
+        })
+
+        test(`getFileFromS3 uses AWS CLI to fetch a file from S3 bucket`, async () => {
+            mockedExec.mockResolvedValueOnce(0)
+            const output = await utils.getFileFromS3({
+                key: 'my/key',
+                bucket: 'my-bucket'
+            })
+            expect(mockedExec).toHaveBeenCalledWith('aws s3 cp', ['s3://my-bucket/my/key', '.temp'])
+            expect(mockedExec).toHaveBeenCalledWith('cat', ['.temp'], {
+                listeners: {stdout: expect.any(Function)}
+            })
+            expect(mockedExec).toHaveBeenCalledWith('rm', ['.temp'])
+            expect(output).toBe('')
         })
     })
 

@@ -1,21 +1,36 @@
 name: 'Deploy Action'
-description:
-    'Deploy the new version of the app by modifying a cursor file in S3 bucket for the given branch.'
+description: 'Deploy a new version of the app by modifying a cursor file in S3 bucket.'
 author: 'Pleo'
 inputs:
-    rollback_commit_hash:
-        description: Commit hash to roll back to, defaults to the previous commit on the branch
-        required: false
-    bucket_name:
+    bucket-name:
         description: Bucket to use for deployments
         required: true
-    deploy_mode:
+    deploy-mode:
         description: The deployment mode (default / rollback / unblock)
         required: false
         default: 'default'
+    requested-version:
+        description: Version of the deployed app - defaults to the current repo tree hash
+        required: false
+    feature-branches:
+        description: Should the action keep independent deployment version per git branch
+        required: false
+        default: 'true'
+    app-name:
+        description: Name of the deployed app - useful for projects with multiple deployed apps
+        required: false
+    rollback-jump:
+        description:
+            Controls how many versions back should be rolled back (only relevant in rollback mode)
+        required: false
+        default: '1'
+    history-count:
+        description: How many versions should be kept in the cursor file
+        required: false
+        default: '20'
 outputs:
-    tree_hash:
-        description: The tree hash of the performed deployment
+    deployed-version:
+        description: Current active version after the deployment
 runs:
     using: 'node16'
     main: 'dist/main/index.js'
