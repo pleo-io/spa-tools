@@ -80,7 +80,7 @@ export async function cursorDeploy({
  * Retrieve the deploy mode from action input, and set a correct enum type
  * Deploy mode can one of the following:
  * - default - a regular deployment, updating latest cursor with hash from params & previous cursor with the value from latest if latest exists
- * - previous - an emergency deployment, updateing latest cursor with the previous cursor & removing previous
+ * - rollback - an emergency deployment restoring the previous version as the current one. It updates the "latest" cursor file with the value of the "previous" cursor & removes the "previous" cursor file
  * @param mode - Deployment mode
  * @returns mode
  */
