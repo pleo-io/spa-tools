@@ -1,6 +1,7 @@
 import {stripIndents as strip} from 'common-tags'
 import {cursorDeploy} from './main'
 import * as utils from '../utils'
+import * as helpers from './helpers'
 
 jest.mock('../utils')
 jest.mock('@actions/core')
@@ -32,15 +33,15 @@ describe(`Translation Cursor Deploy Action`, () => {
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledTimes(2)
 
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledWith({
-                path: `s3://${bucket}/${utils.latestKey}`,
+                path: `s3://${bucket}/${helpers.latestKey}`,
                 bucket: bucket,
-                key: utils.previousKey
+                key: helpers.previousKey
             })
 
             expect(mockedUtils.copyFileToS3).toHaveBeenLastCalledWith({
                 path: 'latest',
                 bucket,
-                key: utils.latestKey
+                key: helpers.latestKey
             })
 
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledTimes(1)
@@ -69,7 +70,7 @@ describe(`Translation Cursor Deploy Action`, () => {
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledWith({
                 path: 'latest',
                 bucket,
-                key: utils.latestKey
+                key: helpers.latestKey
             })
 
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledTimes(1)
@@ -94,14 +95,14 @@ describe(`Translation Cursor Deploy Action`, () => {
 
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledTimes(1)
             expect(mockedUtils.copyFileToS3).toHaveBeenCalledWith({
-                path: `s3://${bucket}/${utils.previousKey}`,
+                path: `s3://${bucket}/${helpers.previousKey}`,
                 bucket,
-                key: utils.latestKey
+                key: helpers.latestKey
             })
             expect(mockedUtils.removeFileFromS3).toHaveBeenCalledTimes(1)
             expect(mockedUtils.removeFileFromS3).toHaveBeenCalledWith({
                 bucket,
-                key: utils.previousKey
+                key: helpers.previousKey
             })
         }
     )

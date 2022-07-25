@@ -7,15 +7,9 @@
 
 import * as core from '@actions/core'
 
-import {
-    writeLineToFile,
-    runAction,
-    fileExistsInS3,
-    copyFileToS3,
-    removeFileFromS3,
-    previousKey,
-    latestKey
-} from '../utils'
+import {writeLineToFile, runAction, fileExistsInS3, copyFileToS3, removeFileFromS3} from '../utils'
+
+import {previousKey, latestKey} from './helpers'
 
 runAction(async () => {
     const bucket = core.getInput('bucket_name', {required: true})
