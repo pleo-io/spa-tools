@@ -79,7 +79,7 @@ export async function cursorDeploy({
 /**
  * Retrieve the deploy mode from action input, and set a correct string union type
  * Deploy mode can one of the following:
- * - default - a regular deployment, updating latest cursor with hash from params & previous cursor with the value from latest if latest exists
+ * - default - a regular deployment, updating the "latest" cursor file with the hash from inputs & the "previous" cursor file with the previous value of the "latest" cursor (if it existed)
  * - rollback - an emergency deployment restoring the previous version as the current one. It updates the "latest" cursor file with the value of the "previous" cursor & removes the "previous" cursor file
  * @param mode - Deployment mode
  * @returns mode
