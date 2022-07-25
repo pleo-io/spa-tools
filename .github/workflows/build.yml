@@ -41,19 +41,17 @@ jobs:
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
     steps:
       - uses: actions/checkout@v3.0.2
-      - uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
-          aws-region: eu-west-1
 
       - name: Check S3 Cache
         uses: pleo-oss/s3-cache-action@v2.0.1
         id: s3-cache
         with:
-          bucket_name: ${{ inputs.bucket_name }}
-          key_prefix: build/${{ inputs.app_name }}
+          bucket-name: ${{ inputs.bucket_name }}
+          key-prefix: build/${{ inputs.app_name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-region: eu-west-1
 
       - uses: actions/setup-node@v3.4.1
         if: steps.s3-cache.outputs.processed == 'false'
