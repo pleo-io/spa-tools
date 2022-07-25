@@ -40,7 +40,7 @@ jobs:
       tree_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3.0.2
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
@@ -49,13 +49,13 @@ jobs:
           aws-region: eu-west-1
 
       - name: Check S3 Cache
-        uses: pleo-oss/pleo-spa-cicd/actions/s3-cache@v1.3.1
+        uses: pleo-oss/s3-cache-action@v2.0.1
         id: s3-cache
         with:
           bucket_name: ${{ inputs.bucket_name }}
           key_prefix: build/${{ inputs.app_name }}
 
-      - uses: actions/setup-node@v2.5.1
+      - uses: actions/setup-node@v3.4.1
         if: steps.s3-cache.outputs.processed == 'false'
         with:
           node-version: "16"
@@ -64,7 +64,7 @@ jobs:
 
       - name: Install Dependencies
         if: steps.s3-cache.outputs.processed == 'false'
-        uses: bahmutov/npm-install@v1.7.11
+        uses: bahmutov/npm-install@v1.8.17
         with:
           useRollingCache: true
           install-command: yarn --frozen-lockfile --ignore-scripts
