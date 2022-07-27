@@ -43,6 +43,6 @@ Append the URLs for branch app and storybook preview deployments to the PR descr
 
 ## Runs
 
-This action is an `node16` action.
+This action is a `node16` action.
 
 <!-- action-docs-runs -->

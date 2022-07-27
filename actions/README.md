@@ -7,11 +7,10 @@ which help implementing a CI/CD pipeline described in this repository.
 
 ## Actions
 
-| Name                                     | Description                                                               |
-| ---------------------------------------- | ------------------------------------------------------------------------- |
-| [cursor-deploy](./cursor-deploy)         | Performs a deployment by updating a cursor file in an S3 bucket.          |
-| [post-preview-urls](./post-preview-urls) | Update PR description with the links to the latest preview deployment.    |
-| [s3-cache](./s3-cache)                   | Allows to skip a job if it was already performed for the same repo state. |
+| Name                                     | Description                                                            |
+| ---------------------------------------- | ---------------------------------------------------------------------- |
+| [cursor-deploy](./cursor-deploy)         | Performs a deployment by updating a cursor file in an S3 bucket.       |
+| [post-preview-urls](./post-preview-urls) | Update PR description with the links to the latest preview deployment. |
 
 ## Contributing
 
