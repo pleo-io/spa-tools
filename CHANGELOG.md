@@ -1,3 +1,16 @@
+# [5.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v4.0.0...v5.0.0) (2022-07-27)
+
+
+### Features
+
+* Get rid of S3 Cache Action (moved to pleo-oss/s3-cache-action) ([#17](https://github.com/pleo-oss/pleo-spa-cicd/issues/17)) ([97c4836](https://github.com/pleo-oss/pleo-spa-cicd/commit/97c48367a7daff67888db74252828aa1482688a1))
+
+
+### BREAKING CHANGES
+
+* The S3 cache action is no longer available in this repository. Use the standalone
+version available at pleo-oss/s3-cache-action
+
 # [4.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v3.1.0...v4.0.0) (2022-07-05)
 
 
