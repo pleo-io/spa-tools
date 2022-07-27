@@ -1,3 +1,10 @@
+# [5.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v5.0.0...v5.1.0) (2022-07-27)
+
+
+### Features
+
+* Add translation-cursor-deploy ([#13](https://github.com/pleo-oss/pleo-spa-cicd/issues/13)) ([c0621e5](https://github.com/pleo-oss/pleo-spa-cicd/commit/c0621e5226e95bf146cf76773a2ee9a4854b6047))
+
 # [5.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v4.0.0...v5.0.0) (2022-07-27)
 
 
