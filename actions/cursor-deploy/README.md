@@ -72,9 +72,9 @@ on:
                 required: false
 jobs:
     rollback:
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
               with:
                   fetch-depth: 10
             - uses: aws-actions/configure-aws-credentials@v1
@@ -98,9 +98,9 @@ name: Unblock
 on: workflow_dispatch
 jobs:
     rollback:
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-22.04
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - uses: aws-actions/configure-aws-credentials@v1
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -116,6 +116,6 @@ jobs:
 
 ## Runs
 
-This action is an `node16` action.
+This action is a `node16` action.
 
 <!-- action-docs-runs -->
