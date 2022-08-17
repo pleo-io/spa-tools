@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
 name: Deploy
 
 on:
@@ -63,6 +65,8 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           scope: ${{ inputs.registry_scope }}
 
+      # For feature preview deployments we're using the permalink as the deploy URL for the GitHub deployment
+      # For deployments on the default branch we're using the domain name passed via inputs.
       - name: Get Deployment URL
         id: deployment-url
         run: |
@@ -109,17 +113,21 @@ jobs:
            --exclude "static/*"
 
       - name: Update Cursor File
-        uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v1.3.1
+        id: cursor-update
+        uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v6
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v1.3.1
+        uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v6
         if: github.event_name == 'pull_request'
         with:
-          domain: ${{ inputs.domain_name }}
           app_name: ${{ inputs.app_name }}
-          permalink: ${{ steps.deployment-url.outputs.url }}
+          links: |
+            [
+              {"name": "Latest", "url": "https://${{ steps.cursor-update.outputs.branch_label }}.${{ inputs.domain_name }}"},
+              {"name": "Current Permalink", "url": "${{ steps.deployment-url.outputs.url }}"}
+            ]
 
       - name: Upload Deployed Bundle as Artifact
         uses: actions/upload-artifact@v3.1.0

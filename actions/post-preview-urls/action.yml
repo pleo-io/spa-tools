@@ -7,12 +7,16 @@ inputs:
         description: GitHub token used to update the PR description
         required: false
         default: ${{ github.token }}
-    domain:
-        description: The domain for the app deployments
+    links:
+        description:
+            'JSON specification of links to post to the PR description (`Array<{name: string, url:
+            string}>`)'
         required: true
-    permalink:
-        description: The permalink to the current preview deployment
+    as_labels:
+        description:
+            If true, the URL is not displayed and all links are rendered as a comma-separated list
         required: false
+        default: 'false'
     app_name:
         description: The name displayed in the link section title
         required: false

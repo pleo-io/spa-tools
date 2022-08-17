@@ -1,5 +1,5 @@
 import {stripIndents as strip} from 'common-tags'
-import {cursorDeploy} from './main'
+import {cursorDeploy, branchNameToHostnameLabel} from './main'
 import * as utils from '../utils'
 
 jest.mock('../utils')
@@ -7,14 +7,7 @@ jest.mock('@actions/core')
 jest.mock('@actions/github')
 
 // just making sure the mock methods are correctly typed
-const mockedUtils = utils as jest.Mocked<typeof utils>
-
-// reset the counter on mock fn calls after every test
-beforeEach(() => jest.clearAllMocks())
-
-// use the actual method for sanitizing branch names
-const originalUtils = jest.requireActual('../utils')
-mockedUtils.getSanitizedBranchName.mockImplementation(originalUtils.getSanitizedBranchName)
+const mockedUtils = jest.mocked(utils)
 
 describe(`Cursor Deploy Action`, () => {
     test(
@@ -47,6 +40,7 @@ describe(`Cursor Deploy Action`, () => {
             })
 
             expect(output.treeHash).toBe(treeHash)
+            expect(output.branchLabel).toBe('master')
         }
     )
 
@@ -60,6 +54,7 @@ describe(`Cursor Deploy Action`, () => {
         `,
         async () => {
             const treeHash = '553b0cb96ac21ffc0583e5d8d72343b1faa90dfd'
+            const sanitizedBranch = 'lol-my-feature-branch-30-better'
             mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(treeHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(false)
 
@@ -74,12 +69,13 @@ describe(`Cursor Deploy Action`, () => {
 
             expectCursorFileUpdated({
                 treeHash: treeHash,
-                branch: 'lol-my-feature-branch-30-better',
+                branch: sanitizedBranch,
                 bucket: 'my-bucket',
                 key: 'deploys/lol-my-feature-branch-30-better'
             })
 
             expect(output.treeHash).toBe(treeHash)
+            expect(output.branchLabel).toBe(sanitizedBranch)
         }
     )
 
@@ -160,6 +156,7 @@ describe(`Cursor Deploy Action`, () => {
             })
 
             expect(output.treeHash).toBe(commitTreeHash)
+            expect(output.branchLabel).toBe('master')
         }
     )
 
@@ -211,6 +208,7 @@ describe(`Cursor Deploy Action`, () => {
             })
 
             expect(output.treeHash).toBe(commitTreeHash)
+            expect(output.branchLabel).toBe('master')
         }
     )
 
@@ -251,6 +249,7 @@ describe(`Cursor Deploy Action`, () => {
             })
 
             expect(output.treeHash).toBe(treeHash)
+            expect(output.branchLabel).toBe('master')
         }
     )
 
@@ -311,6 +310,34 @@ describe(`Cursor Deploy Action`, () => {
             expect(mockedUtils.removeFileFromS3).not.toHaveBeenCalled()
         }
     )
+})
+
+describe('Branch Sanitize - branchNameToHostnameLabel', () => {
+    test(`sanitizes a full git ref into a DNS-ready string`, async () => {
+        const output = branchNameToHostnameLabel('refs/heads/hello/world')
+        expect(output).toBe('hello-world')
+    })
+
+    test(`replaces all non-word characters with a dash`, async () => {
+        const output = branchNameToHostnameLabel(
+            'refs/heads/hello/world-100%_ready,for.this!here:it"a)b(c{d}e'
+        )
+        expect(output).toBe('hello-world-100-_ready-for-this-here-it-a-b-c-d-e')
+    })
+
+    test(`removes multiple dashes in a row`, async () => {
+        const output = branchNameToHostnameLabel(
+            'refs/heads/hello/my-very-weird_branch-100%%%-original'
+        )
+        expect(output).toBe('hello-my-very-weird_branch-100-original')
+    })
+
+    test(`caps the length of the sanitized name to 60 characters`, async () => {
+        const output = branchNameToHostnameLabel(
+            'refs/heads/hello/my-very-weird_branch-100-original-whoooohoooooo-lets-do_it'
+        )
+        expect(output).toBe('hello-my-very-weird_branch-100-original-whoooohoooooo-lets-d')
+    })
 })
 
 //#region Custom Assertions

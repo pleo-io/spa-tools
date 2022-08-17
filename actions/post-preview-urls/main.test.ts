@@ -1,6 +1,5 @@
 import {stripIndent as strip} from 'common-tags'
 import {postPreviewUrls} from './main'
-import * as utils from '../utils'
 import * as github from '@actions/github'
 
 jest.mock('../utils')
@@ -8,37 +7,25 @@ jest.mock('@actions/core')
 jest.mock('@actions/github')
 
 // just making sure the mock methods are correctly typed
-const mockedUtils = utils as jest.Mocked<typeof utils>
-const mockedGithub = github as jest.Mocked<typeof github>
-
-// reset the counter on mock fn calls after every test
-beforeEach(() => jest.clearAllMocks())
-
-// use the actual method for sanitizing branch names
-const originalUtils = jest.requireActual('../utils')
-mockedUtils.getSanitizedBranchName.mockImplementation(originalUtils.getSanitizedBranchName)
+const mockedGithub = jest.mocked(github)
 
 describe(`Post Preview URLs action`, () => {
     test(
         strip`
         When the PR does not yet have the preview links for the app
-        And there is no tree hash provided
-        It updates the PR description
-        And latest link is posted, marked as deploying
-        And the permalink is not posted and it's marked as deploying
+        It adds the links passed to the PR description
         `,
         async () => {
             const token = '1234'
             const mockRequest = jest.fn().mockResolvedValueOnce({
-                data: {
-                    body: 'Hello World!\n Some indent',
-                    head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
-                }
+                data: {body: 'Hello World!\n Some indent'}
             })
             mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
 
             await postPreviewUrls({
-                domain: 'app.example.com',
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature.app.example.com'}
+                ]),
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
@@ -46,31 +33,80 @@ describe(`Post Preview URLs action`, () => {
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
-            expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
-                body: strip`
+            expect(mockRequest).toHaveBeenLastCalledWith(
+                'PATCH /repos/{owner}/{repo}/pulls/{pull_number}',
+                {
+                    body: strip`
                     Hello World!
                      Some indent
-                    <!--app.example.com-preview-urls-do-not-change-below-->
+                    <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
-                    _Latest_: https://lol-my-feature-branch-30-better.app.example.com (Deploying... 🚧)
-                    _Current permalink_: (Deploying... 🚧)
-                    <!--app.example.com-preview-urls-do-not-change-above-->
+                    _Latest_: https://feature.app.example.com
+                    <!--app-preview-urls-do-not-change-above-->
                 `,
-                owner: 'my-org',
-                pull_number: 1,
-                repo: 'my-repo'
+                    owner: 'my-org',
+                    pull_number: 1,
+                    repo: 'my-repo'
+                }
+            )
+        }
+    )
+
+    test(
+        strip`
+        When the PR does not yet have the preview links for the app
+        And the links are requested as labels
+        It adds the links passed to the PR description
+        And renders the links as labels, hiding the URL
+        `,
+        async () => {
+            const token = '1234'
+            const mockRequest = jest.fn().mockResolvedValueOnce({
+                data: {body: 'Hello World!\n Some indent'}
             })
+            mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
+
+            await postPreviewUrls({
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature.app.example.com'},
+                    {
+                        name: 'Current Permalink',
+                        url: 'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com'
+                    }
+                ]),
+                token,
+                repo: {owner: 'my-org', repo: 'my-repo'},
+                prNumber: 1,
+                appName: '🤖 App',
+                asLabels: true
+            })
+
+            expect(mockedGithub.getOctokit).toBeCalledWith(token)
+            expect(mockRequest).toHaveBeenLastCalledWith(
+                'PATCH /repos/{owner}/{repo}/pulls/{pull_number}',
+                {
+                    body: strip`
+                    Hello World!
+                     Some indent
+                    <!--app-preview-urls-do-not-change-below-->
+                    ---
+                    **🤖 App preview links**
+                    [Latest](https://feature.app.example.com), [Current Permalink](https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com)
+                    <!--app-preview-urls-do-not-change-above-->
+                `,
+                    owner: 'my-org',
+                    pull_number: 1,
+                    repo: 'my-repo'
+                }
+            )
         }
     )
 
     test(
         strip`
         When the PR already has the preview links for the app
-        And there is no tree hash provided
-        It updates the PR description
-        And latest link is posted
-        And the permalink is not posted and it's marked as deploying
+        It updates the links in the PR description
         `,
         async () => {
             const token = '1234'
@@ -78,20 +114,21 @@ describe(`Post Preview URLs action`, () => {
                 data: {
                     body: strip`
                         Hello World!
-                        <!--app.example.com-preview-urls-do-not-change-below-->
+                         Some indent
+                        <!--app-preview-urls-do-not-change-below-->
                         ---
                         **🤖 App preview links**
-                        _Latest_: https://lol-my-feature-branch-30-better.app.example.com (Deploying... 🚧)
-                        _Current permalink_: (Deploying... 🚧)
-                        <!--app.example.com-preview-urls-do-not-change-above-->
-                    `,
-                    head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
+                        _Latest_: https://feature.app.example.com
+                        <!--app-preview-urls-do-not-change-above-->
+                    `
                 }
             })
             mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
 
             await postPreviewUrls({
-                domain: 'app.example.com',
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature-2.app.example.com'}
+                ]),
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
@@ -99,75 +136,79 @@ describe(`Post Preview URLs action`, () => {
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
-            expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
-                body: strip`
+            expect(mockRequest).toHaveBeenLastCalledWith(
+                'PATCH /repos/{owner}/{repo}/pulls/{pull_number}',
+                {
+                    body: strip`
                     Hello World!
-                    <!--app.example.com-preview-urls-do-not-change-below-->
+                     Some indent
+                    <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
-                    _Latest_: https://lol-my-feature-branch-30-better.app.example.com
-                    _Current permalink_: (Deploying... 🚧)
-                    <!--app.example.com-preview-urls-do-not-change-above-->
+                    _Latest_: https://feature-2.app.example.com
+                    <!--app-preview-urls-do-not-change-above-->
                 `,
-                owner: 'my-org',
-                pull_number: 1,
-                repo: 'my-repo'
-            })
+                    owner: 'my-org',
+                    pull_number: 1,
+                    repo: 'my-repo'
+                }
+            )
         }
     )
 
     test(
         strip`
-        When the PR already has the preview links for the app
-        And there is a tree hash provided
-        It updates the PR description
-        And latest link is posted
-        And the permalink is posted
+        When there are multiple links passed
+        It posts all links in the PR description
         `,
         async () => {
             const token = '1234'
-            const permalink =
-                'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com'
             const mockRequest = jest.fn().mockResolvedValueOnce({
                 data: {
                     body: strip`
                         Hello World!
-                        <!--app.example.com-preview-urls-do-not-change-below-->
+                        <!--app-preview-urls-do-not-change-below-->
                         ---
                         **🤖 App preview links**
-                        _Latest_: https://lol-my-feature-branch-30-better.app.example.com
-                        _Current permalink_: (Deploying... 🚧)
-                        <!--app.example.com-preview-urls-do-not-change-above-->
-                    `,
-                    head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
+                        _Latest_: https://feature.app.example.com
+                        <!--app-preview-urls-do-not-change-above-->
+                    `
                 }
             })
             mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
 
             await postPreviewUrls({
-                domain: 'app.example.com',
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature.app.example.com'},
+                    {
+                        name: 'Current Permalink',
+                        url: 'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com'
+                    }
+                ]),
                 token,
-                permalink,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
                 appName: '🤖 App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
-            expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
-                body: strip`
+            expect(mockRequest).toHaveBeenLastCalledWith(
+                'PATCH /repos/{owner}/{repo}/pulls/{pull_number}',
+                {
+                    body: strip`
                     Hello World!
-                    <!--app.example.com-preview-urls-do-not-change-below-->
+                    <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
-                    _Latest_: https://lol-my-feature-branch-30-better.app.example.com
-                    _Current permalink_: ${permalink}
-                    <!--app.example.com-preview-urls-do-not-change-above-->
+                    _Latest_: https://feature.app.example.com
+                    _Current Permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
+                    <!--app-preview-urls-do-not-change-above-->
                 `,
-                owner: 'my-org',
-                pull_number: 1,
-                repo: 'my-repo'
-            })
+                    owner: 'my-org',
+                    pull_number: 1,
+                    repo: 'my-repo'
+                }
+            )
         }
     )
 
@@ -179,18 +220,16 @@ describe(`Post Preview URLs action`, () => {
         `,
         async () => {
             const token = '1234'
-            const permalink =
-                'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com'
             const mockRequest = jest.fn().mockResolvedValueOnce({
                 data: {
                     body: strip`
                         Hello World!
-                        <!--app.example.com-preview-urls-do-not-change-below-->
+                        <!--app-preview-urls-do-not-change-below-->
                         ---
                         **🤖 App preview links**
-                        _Latest_: https://lol-my-feature-branch-30-better.app.example.com
-                        _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
-                        <!--app.example.com-preview-urls-do-not-change-above-->
+                        _Latest_: https://feature.app.example.com
+                        _Current Permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
+                        <!--app-preview-urls-do-not-change-above-->
                     `,
                     head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
                 }
@@ -198,35 +237,43 @@ describe(`Post Preview URLs action`, () => {
             mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
 
             await postPreviewUrls({
-                domain: 'storybook.example.com',
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature.storybook.example.com'},
+                    {
+                        name: 'Current Permalink',
+                        url: 'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com'
+                    }
+                ]),
                 token,
-                permalink,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
                 appName: '🤖 Storybook'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
-            expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
-                body: strip`
+            expect(mockRequest).toHaveBeenLastCalledWith(
+                'PATCH /repos/{owner}/{repo}/pulls/{pull_number}',
+                {
+                    body: strip`
                         Hello World!
-                        <!--app.example.com-preview-urls-do-not-change-below-->
+                        <!--app-preview-urls-do-not-change-below-->
                         ---
                         **🤖 App preview links**
-                        _Latest_: https://lol-my-feature-branch-30-better.app.example.com
-                        _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
-                        <!--app.example.com-preview-urls-do-not-change-above-->
-                        <!--storybook.example.com-preview-urls-do-not-change-below-->
+                        _Latest_: https://feature.app.example.com
+                        _Current Permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
+                        <!--app-preview-urls-do-not-change-above-->
+                        <!--storybook-preview-urls-do-not-change-below-->
                         ---
                         **🤖 Storybook preview links**
-                        _Latest_: https://lol-my-feature-branch-30-better.storybook.example.com
-                        _Current permalink_: ${permalink}
-                        <!--storybook.example.com-preview-urls-do-not-change-above-->
+                        _Latest_: https://feature.storybook.example.com
+                        _Current Permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com
+                        <!--storybook-preview-urls-do-not-change-above-->
                     `,
-                owner: 'my-org',
-                pull_number: 1,
-                repo: 'my-repo'
-            })
+                    owner: 'my-org',
+                    pull_number: 1,
+                    repo: 'my-repo'
+                }
+            )
         }
     )
 
@@ -239,24 +286,22 @@ describe(`Post Preview URLs action`, () => {
         `,
         async () => {
             const token = '1234'
-            const permalink =
-                'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com'
             const mockRequest = jest.fn().mockResolvedValueOnce({
                 data: {
                     body: strip`
                     Hello World!
-                    <!--storybook.example.com-preview-urls-do-not-change-below-->
+                    <!--storybook-preview-urls-do-not-change-below-->
                     ---
                     **🤖 Storybook preview links**
-                    _Latest_: https://lol-my-feature-branch-30-better.storybook.example.com
-                    _Current permalink_:https://preview-0ce99f79fa377f39248fa0633b21bdb130728674.storybook.example.com
-                    <!--storybook.example.com-preview-urls-do-not-change-above-->
-                    <!--app.example.com-preview-urls-do-not-change-below-->
+                    _Latest_: https://feature.storybook.example.com
+                    _Current Permalink_: https://preview-0ce99f79fa377f39248fa0633b21bdb130728674.storybook.example.com
+                    <!--storybook-preview-urls-do-not-change-above-->
+                    <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
-                    _Latest_: https://lol-my-feature-branch-30-better.app.example.com
-                    _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
-                    <!--app.example.com-preview-urls-do-not-change-above-->
+                    _Latest_: https://feature.app.example.com
+                    _Current Permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
+                    <!--app-preview-urls-do-not-change-above-->
                 `,
                     head: {ref: 'refs/heads/lol/my-feature-branch-30%-better'}
                 }
@@ -264,9 +309,14 @@ describe(`Post Preview URLs action`, () => {
             mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
 
             await postPreviewUrls({
-                domain: 'storybook.example.com',
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature.storybook.example.com'},
+                    {
+                        name: 'Current Permalink',
+                        url: 'https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com'
+                    }
+                ]),
                 token,
-                permalink,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
                 appName: '📚 Storybook'
@@ -276,18 +326,18 @@ describe(`Post Preview URLs action`, () => {
             expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
                 body: strip`
                 Hello World!
-                <!--storybook.example.com-preview-urls-do-not-change-below-->
+                <!--storybook-preview-urls-do-not-change-below-->
                 ---
                 **📚 Storybook preview links**
-                _Latest_: https://lol-my-feature-branch-30-better.storybook.example.com
-                _Current permalink_: ${permalink}
-                <!--storybook.example.com-preview-urls-do-not-change-above-->
-                <!--app.example.com-preview-urls-do-not-change-below-->
+                _Latest_: https://feature.storybook.example.com
+                _Current Permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.storybook.example.com
+                <!--storybook-preview-urls-do-not-change-above-->
+                <!--app-preview-urls-do-not-change-below-->
                 ---
                 **🤖 App preview links**
-                _Latest_: https://lol-my-feature-branch-30-better.app.example.com
-                _Current permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
-                <!--app.example.com-preview-urls-do-not-change-above-->
+                _Latest_: https://feature.app.example.com
+                _Current Permalink_: https://preview-c819fdae556e892d5d25de24db6bd6997e673ec6.app.example.com
+                <!--app-preview-urls-do-not-change-above-->
             `,
                 owner: 'my-org',
                 pull_number: 1,

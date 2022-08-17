@@ -8,10 +8,7 @@ jest.mock('@actions/core')
 jest.mock('@actions/github')
 
 // just making sure the mock methods are correctly typed
-const mockedUtils = utils as jest.Mocked<typeof utils>
-
-// reset the counter on mock fn calls after every test
-beforeEach(() => jest.clearAllMocks())
+const mockedUtils = jest.mocked(utils)
 
 describe(`Translation Cursor Deploy Action`, () => {
     test(

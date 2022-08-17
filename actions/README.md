@@ -7,10 +7,11 @@ which help implementing a CI/CD pipeline described in this repository.
 
 ## Actions
 
-| Name                                     | Description                                                            |
-| ---------------------------------------- | ---------------------------------------------------------------------- |
-| [cursor-deploy](./cursor-deploy)         | Performs a deployment by updating a cursor file in an S3 bucket.       |
-| [post-preview-urls](./post-preview-urls) | Update PR description with the links to the latest preview deployment. |
+| Name                                                     | Description                                                                              |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------- | --- |
+| [cursor-deploy](./cursor-deploy)                         | Performs a deployment by updating a cursor file in an S3 bucket.                         |
+| [post-preview-urls](./post-preview-urls)                 | Update PR description with the links to the latest preview deployment.                   |     |
+| [translation-cursor-deploy](./translation-cursor-deploy) | Performs a deployment by updating a cursor file in an S3 bucket - used for translations. |
 
 ## Contributing
 

@@ -102,28 +102,6 @@ export async function runAction(action: () => Promise<unknown>) {
 }
 
 /**
- * Retrieve and convert the current git branch name to a string that is safe
- * for use as a S3 file key and a URL segment
- * @returns branchName
- */
-export function getSanitizedBranchName(ref: string) {
-    const branchName = ref
-        .split('refs/heads/')
-        .pop()
-        ?.replace(/[^\w]/gi, '-') // replace all non-word characters with a "-"
-        .replace(/-{2,}/gi, '-') // get rid of multiple consecutive "-"
-        .toLowerCase()
-        .slice(0, 60)
-        .trim()
-
-    if (!branchName) {
-        throw new Error('Invalid context, could not calculate sanitized branch name')
-    }
-
-    return branchName
-}
-
-/**
  * Validate if the passed git commit hash is present on the current branch
  * @param commitHash - commit hash to validate
  * @returns isHeadAncestor
