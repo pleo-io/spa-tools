@@ -313,26 +313,26 @@ describe(`Cursor Deploy Action`, () => {
 })
 
 describe('Branch Sanitize - branchNameToHostnameLabel', () => {
-    test(`sanitizes a full git ref into a DNS-ready string`, async () => {
+    it(`sanitizes a full git ref into a DNS-ready string`, async () => {
         const output = branchNameToHostnameLabel('refs/heads/hello/world')
         expect(output).toBe('hello-world')
     })
 
-    test(`replaces all non-word characters with a dash`, async () => {
+    it(`replaces all non-word characters with a dash`, async () => {
         const output = branchNameToHostnameLabel(
             'refs/heads/hello/world-100%_ready,for.this!here:it"a)b(c{d}e'
         )
         expect(output).toBe('hello-world-100-_ready-for-this-here-it-a-b-c-d-e')
     })
 
-    test(`removes multiple dashes in a row`, async () => {
+    it(`removes multiple dashes in a row`, async () => {
         const output = branchNameToHostnameLabel(
             'refs/heads/hello/my-very-weird_branch-100%%%-original'
         )
         expect(output).toBe('hello-my-very-weird_branch-100-original')
     })
 
-    test(`caps the length of the sanitized name to 60 characters`, async () => {
+    it(`caps the length of the sanitized name to 60 characters`, async () => {
         const output = branchNameToHostnameLabel(
             'refs/heads/hello/my-very-weird_branch-100-original-whoooohoooooo-lets-do_it'
         )
