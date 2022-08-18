@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v5.1.0...v6.0.0) (2022-08-18)
+
+
+### Features
+
+* Make "Post Preview URLs" action more generic ([#19](https://github.com/pleo-oss/pleo-spa-cicd/issues/19)) ([f5fa08f](https://github.com/pleo-oss/pleo-spa-cicd/commit/f5fa08f731b6b84eea3628ee7328d1a1ad4a54f6))
+
+
+### BREAKING CHANGES
+
+* The post preview url actions now takes a JSON definition of links to post
+
 # [5.1.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v5.0.0...v5.1.0) (2022-07-27)
 
 
