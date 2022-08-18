@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/pleo-oss/pleo-spa-cicd/compare/v6.0.0...v6.0.1) (2022-08-18)
+
+
+### Bug Fixes
+
+* Fix version of actions in the workflow ([#20](https://github.com/pleo-oss/pleo-spa-cicd/issues/20)) ([87c7fd6](https://github.com/pleo-oss/pleo-spa-cicd/commit/87c7fd613300518e540f166d87ed1b653acfd8fc))
+
 # [6.0.0](https://github.com/pleo-oss/pleo-spa-cicd/compare/v5.1.0...v6.0.0) (2022-08-18)
 
 
