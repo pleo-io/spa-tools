@@ -16,7 +16,6 @@ import {
     removeFileFromS3,
     runAction,
     getCurrentRepoTreeHash,
-    getSanitizedBranchName,
     isHeadAncestor,
     getTreeHashForCommitHash
 } from '../utils'
@@ -37,6 +36,7 @@ runAction(async () => {
     })
 
     core.setOutput('tree_hash', output.treeHash)
+    core.setOutput('branch_label', output.branchLabel)
 })
 
 interface CursorDeployActionArgs {
@@ -53,11 +53,11 @@ export async function cursorDeploy({
     rollbackCommitHash
 }: CursorDeployActionArgs) {
     const deployMode = getDeployMode(deployModeInput)
-    const branchName = getSanitizedBranchName(ref)
+    const branchLabel = branchNameToHostnameLabel(ref)
     const treeHash = await getDeploymentHash(deployMode, rollbackCommitHash)
 
-    const rollbackKey = `rollbacks/${branchName}`
-    const deployKey = `deploys/${branchName}`
+    const rollbackKey = `rollbacks/${branchLabel}`
+    const deployKey = `deploys/${branchLabel}`
 
     if (deployMode === 'default' || deployMode === 'unblock') {
         const rollbackFileExists = await fileExistsInS3({bucket, key: rollbackKey})
@@ -66,37 +66,37 @@ export async function cursorDeploy({
         // rollback for the branch we're deploying. Active rollback prevents automatic
         // deployments and requires an explicit unblocking deployment to resume them.
         if (deployMode === 'default' && rollbackFileExists) {
-            throw new Error(`${branchName} is currently blocked due to an active rollback.`)
+            throw new Error(`${branchLabel} is currently blocked due to an active rollback.`)
         }
 
         // If we're unblocking a branch after a rollback, it only makes sense if there is an
         // active rollback
         if (deployMode === 'unblock' && !rollbackFileExists) {
-            throw new Error(`${branchName} does not have an active rollback, you can't unblock.`)
+            throw new Error(`${branchLabel} does not have an active rollback, you can't unblock.`)
         }
     }
 
     // Perform the deployment by updating the cursor file for the current branch to point
     // to the desired tree hash
-    await writeLineToFile({text: treeHash, path: branchName})
-    await copyFileToS3({path: branchName, bucket, key: deployKey})
-    core.info(`Tree hash ${treeHash} is now the active deployment for ${branchName}.`)
+    await writeLineToFile({text: treeHash, path: branchLabel})
+    await copyFileToS3({path: branchLabel, bucket, key: deployKey})
+    core.info(`Tree hash ${treeHash} is now the active deployment for ${branchLabel}.`)
 
     // If we're doing a rollback deployment we create a rollback file that blocks any following
     // deployments from going through.
     if (deployMode === 'rollback') {
-        await copyFileToS3({path: branchName, bucket, key: rollbackKey})
-        core.info(`${branchName} marked as rolled back, automatic deploys paused.`)
+        await copyFileToS3({path: branchLabel, bucket, key: rollbackKey})
+        core.info(`${branchLabel} marked as rolled back, automatic deploys paused.`)
     }
 
     // If we're doing an unblock deployment, we delete the rollback file to allow the following
     // deployments to go through
     if (deployMode === 'unblock') {
         await removeFileFromS3({bucket, key: rollbackKey})
-        core.info(`${branchName} has automatic deploys resumed.`)
+        core.info(`${branchLabel} has automatic deploys resumed.`)
     }
 
-    return {treeHash}
+    return {treeHash, branchLabel}
 }
 
 /**
@@ -143,4 +143,21 @@ async function getDeploymentHash(deployMode: DeployMode, rollbackCommitHash?: st
     const treeHash = await getCurrentRepoTreeHash()
     core.info(`Using current root tree hash ${treeHash}`)
     return treeHash
+}
+
+export function branchNameToHostnameLabel(ref: string) {
+    const hostnameLabel = ref
+        ?.split('refs/heads/')
+        .pop()
+        ?.replace(/[^\w]/gi, '-') // replace all non-word characters with a "-"
+        .replace(/-{2,}/gi, '-') // get rid of multiple consecutive "-"
+        .toLowerCase()
+        .slice(0, 60)
+        .trim()
+
+    if (!hostnameLabel) {
+        throw new Error('Could not get a valid hostname label from branch name')
+    }
+
+    return hostnameLabel
 }

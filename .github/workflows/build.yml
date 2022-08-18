@@ -1,3 +1,5 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
 name: Build
 
 on:
@@ -77,6 +79,13 @@ jobs:
         id: bundle-uri
         run: |
           echo "::set-output name=uri::s3://${{ inputs.bucket_name }}/bundles/${{ github.repository }}/${{ inputs.app_name }}/${{ steps.s3-cache.outputs.hash }}.tar.gz"
+
+      - uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-region: eu-west-1
 
       - name: Compress & Upload Bundle
         if: steps.s3-cache.outputs.processed == 'false'

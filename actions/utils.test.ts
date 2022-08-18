@@ -1,6 +1,5 @@
 import * as utils from './utils'
 import {exec} from '@actions/exec'
-import * as core from '@actions/core'
 
 jest.mock('@actions/core')
 jest.mock('@actions/exec')
@@ -91,34 +90,6 @@ describe(`Actions Utils`, () => {
             mockedExec.mockResolvedValue(0)
             await utils.removeFileFromS3({key: 'my/key', bucket: 'my-bucket'})
             expect(mockedExec).toHaveBeenCalledWith('aws s3 rm', ['s3://my-bucket/my/key'])
-        })
-    })
-
-    describe('Branch Sanitize - getSanitizedBranchName', () => {
-        test(`sanitizes a full git ref into a DNS-ready string`, async () => {
-            const output = utils.getSanitizedBranchName('refs/heads/hello/world')
-            expect(output).toBe('hello-world')
-        })
-
-        test(`replaces all non-word characters with a dash`, async () => {
-            const output = utils.getSanitizedBranchName(
-                'refs/heads/hello/world-100%_ready,for.this!here:it"a)b(c{d}e'
-            )
-            expect(output).toBe('hello-world-100-_ready-for-this-here-it-a-b-c-d-e')
-        })
-
-        test(`removes multiple dashes in a row`, async () => {
-            const output = utils.getSanitizedBranchName(
-                'refs/heads/hello/my-very-weird_branch-100%%%-original'
-            )
-            expect(output).toBe('hello-my-very-weird_branch-100-original')
-        })
-
-        test(`caps the length of the sanitized name to 60 characters`, async () => {
-            const output = utils.getSanitizedBranchName(
-                'refs/heads/hello/my-very-weird_branch-100-original-whoooohoooooo-lets-do_it'
-            )
-            expect(output).toBe('hello-my-very-weird_branch-100-original-whoooohoooooo-lets-d')
         })
     })
 })
