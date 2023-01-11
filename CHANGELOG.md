@@ -1,3 +1,10 @@
+## [6.0.2](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.1...v6.0.2) (2023-01-11)
+
+
+### Bug Fixes
+
+* Use GH Hosted Runners, remove mentions of pleo-oss ([#23](https://github.com/pleo-io/pleo-spa-cicd/issues/23)) ([37b31bd](https://github.com/pleo-io/pleo-spa-cicd/commit/37b31bdeecba74de94fe970bd6d0b6cd043aa8d2))
+
 ## [6.0.1](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.0...v6.0.1) (2022-08-18)
 
 ### Bug Fixes
