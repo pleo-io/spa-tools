@@ -51,7 +51,7 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: [self-hosted, universal]
+    runs-on: ubuntu-22.04
     environment:
       name: ${{ inputs.environment  }}
       url: ${{ steps.deployment-url.outputs.url }}
