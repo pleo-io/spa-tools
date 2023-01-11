@@ -47,7 +47,7 @@ action in a step prior to running this action to ensure that's the case.
 ```yml
 - name: Update the cursor file
   id: deployment
-  uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v6
+  uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6
   with:
       bucket_name: my-s3-bucket
 ```
@@ -83,7 +83,7 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             - name: Update Cursor File
-              uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v6
+              uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6
               with:
                   bucket_name: my-origin-bucket
                   rollback_commit_hash: ${{ github.event.inputs.sha }}
@@ -107,7 +107,7 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             - name: Update Cursor File
-              uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v6
+              uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6
               with:
                   bucket_name: my-origin-bucket
                   deploy_mode: update
