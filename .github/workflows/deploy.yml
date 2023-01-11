@@ -114,12 +114,12 @@ jobs:
 
       - name: Update Cursor File
         id: cursor-update
-        uses: pleo-oss/pleo-spa-cicd/actions/cursor-deploy@v6.0.0
+        uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6.0.0
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: pleo-oss/pleo-spa-cicd/actions/post-preview-urls@v6.0.0
+        uses: pleo-io/pleo-spa-cicd/actions/post-preview-urls@v6.0.0
         if: github.event_name == 'pull_request'
         with:
           app_name: ${{ inputs.app_name }}
