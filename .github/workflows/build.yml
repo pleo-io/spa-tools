@@ -37,7 +37,7 @@ on:
 jobs:
   build:
     name: Build & Upload
-    runs-on: [self-hosted, universal]
+    runs-on: ubuntu-22.04
     outputs:
       tree_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
