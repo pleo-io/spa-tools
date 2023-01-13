@@ -1,9 +1,10 @@
 ## [6.0.2](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.1...v6.0.2) (2023-01-11)
 
-
 ### Bug Fixes
 
-* Use GH Hosted Runners, remove mentions of pleo-oss ([#23](https://github.com/pleo-io/pleo-spa-cicd/issues/23)) ([37b31bd](https://github.com/pleo-io/pleo-spa-cicd/commit/37b31bdeecba74de94fe970bd6d0b6cd043aa8d2))
+- Use GH Hosted Runners, remove mentions of pleo-io
+  ([#23](https://github.com/pleo-io/pleo-spa-cicd/issues/23))
+  ([37b31bd](https://github.com/pleo-io/pleo-spa-cicd/commit/37b31bdeecba74de94fe970bd6d0b6cd043aa8d2))
 
 ## [6.0.1](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.0...v6.0.1) (2022-08-18)
 
@@ -37,14 +38,14 @@
 
 ### Features
 
-- Get rid of S3 Cache Action (moved to pleo-oss/s3-cache-action)
+- Get rid of S3 Cache Action (moved to pleo-io/s3-cache-action)
   ([#17](https://github.com/pleo-io/pleo-spa-cicd/issues/17))
   ([97c4836](https://github.com/pleo-io/pleo-spa-cicd/commit/97c48367a7daff67888db74252828aa1482688a1))
 
 ### BREAKING CHANGES
 
 - The S3 cache action is no longer available in this repository. Use the
-  standalone version available at pleo-oss/s3-cache-action
+  standalone version available at pleo-io/s3-cache-action
 
 # [4.0.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v3.1.0...v4.0.0) (2022-07-05)
 
