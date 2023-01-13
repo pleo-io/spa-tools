@@ -1,3 +1,10 @@
+## [6.0.3](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.2...v6.0.3) (2023-01-13)
+
+
+### Bug Fixes
+
+* Use cache action from pleo-io ([#25](https://github.com/pleo-io/pleo-spa-cicd/issues/25)) ([3702056](https://github.com/pleo-io/pleo-spa-cicd/commit/37020564ec9967d6392b23fccb2a0bf53d807175))
+
 ## [6.0.2](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.1...v6.0.2) (2023-01-11)
 
 ### Bug Fixes
