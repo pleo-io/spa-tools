@@ -70,7 +70,7 @@ jobs:
       - name: Get Deployment URL
         id: deployment-url
         run: |
-          SUBDOMAIN=$([[ $GITHUB_REF = "refs/heads/master" ]] && echo "" || echo "preview-${{ inputs.tree_hash }}.")
+          SUBDOMAIN=$([[ $GITHUB_REF = "refs/heads/master" || $GITHUB_REF = "refs/heads/main" ]] && echo "" || echo "preview-${{ inputs.tree_hash }}.")
           echo "::set-output name=url::https://${SUBDOMAIN}${{ inputs.domain_name }}"
 
       - name: Setup AWS Credentials for Registry Bucket Access
