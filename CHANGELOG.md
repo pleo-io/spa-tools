@@ -1,3 +1,10 @@
+# [6.1.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.3...v6.1.0) (2023-02-16)
+
+
+### Features
+
+* Support "master" and "main" as the default branch ([#27](https://github.com/pleo-io/pleo-spa-cicd/issues/27)) ([a7622f8](https://github.com/pleo-io/pleo-spa-cicd/commit/a7622f80d3dce770bae9619bbae72d4f844522f6))
+
 ## [6.0.3](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.2...v6.0.3) (2023-01-13)
 
 
