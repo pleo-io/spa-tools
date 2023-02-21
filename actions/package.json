@@ -2,6 +2,9 @@
     "private": true,
     "name": "pleo-spa-cdicd-actions",
     "version": "0.0.0",
+    "scripts": {
+        "preinstall": "npx only-allow pnpm"
+    },
     "dependencies": {
         "@actions/core": "1.9.1",
         "@actions/exec": "1.1.1",
