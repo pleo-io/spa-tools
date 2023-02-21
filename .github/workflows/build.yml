@@ -70,7 +70,7 @@ jobs:
 
       - name: Install Dependencies
         if: steps.s3-cache.outputs.processed == 'false'
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
 
