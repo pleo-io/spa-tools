@@ -1,3 +1,21 @@
+# [7.0.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.1.0...v7.0.0) (2023-02-22)
+
+
+### Features
+
+* Switch from yarn to pnpm ([#26](https://github.com/pleo-io/pleo-spa-cicd/issues/26)) ([0b4bab1](https://github.com/pleo-io/pleo-spa-cicd/commit/0b4bab19f4a83f60fc0c11b2df62c32d373ab80f))
+
+
+### BREAKING CHANGES
+
+* using pnpm
+
+* feat: Switch pleo-spa-cicd to pnpm
+
+* chore: Update dist
+
+* chore: Use --ignore-scripts
+
 # [6.1.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.0.3...v6.1.0) (2023-02-16)
 
 
