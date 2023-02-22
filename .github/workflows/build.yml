@@ -55,19 +55,22 @@ jobs:
             ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
-      - uses: actions/setup-node@v3.4.1
+      - uses: pnpm/action-setup@v2
+        if: steps.s3-cache.outputs.processed == 'false'
+        with:
+          version: 7
+
+      - uses: actions/setup-node@v3.6.0
         if: steps.s3-cache.outputs.processed == 'false'
         with:
           node-version: "16"
           registry-url: "https://npm.pkg.github.com"
           scope: ${{ inputs.registry_scope }}
+          cache: "pnpm"
 
       - name: Install Dependencies
         if: steps.s3-cache.outputs.processed == 'false'
-        uses: bahmutov/npm-install@v1.8.17
-        with:
-          useRollingCache: true
-          install-command: yarn --frozen-lockfile --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
 

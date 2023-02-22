@@ -20,14 +20,19 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.0.2
-      - uses: actions/setup-node@v3.4.1
+      - uses: actions/checkout@v3.1.0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
+      - uses: actions/setup-node@v3.6.0
         with:
           node-version: "16"
-          cache: "yarn"
-          cache-dependency-path: actions/yarn.lock
+          cache: "pnpm"
+          cache-dependency-path: actions/pnpm-lock.yaml
 
-      - run: yarn --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: make test
       - run: make lint
       - run: make build
