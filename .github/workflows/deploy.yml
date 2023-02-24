@@ -139,3 +139,7 @@ jobs:
         with:
           name: bundle-${{ inputs.tree_hash }}
           path: bundle.tar.gz
+
+      - name: Verify app deployment
+        # We expect "Inject Environment Config" to insert the version in the HTML.
+        run: curl --silent --show-error ${{ steps.deployment-url.outputs.url }} | grep -q ${{ inputs.tree_hash }}
