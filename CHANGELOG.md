@@ -1,3 +1,10 @@
+## [7.1.1](https://github.com/pleo-io/pleo-spa-cicd/compare/v7.1.0...v7.1.1) (2023-02-24)
+
+
+### Bug Fixes
+
+* Only run verification if config was injected ([#29](https://github.com/pleo-io/pleo-spa-cicd/issues/29)) ([82b30ff](https://github.com/pleo-io/pleo-spa-cicd/commit/82b30ff19b592761e61370fd46c33e4e4092d9a1))
+
 # [7.1.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v7.0.0...v7.1.0) (2023-02-24)
 
 
