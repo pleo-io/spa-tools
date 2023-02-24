@@ -1,3 +1,10 @@
+# [7.1.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v7.0.0...v7.1.0) (2023-02-24)
+
+
+### Features
+
+* Verify deployment by checking for tree hash injection ([#28](https://github.com/pleo-io/pleo-spa-cicd/issues/28)) ([aa8b356](https://github.com/pleo-io/pleo-spa-cicd/commit/aa8b35624bc3702929a5c460a8bf8ddeff3169f5))
+
 # [7.0.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v6.1.0...v7.0.0) (2023-02-22)
 
 
