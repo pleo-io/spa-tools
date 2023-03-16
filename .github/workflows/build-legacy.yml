@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        required: true
+        description: "Name of the app, unique for the repo, kebab-cased"
+        type: string
+      bucket_name:
+        required: true
+        description: "Name of the S3 registry bucket"
+        type: string
+      build_dir:
+        required: true
+        description: "Location of the deploy bundle after build"
+        type: string
+      build_cmd:
+        required: true
+        description: "Command for building the deploy bundle"
+        type: string
+      registry_scope:
+        required: false
+        default: "@pleo-io"
+        description: "Org scope for the GitHub Package Registry"
+        type: string
+    outputs:
+      tree_hash:
+        description: "Tree hash of the code built"
+        value: ${{ jobs.build.outputs.tree_hash }}
+      bundle_uri:
+        description: "S3 URI of the bundle in the registry bucket"
+        value: ${{ jobs.build.outputs.bundle_uri }}
+
+jobs:
+  build:
+    name: Build & Upload
+    runs-on: ubuntu-22.04
+    outputs:
+      tree_hash: ${{ steps.s3-cache.outputs.hash }}
+      bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
+    steps:
+      - uses: actions/checkout@v3.0.2
+
+      - name: Check S3 Cache
+        uses: pleo-io/s3-cache-action@v2.0.1
+        id: s3-cache
+        with:
+          bucket-name: ${{ inputs.bucket_name }}
+          key-prefix: build/${{ inputs.app_name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-region: eu-west-1
+
+      - uses: actions/setup-node@v3.6.0
+        if: steps.s3-cache.outputs.processed == 'false'
+        with:
+          node-version: "16"
+          registry-url: "https://npm.pkg.github.com"
+          scope: ${{ inputs.registry_scope }}
+
+      - name: Install Dependencies
+        if: steps.s3-cache.outputs.processed == 'false'
+        uses: bahmutov/npm-install@v1.8.17
+        with:
+          useRollingCache: true
+          install-command: yarn --frozen-lockfile --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
+
+      - name: Build
+        if: steps.s3-cache.outputs.processed == 'false'
+        run: ${{ inputs.build_cmd }}
+
+      - name: Get Bundle S3 URI
+        id: bundle-uri
+        run: |
+          echo "::set-output name=uri::s3://${{ inputs.bucket_name }}/bundles/${{ github.repository }}/${{ inputs.app_name }}/${{ steps.s3-cache.outputs.hash }}.tar.gz"
+
+      - uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-region: eu-west-1
+
+      - name: Compress & Upload Bundle
+        if: steps.s3-cache.outputs.processed == 'false'
+        run: |
+          tar -zcvf bundle.tar.gz -C ${{ inputs.build_dir }} .
+          aws s3 cp bundle.tar.gz ${{ steps.bundle-uri.outputs.uri }}
