@@ -5,6 +5,10 @@
     "scripts": {
         "preinstall": "npx only-allow pnpm"
     },
+    "engines": {
+        "node": "16.x",
+        "pnpm": "8.x"
+    },
     "dependencies": {
         "@actions/core": "1.9.1",
         "@actions/exec": "1.1.1",
