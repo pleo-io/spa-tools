@@ -143,4 +143,6 @@ jobs:
       - name: Verify app deployment
         if: inputs.inject_config_cmd
         # We expect the injection to insert the version in the HTML.
-        run: curl --silent --show-error ${{ steps.deployment-url.outputs.url }} | grep -q ${{ inputs.tree_hash }}
+        run:
+          curl --silent --show-error ${{ steps.deployment-url.outputs.url }} |
+          grep -q ${{ inputs.tree_hash }}
