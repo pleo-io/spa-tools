@@ -38,7 +38,7 @@ jobs:
             cmp --silent .github/workflows/$filename $file || (echo "::error::When editing reusable workflows, update both \`reusable-workflows\` and \`.github/workflows\` for file: $filename" && exit 1)
           done
 
-  test_actions:
+  test-actions:
     name: Check actions
     runs-on: ubuntu-22.04
     defaults:
