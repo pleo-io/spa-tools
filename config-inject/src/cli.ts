@@ -12,74 +12,32 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 
 import merge from 'lodash.merge'
-import {Command} from '@commander-js/extra-typings'
 import {loadConfig} from './shared/load-config'
 import {assertExists} from './shared/assert-exists'
 import {getMinifiedConfig} from './shared/get-minified-config'
 import {STRING_TO_REPLACE} from './shared/constants'
-
-const config = loadConfig()
-
-/**
-Initializes the command-line interface for the program.
-*/
-const program = new Command()
-    .name('spa-config-inject')
-    .description('Apply configuration to an SPA HTML template file')
-    .requiredOption('--env <env>', 'The environment of the config to inject', process.env.SPA_ENV)
-    .option(
-        '--dynamic-config <dynamicConfig>',
-        'Dynamic config override',
-        process.env.SPA_CONFIG_OVERRIDE
-    )
-    .option(
-        '--build-dir <buildDir>',
-        'The location of the HTML template file',
-        config.buildDir ?? process.env.SPA_BUNDLE_DIR
-    )
-    .option(
-        '--config-dir <configDir>',
-        'Location of the configuration files',
-        config.configDir ?? process.env.SPA_CONFIG_DIR
-    )
-    .option(
-        '--template <template>',
-        'The name of the template HTML file (relative to build dir)',
-        config.templateFileName ?? process.env.SPA_TEMPLATE_FILE_NAME
-    )
-    .option(
-        '--output <output>',
-        'The name of the output HTML file (relative to build dir)',
-        config.outputFileName ?? process.env.SPA_OUTPUT_FILE_NAME
-    )
+import assert from 'node:assert'
 
 /**
 Main function that parses the command-line options and injects the config
 into the HTML template file.
+@param cliEnv - The environment of the config to inject, passed via CLI argument
 */
-async function run() {
-    const {
+async function run(cliEnv: string) {
+    const {buildDir, templateFileName, outputFileName, configDir} = loadConfig()
+    const dynamicConfigJSON = process.env.SPA_CONFIG_OVERRIDE
+    const env = cliEnv ?? process.env.SPA_ENV
+
+    assert(env, 'Provide the environment name as an option or via SPA_ENV env variable')
+
+    await injectConfig({
         buildDir,
-        template: templateFileName,
-        output: outputFileName,
+        templateFileName,
+        outputFileName,
         configDir,
         env,
-        dynamicConfig: dynamicConfigJSON
-    } = program.parse().opts()
-
-    try {
-        await injectConfig({
-            buildDir,
-            templateFileName,
-            outputFileName,
-            configDir,
-            env,
-            dynamicConfigJSON
-        })
-    } catch (e: any) {
-        console.error(`🛑 An error occurred: ${e.message}`)
-        process.exit(1)
-    }
+        dynamicConfigJSON
+    })
 }
 
 /**
@@ -98,7 +56,7 @@ async function injectConfig(opts: {
     outputFileName: string
     configDir: string
     env: string
-    dynamicConfigJSON: string
+    dynamicConfigJSON?: string
 }) {
     assertExists(opts.buildDir, {dir: true})
     assertExists(opts.configDir, {dir: true})
@@ -114,7 +72,6 @@ async function injectConfig(opts: {
     let dynamicConfig: null | object = null
     if (opts.dynamicConfigJSON) {
         try {
-            console.log(opts.dynamicConfigJSON)
             dynamicConfig = JSON.parse(opts.dynamicConfigJSON)
         } catch (e) {
             throw new Error(`Dynamic config cannot be parsed as JSON`)
@@ -131,4 +88,7 @@ async function injectConfig(opts: {
     await fs.promises.writeFile(outputPath, htmlWithConfig)
 }
 
-run()
+run(process.argv[2]).catch((error) => {
+    console.error(`🛑 An error occurred: ${error.message}`)
+    process.exit(1)
+})

@@ -1,16 +1,18 @@
 ## scripts/app-config
 
-SPA Config Inject is a command-line tool that helps you apply configurations to Single Page
-Application (SPA) HTML template files. This allows you to build environment-agnostic bundles once
-and then deploy the same bundle to different environments. This saves CI/CD time and ensures you
-deploy the same code you tested.
+SPA Config Inject is set of tools that help you apply configurations to Single Page Application
+(SPA) HTML template files. This allows you to build environment-agnostic bundles once and then
+deploy the same bundle to different environments. This saves CI/CD time and ensures you deploy the
+same code you tested.
 
-Given the location of the SPA index HTML file this script reads the config file and inlines the
-config as a string within the HTML file in a selected slot. The interpolated file is saved and ready
-for deployment.
+Available tools are:
 
-In development a Vite plugin injects dev configuration. It's possible to selectively override the
-default dev config via a git-ignored override file.
+-   **CLI** Given the location of the SPA index HTML file this script reads the config file and
+    inlines the config as a string within the HTML file in a selected slot. The interpolated file is
+    saved and ready for deployment.
+-   **Vite Plugin** In development a Vite plugin injects dev configuration. It's possible to
+    selectively override the default dev config via a git-ignored override file.
+-   **Runtime config helper** Allows you to easily extract and use the injected config in your app.
 
 ## Installation
 
@@ -20,12 +22,14 @@ $ pnpm add @pleo-io/spa-config-inject
 
 ## Project Setup
 
+> See the `example` directory for a sample project that uses this package in a recommended way.
+
 Your SPA project needs to fulfill a few assumptions:
 
 -   Configuration files as `mjs` modules under a common directory, following `config.{env}.mjs`
-    naming convention. Config modules have a `config` name export which is an object containing
+    naming convention. Config modules have a `config` named export which is an object containing
     configuration values. The object can be arbitrary nested, but needs to be JSON-serialisable.
--   `config.dev.mjs` exists and contains configuration used during development
+-   `config.dev.mjs` exists and contains configuration used during development.
 
 Furthermore, we recommend:
 
@@ -79,11 +83,11 @@ let boi = config.nested.boi // string
 
 ## Configuration
 
-You can configure the tool by adding a spaConfig namespace to your package.json file. The
-configuration options are as follows:
+Configure the tool by adding a `spaConfig` namespace to your `package.json` file. The configuration
+options are as follows:
 
--   `configDir` (string): The location of your app configuration files.
--   `buildDir` (string): The location of the HTML template file.
+-   `configDir` (string, required): The location of your app configuration files.
+-   `buildDir` (string, required): The location of the HTML template file.
 -   `templateFileName` (string, optional, default: `_index.html`): The name of the template HTML
     file (relative to build dir).
 -   `outputFileName` (string, optional, default: `index.html`): The name of the output HTML file
@@ -111,7 +115,7 @@ export default defineConfig((config) => {
 When running the app in dev mode the first time, an empty `config.dev.json` (or another name if you
 configure it via `devConfigOverrideFile` option) will be created at the root of the project. This
 file allows you to temporarily override the dev config (e.g. change an API route) without having to
-remember to undo your changes before committing. Remember to add that file to `.gitingored` as it's
+remember to undo your changes before committing. Remember to add that file to `.gitignore` as it's
 not supposed to be versioned.
 
 ## CLI Usage
@@ -120,31 +124,21 @@ In your CD flow you'll need to run the CLI for each environment you deploy to, i
 the HTML with baked in config for that env.
 
 ```sh
-$ pnpm spa-config-inject --env <env>
+$ npx @pleo-io/spa-config-inject <env>
 ```
 
 Usually you'll also want to add some dynamic overrides based on your CD run, e.g. adding a version:
 
 ```sh
-$ SPA_CONFIG_OVERRIDE="{\"version\": \"${{github.sha}}\"}" pnpm spa-config-inject --env staging
+$ SPA_CONFIG_OVERRIDE="{\"version\": \"abcd\"}" npx @pleo-io/spa-config-inject staging
 ```
 
 ### Options
 
-Required options:
+Required:
 
--   `--env`: The environment of the config to inject. Can also be provided via `SPA_ENV` env var.
+-   `<env>`: The environment of the config to inject. Can also be provided via `SPA_ENV` env var.
 
-Optional options:
+Optionally:
 
--   `--dynamic-config`: Dynamic config override as a JSON string. Can also be provided via
-    `SPA_CONFIG_OVERRIDE` env var.
--   `--build-dir`: The location of the HTML template file. Uses `configDir` from `package.json`, can
-    also be provided via `SPA_BUNDLE_DIR` env var.
--   `--config-dir`: The location of the configuration files. Uses `buildDir` from `package.json`,
-    can also be provided via `SPA_CONFIG_DIR` env var.
--   `--template`: The name of the template HTML file (relative to build dir). Uses
-    `templateFileName` from `package.json`, can also be provided via `SPA_TEMPLATE_FILE_NAME` env
-    var.
--   `--output`: The name of the output HTML file (relative to build dir). Uses `outputFileName` from
-    `package.json`, can also be provided via `SPA_OUTPUT_FILE_NAME` env var.
+-   `SPA_CONFIG_OVERRIDE` (set as env variable): dynamic config override as a JSON string

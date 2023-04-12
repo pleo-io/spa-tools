@@ -1,7 +1,6 @@
 import path from 'node:path'
 import {createRequire} from 'module'
-import {z, ZodError} from 'zod'
-import {fromZodError} from 'zod-validation-error'
+import {z} from 'zod'
 
 const clientConfigSchema = z.object({
     configDir: z.string(),
@@ -31,12 +30,7 @@ export function parseConfig(rawConfig: unknown) {
     try {
         return clientConfigSchema.parse(rawConfig)
     } catch (err) {
-        if (err instanceof ZodError) {
-            const validationError = fromZodError(err)
-            console.error(`🛑 Configuration error: ${validationError}`)
-        } else {
-            console.error(`🛑 Configuration error: ${err}`)
-        }
+        console.error(`🛑 Configuration error: ${err}`)
         process.exit(1)
     }
 }
