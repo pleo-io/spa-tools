@@ -1,3 +1,17 @@
+# [8.0.0](https://github.com/pleo-io/pleo-spa-cicd/compare/v7.1.1...v8.0.0) (2023-04-12)
+
+
+### Features
+
+* make pnpm version configurable ([#39](https://github.com/pleo-io/pleo-spa-cicd/issues/39)) ([607cf96](https://github.com/pleo-io/pleo-spa-cicd/commit/607cf969758d33ce9b5e652451c8f19d2c84f4bc))
+
+
+### BREAKING CHANGES
+
+* pnpm version is now required.
+
+* chore: Use pnpm 8 internally
+
 ## [7.1.1](https://github.com/pleo-io/pleo-spa-cicd/compare/v7.1.0...v7.1.1) (2023-02-24)
 
 
