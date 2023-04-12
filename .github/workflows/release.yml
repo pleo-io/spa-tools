@@ -1,0 +1,21 @@
+name: Release & Publish
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+  packages: write
+
+jobs:
+  release:
+    name: Run "Release Please"
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: google-github-actions/release-please-action@v3.7.8
+        with:
+          command: manifest
