@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.5.1
       - run: |
-          for file in reusable-workflow/*.yml; do
+          for file in reusable-workflows/*.yml; do
             filename=$(basename $file)
             cmp --silent .github/workflows/$filename $file || (echo "::error::When editing reusable workflows, update both \`reusable-workflows\` and \`.github/workflows\` for file: $filename" && exit 1)
           done
