@@ -1,9 +1,13 @@
 {
     "private": true,
-    "name": "pleo-spa-cdicd-actions",
-    "version": "0.0.0",
+    "name": "@pleo-io/spa-github-actions",
+    "version": "8.0.0",
     "scripts": {
         "preinstall": "npx only-allow pnpm"
+    },
+    "engines": {
+        "node": "16.x",
+        "pnpm": "8.x"
     },
     "dependencies": {
         "@actions/core": "1.9.1",

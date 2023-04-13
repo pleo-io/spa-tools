@@ -1,0 +1,15 @@
+{
+  "bootstrap-sha": "d8a23fd8414bb51fcd8b66251270e3b4a46cf982",
+  "packages": {
+    "actions": {
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "node"
+    },
+    "reusable-workflow": {
+      "package-name": "reusable-workflow",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "simple"
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}
