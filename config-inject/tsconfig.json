@@ -8,5 +8,5 @@
         "noEmit": true,
         "lib": ["es2022", "DOM"]
     },
-    "exclude": ["dist"]
+    "exclude": ["dist", "example"]
 }
