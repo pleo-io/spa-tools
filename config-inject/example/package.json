@@ -1,0 +1,24 @@
+{
+    "name": "example",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build && mv dist/index.html dist/_index.html",
+        "inject:prod": "spa-config-inject --env production",
+        "inject:staging": "spa-config-inject --env staging",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.4",
+        "vite": "^4.2.0"
+    },
+    "spaConfig": {
+        "configDir": "src/config",
+        "buildDir": "dist"
+    },
+    "dependencies": {
+        "@pleo-io/spa-config-inject": "link:.."
+    }
+}
