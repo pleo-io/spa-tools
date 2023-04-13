@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.0...spa-config-inject-v0.2.1) (2023-04-13)
+
+
+### Bug Fixes
+
+* Fix issue with workflow publishing ([fb55bf5](https://github.com/pleo-io/pleo-spa-cicd/commit/fb55bf591213c07c41cb171e0d7596df1c40aa04))
+
 ## [0.2.0](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.1.0...spa-config-inject-v0.2.0) (2023-04-13)
 
 
