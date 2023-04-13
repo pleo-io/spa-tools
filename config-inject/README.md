@@ -139,6 +139,6 @@ Required:
 
 -   `<env>`: The environment of the config to inject. Can also be provided via `SPA_ENV` env var.
 
-Optionally:
+Optional:
 
 -   `SPA_CONFIG_OVERRIDE` (set as env variable): dynamic config override as a JSON string

@@ -41,6 +41,7 @@ jobs:
           node-version: "16.x"
           scope: "@pleo-io"
           cache: "pnpm"
+          registry-url: "https://npm.pkg.github.com"
           cache-dependency-path: config-inject/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm run build
