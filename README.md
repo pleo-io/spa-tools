@@ -16,9 +16,15 @@ project on Linear (if you have access).
 
 - [Custom GitHub Actions](/actions)
 - [Reusable GitHub Workflows](/.github/workflows)
+- [Runtime Config Injection Tooling](./config-inject)
 
 ## Contributing
 
-This repo uses Semantic Release to version the changes and keep an up-to-date
-changelog file. When creating a PR, make sure that the squash commit title
-(i.e. the PR title) follows the semantic commit standards.
+This repo uses Semantic Release via
+[Release Please](https://github.com/google-github-actions/release-please-action)
+to version the changes and keep an up-to-date changelog file. When creating a
+PR, make sure that the squash commit title (i.e. the PR title) follows the
+semantic commit standards.
+
+When your PR with package changes is merged, Release Please will create another
+PR that updates package version and changelog.
