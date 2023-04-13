@@ -64,3 +64,27 @@ jobs:
       - name: Check if built version was committed
         run: |
           git diff --exit-code || (echo "::error::You forgot to commit the built actions, run 'make' locally" && exit 1)
+
+  test-config:
+    name: Check config
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: config-inject
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v3.5.1
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v3.6.0
+        with:
+          node-version: "16"
+          cache: "pnpm"
+          cache-dependency-path: config-inject/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm run test
+      - run: pnpm run lint
+      - run: pnpm run typecheck
+      - run: pnpm run build
