@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.1...spa-config-inject-v0.2.2) (2023-04-14)
+
+
+### Bug Fixes
+
+* Update exports in package.json to include types ([95dde53](https://github.com/pleo-io/pleo-spa-cicd/commit/95dde53ab62ad6e7a63500d3562ef2997cf4905b))
+
 ## [0.2.1](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.0...spa-config-inject-v0.2.1) (2023-04-13)
 
 
