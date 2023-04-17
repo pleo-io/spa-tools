@@ -2,7 +2,7 @@
 @fileoverview A Vite plugin that inlines runtime configuration during development.
 */
 
-import type {ConfigEnv, IndexHtmlTransform} from 'vite'
+import type {ConfigEnv, Plugin} from 'vite'
 import fs from 'fs'
 import path from 'path'
 import merge from 'lodash.merge'
@@ -11,11 +11,6 @@ import {assertExists} from './shared/assert-exists'
 import {getMinifiedConfig} from './shared/get-minified-config'
 import {STRING_TO_REPLACE} from './shared/constants'
 
-type PluginDefinition = {
-    name: string
-    transformIndexHtml: IndexHtmlTransform
-}
-
 /**
 Inline runtime configuration during development.
 Inspiration: https://github.com/vitejs/vite/issues/3105
@@ -23,7 +18,7 @@ Inspiration: https://github.com/vitejs/vite/issues/3105
 @param config - The Vite config environment.
 @returns Returns a Vite plugin definition or null if in production mode.
 */
-export const inlineDevelopmentConfig = (config: ConfigEnv): PluginDefinition | null => {
+export const inlineDevelopmentConfig = (config: ConfigEnv): Plugin | null => {
     if (config.mode === 'production') {
         return null
     }
