@@ -10,19 +10,19 @@
     },
     "exports": {
         ".": {
-            "types": "./dist/runtime.d.ts",
-            "require": "./dist/runtime.cjs",
-            "import": "./dist/runtime.js"
+            "types": "./runtime.d.ts",
+            "require": "./runtime.cjs",
+            "import": "./runtime.js"
         },
         "./vite": {
-            "types": "./dist/vite.d.ts",
-            "import": "./dist/vite.js",
-            "require": "./dist/vite.cjs"
+            "types": "./vite.d.ts",
+            "import": "./vite.js",
+            "require": "./vite.cjs"
         }
     },
-    "types": "./dist/runtime.d.ts",
-    "main": "./dist/runtime.cjs",
-    "bin": "./dist/cli.js",
+    "types": "./runtime.d.ts",
+    "main": "./runtime.cjs",
+    "bin": "./cli.js",
     "type": "module",
     "engines": {
         "node": ">=16"
@@ -31,7 +31,7 @@
         "registry": "https://npm.pkg.github.com"
     },
     "scripts": {
-        "build": "tsup-node",
+        "build": "tsup-node && cp package.json dist",
         "lint:fix": "prettier --write .",
         "lint": "prettier -c .",
         "preinstall": "npx only-allow pnpm",

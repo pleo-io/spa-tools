@@ -2,7 +2,7 @@
 @fileoverview A Vite plugin that inlines runtime configuration during development.
 */
 
-import type {ConfigEnv, Plugin} from 'vite'
+import type {ConfigEnv, PluginOption} from 'vite'
 import fs from 'fs'
 import path from 'path'
 import merge from 'lodash.merge'
@@ -18,7 +18,7 @@ Inspiration: https://github.com/vitejs/vite/issues/3105
 @param config - The Vite config environment.
 @returns Returns a Vite plugin definition or null if in production mode.
 */
-export const inlineDevelopmentConfig = (config: ConfigEnv): Plugin | null => {
+export const inlineDevelopmentConfig = (config: ConfigEnv): PluginOption => {
     if (config.mode === 'production') {
         return null
     }
