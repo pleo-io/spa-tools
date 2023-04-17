@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.5...spa-config-inject-v0.2.6) (2023-04-17)
+
+
+### Bug Fixes
+
+* Remove cjs output ([62e9e2e](https://github.com/pleo-io/pleo-spa-cicd/commit/62e9e2e2f394beb31b478d53d2377b326520c739))
+
 ## [0.2.5](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.4...spa-config-inject-v0.2.5) (2023-04-17)
 
 
