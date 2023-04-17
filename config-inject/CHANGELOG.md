@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.4...spa-config-inject-v0.2.5) (2023-04-17)
+
+
+### Bug Fixes
+
+* Use PluginOption as return type for the Vite plugin ([6f4cee8](https://github.com/pleo-io/pleo-spa-cicd/commit/6f4cee8db0bb2b78217c34d3d715e5b62bffedc8))
+
 ## [0.2.4](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.3...spa-config-inject-v0.2.4) (2023-04-17)
 
 
