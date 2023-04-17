@@ -17,7 +17,7 @@
     "devDependencies": {
         "@types/common-tags": "^1.8.1",
         "@types/jest": "^28.1.7",
-        "@vercel/ncc": "0.34.0",
+        "@vercel/ncc": "0.36.1",
         "action-docs": "^1.0.4",
         "common-tags": "^1.8.2",
         "jest": "28.1.3",
