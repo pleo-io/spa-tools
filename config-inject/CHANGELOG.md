@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.2...spa-config-inject-v0.2.3) (2023-04-17)
+
+
+### Bug Fixes
+
+* Add CJS support ([8ce4fde](https://github.com/pleo-io/pleo-spa-cicd/commit/8ce4fdef141753f95cefb84f26a3993d2cd75238))
+
 ## [0.2.2](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.1...spa-config-inject-v0.2.2) (2023-04-14)
 
 
