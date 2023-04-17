@@ -21,7 +21,7 @@ import {
 } from '../utils'
 
 const deployModes = ['default', 'rollback', 'unblock'] as const
-type DeployMode = typeof deployModes[number]
+type DeployMode = (typeof deployModes)[number]
 
 runAction(async () => {
     const bucket = core.getInput('bucket_name', {required: true})
