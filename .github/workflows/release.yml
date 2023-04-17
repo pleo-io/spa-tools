@@ -45,6 +45,6 @@ jobs:
           cache-dependency-path: config-inject/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm run build
-      - run: npm publish
+      - run: cd dist && npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
