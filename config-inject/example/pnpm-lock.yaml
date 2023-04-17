@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@pleo-io/spa-config-inject':
-    specifier: link:..
-    version: link:..
+    specifier: link:../dist
+    version: link:../dist
 
 devDependencies:
   typescript:

@@ -19,6 +19,6 @@
         "buildDir": "dist"
     },
     "dependencies": {
-        "@pleo-io/spa-config-inject": "link:.."
+        "@pleo-io/spa-config-inject": "link:../dist"
     }
 }
