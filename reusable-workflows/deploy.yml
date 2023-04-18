@@ -76,7 +76,7 @@ jobs:
               exit 1
           fi
           SUBDOMAIN=$([[ $GITHUB_REF = "refs/heads/$DEFAULT_BRANCH" ]] && echo "" || echo "preview-${{ inputs.tree_hash }}.")
-          echo "{url}=https://${SUBDOMAIN}${{ inputs.domain_name }}" >> $GITHUB_OUTPUT
+          echo "url=https://${SUBDOMAIN}${{ inputs.domain_name }}" >> $GITHUB_OUTPUT
 
       - name: Setup AWS Credentials for Registry Bucket Access
         uses: aws-actions/configure-aws-credentials@v2.0.0
