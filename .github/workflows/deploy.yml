@@ -79,7 +79,7 @@ jobs:
           echo "::set-output name=url::https://${SUBDOMAIN}${{ inputs.domain_name }}"
 
       - name: Setup AWS Credentials for Registry Bucket Access
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2.0.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
           aws-secret-access-key:
@@ -92,7 +92,7 @@ jobs:
           mkdir ${{ inputs.bundle_dir }} && tar -xvzf bundle.tar.gz -C ${{ inputs.bundle_dir }}
 
       - name: Setup AWS Credentials for Origin Bucket Access
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2.0.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
