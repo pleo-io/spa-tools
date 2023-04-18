@@ -58,8 +58,8 @@ jobs:
     outputs:
       deployment_url: ${{ steps.deployment-url.outputs.url }}
     steps:
-      - uses: actions/checkout@v3.0.2
-      - uses: actions/setup-node@v3.4.1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.6.0
         with:
           node-version: "16"
           registry-url: "https://npm.pkg.github.com"
@@ -119,12 +119,12 @@ jobs:
 
       - name: Update Cursor File
         id: cursor-update
-        uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6.0.0
+        uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@spa-github-actions-v8.0.2
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: pleo-io/pleo-spa-cicd/actions/post-preview-urls@v6.0.0
+        uses: pleo-io/pleo-spa-cicd/actions/post-preview-urls@spa-github-actions-v8.0.2
         if: github.event_name == 'pull_request'
         with:
           app_name: ${{ inputs.app_name }}
@@ -135,7 +135,7 @@ jobs:
             ]
 
       - name: Upload Deployed Bundle as Artifact
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: bundle-${{ inputs.tree_hash }}
           path: bundle.tar.gz

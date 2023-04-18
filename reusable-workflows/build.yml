@@ -46,7 +46,7 @@ jobs:
       tree_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
     steps:
-      - uses: actions/checkout@v3.0.2
+      - uses: actions/checkout@v3
 
       - name: Check S3 Cache
         uses: pleo-io/s3-cache-action@v2.0.2
