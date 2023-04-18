@@ -27,4 +27,7 @@ PR, make sure that the squash commit title (i.e. the PR title) follows the
 semantic commit standards.
 
 When your PR with package changes is merged, Release Please will create another
-PR that updates package version and changelog.
+PR that updates package version and changelog. 
+
+The release PR needs to be manually [closed and re-opened](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#workarounds-to-trigger-further-workflow-runs
+) in order to run CI checks. ⚠️

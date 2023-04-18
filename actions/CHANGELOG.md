@@ -11,6 +11,13 @@
 
 -   chore: Use pnpm 8 internally
 
+## [8.0.1](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-github-actions-v8.0.0...spa-github-actions-v8.0.1) (2023-04-18)
+
+
+### Bug Fixes
+
+* use environment files by upgrading dependencies ([#50](https://github.com/pleo-io/pleo-spa-cicd/issues/50)) ([849f746](https://github.com/pleo-io/pleo-spa-cicd/commit/849f7468fb635d6096083a911bccec8d632088f5))
+
 ## [7.1.1](https://github.com/pleo-io/pleo-spa-cicd/compare/v7.1.0...v7.1.1) (2023-02-24)
 
 ### Bug Fixes
