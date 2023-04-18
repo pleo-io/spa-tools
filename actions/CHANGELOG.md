@@ -11,6 +11,13 @@
 
 -   chore: Use pnpm 8 internally
 
+## [8.0.2](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-github-actions-v8.0.1...spa-github-actions-v8.0.2) (2023-04-18)
+
+
+### Bug Fixes
+
+* Upgrade aws-credentials (node 16 by default) ([#52](https://github.com/pleo-io/pleo-spa-cicd/issues/52)) ([f684cf4](https://github.com/pleo-io/pleo-spa-cicd/commit/f684cf4db7896b06af854aed6b4375b3ed62c04c))
+
 ## [8.0.1](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-github-actions-v8.0.0...spa-github-actions-v8.0.1) (2023-04-18)
 
 
