@@ -15,7 +15,7 @@ on:
         type: string
       build_dir:
         required: true
-        description: "Location of the deploy bundle after build"
+        description: "Location of the deploy bundle after running the build command"
         type: string
       build_cmd:
         required: true
