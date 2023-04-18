@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.4](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.0.3...reusable-workflows-v8.0.4) (2023-04-18)
+
+
+### Bug Fixes
+
+* Also update s3-cache-action to avoid using set-state ([dcfa310](https://github.com/pleo-io/pleo-spa-cicd/commit/dcfa3100e11a4623b48eca2c28a80722b30ed9dd))
+
 ## [8.0.3](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.0.2...reusable-workflows-v8.0.3) (2023-04-18)
 
 
