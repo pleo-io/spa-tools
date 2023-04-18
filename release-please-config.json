@@ -5,8 +5,8 @@
       "changelog-path": "CHANGELOG.md",
       "release-type": "node"
     },
-    "reusable-workflow": {
-      "package-name": "reusable-workflow",
+    "reusable-workflows": {
+      "package-name": "reusable-workflows",
       "changelog-path": "CHANGELOG.md",
       "release-type": "simple"
     },
