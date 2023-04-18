@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.0.5](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.0.4...reusable-workflows-v8.0.5) (2023-04-18)
+
+
+### Bug Fixes
+
+* Upgrade even more actions ([#58](https://github.com/pleo-io/pleo-spa-cicd/issues/58)) ([788b13c](https://github.com/pleo-io/pleo-spa-cicd/commit/788b13cb4783acc0dd88304e5ddfd9704349d535))
+
 ## [8.0.4](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.0.3...reusable-workflows-v8.0.4) (2023-04-18)
 
 
