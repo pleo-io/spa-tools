@@ -41,7 +41,7 @@ dev config file and the dev overrides from dev overrides file.
 @returns Returns a promise that resolves to a string containing the merged dev runtime config.
 */
 async function getDevRuntimeConfig() {
-    const config = loadConfig()
+    const config = await loadConfig()
 
     const configPath = path.resolve(config.configDir, 'config.dev.mjs')
     assertExists(configPath)

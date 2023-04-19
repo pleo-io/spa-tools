@@ -11,15 +11,18 @@
     "exports": {
         ".": {
             "types": "./runtime.d.ts",
-            "import": "./runtime.js"
+            "import": "./runtime.js",
+            "require": "./runtime.cjs"
         },
         "./vite": {
             "types": "./vite.d.ts",
-            "import": "./vite.js"
+            "import": "./vite.js",
+            "require": "./vite.cjs"
         }
     },
     "types": "./runtime.d.ts",
     "module": "./runtime.js",
+    "main": "./runtime.cjs",
     "bin": "./cli.js",
     "type": "module",
     "engines": {

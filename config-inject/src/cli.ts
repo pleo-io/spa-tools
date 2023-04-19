@@ -24,7 +24,7 @@ into the HTML template file.
 @param cliEnv - The environment of the config to inject, passed via CLI argument
 */
 async function run(cliEnv: string) {
-    const {buildDir, templateFileName, outputFileName, configDir} = loadConfig()
+    const {buildDir, templateFileName, outputFileName, configDir} = await loadConfig()
     const dynamicConfigJSON = process.env.SPA_CONFIG_OVERRIDE
     const env = cliEnv ?? process.env.SPA_ENV
 

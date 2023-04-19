@@ -1,6 +1,6 @@
 import path from 'node:path'
-import {createRequire} from 'module'
 import {z} from 'zod'
+import {readFileSync} from 'node:fs'
 
 const clientConfigSchema = z.object({
     configDir: z.string(),
@@ -15,15 +15,14 @@ Loads and validates the configuration from package.json.
 If the configuration is invalid, it logs the error and exits the process.
 @returns Returns the parsed and validated configuration object.
 */
-export function loadConfig() {
-    const rawConfig = getRawConfig()
+export async function loadConfig() {
+    const rawConfig = await getRawConfig()
     return parseConfig(rawConfig)
 }
 
-export function getRawConfig() {
-    const require = createRequire(import.meta.url)
-    const pkgJSON = require(path.resolve('package.json'))
-    return pkgJSON.spaConfig
+async function getRawConfig() {
+    const pkgJSON = readFileSync(path.resolve('package.json'), 'utf-8')
+    return JSON.parse(pkgJSON).spaConfig
 }
 
 export function parseConfig(rawConfig: unknown) {
