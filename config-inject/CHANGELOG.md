@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.6...spa-config-inject-v0.2.7) (2023-04-19)
+
+
+### Bug Fixes
+
+* Generate cjs, avoid importing JSON ([6c28a6f](https://github.com/pleo-io/pleo-spa-cicd/commit/6c28a6fddf3a7c8fd6f63e36e70108073068294b))
+
 ## [0.2.6](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.5...spa-config-inject-v0.2.6) (2023-04-17)
 
 
