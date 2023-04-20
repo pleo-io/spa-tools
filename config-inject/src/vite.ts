@@ -18,7 +18,7 @@ Inspiration: https://github.com/vitejs/vite/issues/3105
 @param config - The Vite config environment.
 @returns Returns a Vite plugin definition or null if in production mode.
 */
-export const inlineDevelopmentConfig = (config: ConfigEnv): PluginOption => {
+export const inlineDevelopmentConfig = (config: ConfigEnv) => {
     if (config.mode === 'production') {
         return null
     }
@@ -32,7 +32,7 @@ export const inlineDevelopmentConfig = (config: ConfigEnv): PluginOption => {
                 return html.replace(new RegExp(STRING_TO_REPLACE, 'g'), runtimeConfig)
             }
         }
-    }
+    } satisfies PluginOption
 }
 
 /**
