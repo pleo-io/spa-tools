@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.1.0](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.0.5...reusable-workflows-v8.1.0) (2023-04-20)
+
+
+### Features
+
+* Enable using npx with private registry for config command ([#62](https://github.com/pleo-io/pleo-spa-cicd/issues/62)) ([90d141a](https://github.com/pleo-io/pleo-spa-cicd/commit/90d141a18b765c9ede1a861d3f71fb73e25f4886))
+
 ## [8.0.5](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.0.4...reusable-workflows-v8.0.5) (2023-04-18)
 
 
