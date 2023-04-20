@@ -100,9 +100,12 @@ jobs:
 
       - name: Inject Environment Config
         if: inputs.inject_config_cmd
-        run: |
-          SPA_BUNDLE_DIR=${{ inputs.bundle_dir }} SPA_ENV=${{inputs.environment}} SPA_TREE_HASH=${{ inputs.tree_hash}} \
-            ${{inputs.inject_config_cmd }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
+          SPA_BUNDLE_DIR: ${{ inputs.bundle_dir }}
+          SPA_ENV: ${{inputs.environment}}
+          SPA_TREE_HASH: ${{ inputs.tree_hash}}
+        run: ${{inputs.inject_config_cmd }}
 
       - name: Copy Static Files
         run: |
