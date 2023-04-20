@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.8](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.7...spa-config-inject-v0.2.8) (2023-04-20)
+
+
+### Bug Fixes
+
+* Adjust types of the Vite plugin ([7280f4e](https://github.com/pleo-io/pleo-spa-cicd/commit/7280f4e716a8cde38a1a0dbbd4be32fe6350271b))
+
 ## [0.2.7](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.6...spa-config-inject-v0.2.7) (2023-04-19)
 
 
