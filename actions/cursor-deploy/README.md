@@ -47,7 +47,7 @@ action in a step prior to running this action to ensure that's the case.
 ```yml
 - name: Update the cursor file
   id: deployment
-  uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6
+  uses: pleo-io/pleo-tools/actions/cursor-deploy@v6
   with:
       bucket_name: my-s3-bucket
 ```
@@ -75,7 +75,7 @@ jobs:
     rollback:
         runs-on: ubuntu-22.04
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v3.5.2
               with:
                   fetch-depth: 10
             - uses: aws-actions/configure-aws-credentials@v2.0.0
@@ -83,7 +83,7 @@ jobs:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             - name: Update Cursor File
-              uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6
+              uses: pleo-io/pleo-tools/actions/cursor-deploy@v6
               with:
                   bucket_name: my-origin-bucket
                   rollback_commit_hash: ${{ github.event.inputs.sha }}
@@ -101,13 +101,13 @@ jobs:
     rollback:
         runs-on: ubuntu-22.04
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v3.5.2
             - uses: aws-actions/configure-aws-credentials@v2.0.0
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             - name: Update Cursor File
-              uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@v6
+              uses: pleo-io/pleo-tools/actions/cursor-deploy@v6
               with:
                   bucket_name: my-origin-bucket
                   deploy_mode: update

@@ -16,7 +16,7 @@ Append the URLs for branch app and storybook preview deployments to the PR descr
 
 ```yml
 - name: Update PR Description
-  uses: pleo-io/pleo-spa-cicd/actions/post-preview-urls@v6
+  uses: pleo-io/pleo-tools/actions/post-preview-urls@v6
   with:
       app_name: My App
       links: |
