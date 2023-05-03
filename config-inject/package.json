@@ -5,7 +5,7 @@
     "author": "Pleo",
     "repository": {
         "type": "git",
-        "url": "https://github.com/pleo-io/pleo-spa-cicd.git",
+        "url": "https://github.com/pleo-io/pleo-tools.git",
         "directory": "config-inject"
     },
     "exports": {
