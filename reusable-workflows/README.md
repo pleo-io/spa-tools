@@ -63,7 +63,7 @@ options when using the workflow.
 
 ```yml
 build:
-  uses: pleo-io/pleo-spa-cicd/workflows/build.yml@v6
+  uses: pleo-io/spa-tools/.github/workflows/build.yml@v6
   secrets: inherit
   with:
     app_name: my-app
@@ -113,7 +113,7 @@ options when using the workflow.
 
 ```yml
 deploy:
-  uses: pleo-io/pleo-spa-cicd/workflows/deploy.yml@v6
+  uses: pleo-io/spa-tools/.github/workflows/deploy.yml@v6
   needs: build
   secrets: inherit
   with:
