@@ -2,14 +2,14 @@
 ---
 version: 1
 service:
-  name: Pleo SPA CI/CD
+  name: Pleo SPA Tools
   lifecycle: generally_available
   owner: web-core
   language: TypeScript
   description: |-
     Reusable pieces of CICD pipelines for Single Page Applications
   aliases:
-    - pleo-spa-cicd
+    - spa-tools
   tags:
     - key: type
       value: library

@@ -1,22 +1,24 @@
 <h1 align="center">
-  🔋 Pleo SPA CI/CD
+  🔋 Pleo SPA Tools
 </h1>
 
-💡 A collection of reusable GitHub Actions and Workflows helpful while building
-a complete CI/CD pipeline for a Single Page Application using the cursor files.
+💡 A collection of reusable tools for delivering Single Page Applications,
+including AWS-based infrastructure, GitHub Actions CI/CD and runtime config.
 
 👨‍🔧 This repository is lovingly stewarded by Pleo's Web Core team.
 
 🐛 Issues should be reported
-[in the repository](https://github.com/pleo-io/pleo-spa-cicd/issues) or via
-[Stewards: Frontend Infrastructure](https://linear.app/pleo/project/stewards-spa-cicd-and-infra-53a0a536f855)
+[in the repository](https://github.com/pleo-io/pleo-tools/issues) or via
+[Stewards: SPA Tools](https://linear.app/pleo/project/stewards-spa-tools-53a0a536f855)
 project on Linear (if you have access).
 
 ## Contents
 
 - [Custom GitHub Actions](/actions)
-- [Reusable GitHub Workflows](/.github/workflows)
+- [Reusable GitHub Workflows](/reusable-workflows)
 - [Runtime Config Injection Tooling](./config-inject)
+- [Terraform Module](./terraform-module)
+- [Lambda@Edge Lambdas](/edge-lambdas)
 
 ## Contributing
 
@@ -27,7 +29,8 @@ PR, make sure that the squash commit title (i.e. the PR title) follows the
 semantic commit standards.
 
 When your PR with package changes is merged, Release Please will create another
-PR that updates package version and changelog. 
+PR that updates package version and changelog.
 
-The release PR needs to be manually [closed and re-opened](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#workarounds-to-trigger-further-workflow-runs
-) in order to run CI checks. ⚠️
+The release PR needs to be manually
+[closed and re-opened](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#workarounds-to-trigger-further-workflow-runs)
+in order to run CI checks. ⚠️
