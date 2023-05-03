@@ -31,7 +31,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.1
+      - uses: actions/checkout@v3.5.2
       - run: |
           for file in reusable-workflows/*.yml; do
             filename=$(basename $file)
@@ -47,7 +47,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.1
+      - uses: actions/checkout@v3.5.2
       - uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -56,6 +56,33 @@ jobs:
           node-version: "16"
           cache: "pnpm"
           cache-dependency-path: actions/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: make test
+      - run: make lint
+      - run: make build
+
+      - name: Check if built version was committed
+        run: |
+          git diff --exit-code || (echo "::error::You forgot to commit the built actions, run 'make' locally" && exit 1)
+
+  test-lambdas:
+    name: Check Lambda@Edge Functions
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: edge-lambdas
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v3.5.2
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v3.6.0
+        with:
+          node-version: "16"
+          cache: "pnpm"
+          cache-dependency-path: edge-lambdas/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: make test
       - run: make lint
@@ -74,7 +101,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.1
+      - uses: actions/checkout@v3.5.2
       - uses: pnpm/action-setup@v2
         with:
           version: 8

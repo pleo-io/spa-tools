@@ -58,7 +58,7 @@ jobs:
     outputs:
       deployment_url: ${{ steps.deployment-url.outputs.url }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.5.2
       - uses: actions/setup-node@v3.6.0
         with:
           node-version: "16"
@@ -122,12 +122,12 @@ jobs:
 
       - name: Update Cursor File
         id: cursor-update
-        uses: pleo-io/pleo-spa-cicd/actions/cursor-deploy@spa-github-actions-v8.0.2
+        uses: pleo-io/spa-tools/actions/cursor-deploy@spa-github-actions-v8.0.2
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: pleo-io/pleo-spa-cicd/actions/post-preview-urls@spa-github-actions-v8.0.2
+        uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v8.0.2
         if: github.event_name == 'pull_request'
         with:
           app_name: ${{ inputs.app_name }}
