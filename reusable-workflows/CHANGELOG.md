@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.2.0](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.1.0...reusable-workflows-v8.2.0) (2023-05-04)
+
+
+### Features
+
+* Merge with infra repo ([#71](https://github.com/pleo-io/pleo-spa-cicd/issues/71)) ([cf9ea0e](https://github.com/pleo-io/pleo-spa-cicd/commit/cf9ea0e7069ef2b844206c782e5a536fdb077f1c))
+
 ## [8.1.0](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.0.5...reusable-workflows-v8.1.0) (2023-04-20)
 
 
