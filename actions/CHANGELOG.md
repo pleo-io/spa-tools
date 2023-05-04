@@ -11,6 +11,13 @@
 
 -   chore: Use pnpm 8 internally
 
+## [8.1.0](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-github-actions-v8.0.2...spa-github-actions-v8.1.0) (2023-05-04)
+
+
+### Features
+
+* Merge with infra repo ([#71](https://github.com/pleo-io/pleo-spa-cicd/issues/71)) ([cf9ea0e](https://github.com/pleo-io/pleo-spa-cicd/commit/cf9ea0e7069ef2b844206c782e5a536fdb077f1c))
+
 ## [8.0.2](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-github-actions-v8.0.1...spa-github-actions-v8.0.2) (2023-04-18)
 
 
