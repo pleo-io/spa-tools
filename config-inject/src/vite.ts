@@ -29,6 +29,11 @@ export const inlineDevelopmentConfig = (config: ConfigEnv) => {
             enforce: 'pre' as const,
             transform: async (html: string) => {
                 const runtimeConfig = await getDevRuntimeConfig()
+                if (!html.includes(STRING_TO_REPLACE)) {
+                    throw new Error(
+                        `🛑 Could not inject runtime configuration: ${STRING_TO_REPLACE} not found`
+                    )
+                }
                 return html.replace(new RegExp(STRING_TO_REPLACE, 'g'), runtimeConfig)
             }
         }

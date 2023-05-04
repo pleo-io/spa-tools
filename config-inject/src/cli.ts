@@ -83,6 +83,9 @@ async function injectConfig(opts: {
 
     const htmlTemplate = await fs.promises.readFile(templatePath, {encoding: 'utf8'})
     const htmlWithConfig = htmlTemplate.replace(STRING_TO_REPLACE, configString)
+    if (htmlTemplate === htmlWithConfig) {
+        throw new Error(`🛑 Could not inject runtime configuration: ${STRING_TO_REPLACE} not found`)
+    }
 
     const outputPath = path.resolve(opts.buildDir, opts.outputFileName)
     await fs.promises.writeFile(outputPath, htmlWithConfig)
