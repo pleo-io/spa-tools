@@ -36,7 +36,7 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = data.archive_file.lambda.output_base64sha256
   publish          = true
   role             = var.role_arn
-  runtime          = "nodejs12.x"
+  runtime          = "nodejs18.x"
 
   tags = {
     environment = lower(var.env)
