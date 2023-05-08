@@ -20,39 +20,22 @@ const LANG_QUERY_PARAM = 'lang'
 const LANG_COOKIE_NAME = 'x-pleo-language'
 const TRANSLATION_VERSION_COOKIE_NAME = 'translation-version'
 
-enum SupportedLanguage {
-    DA = 'da',
-    SV = 'sv',
-    EN = 'en',
-    DE = 'de',
-    DE_AT = 'de-AT',
-    ES = 'es',
-    FR = 'fr',
-    FR_BE = 'fr-BE',
-    FI = 'fi',
-    NL = 'nl',
-    NL_BE = 'nl-BE',
-    PT = 'pt',
-    IT = 'it',
-    NO = 'no'
-}
-
 const SUPPORTED_LANGUAGE_LIST = [
-    SupportedLanguage.EN,
-    SupportedLanguage.DE,
-    SupportedLanguage.DE_AT,
-    SupportedLanguage.ES,
-    SupportedLanguage.SV,
-    SupportedLanguage.FR,
-    SupportedLanguage.FR_BE,
-    SupportedLanguage.DA,
-    SupportedLanguage.FI,
-    SupportedLanguage.NL,
-    SupportedLanguage.NL_BE,
-    SupportedLanguage.PT,
-    SupportedLanguage.IT,
-    SupportedLanguage.NO
-]
+    'da',
+    'sv',
+    'en',
+    'de',
+    'de-AT',
+    'es',
+    'fr',
+    'fr-BE',
+    'fi',
+    'nl',
+    'nl-BE',
+    'pt',
+    'it',
+    'no'
+] as const
 
 /**
  * Modifies the response object to enrich it with headers used to serve translations for the app.
