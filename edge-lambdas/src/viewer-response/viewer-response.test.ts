@@ -253,6 +253,43 @@ describe(`Viewer response Lambda@Edge`, () => {
     })
 
     test(`
+        When an unsupported language is selected via a query parameter
+        Then it adds a preload header for default language
+    `, async () => {
+        const appVersion = getRandomSha()
+        const translationVersion = getRandomInt()
+        const event = mockResponseEvent({
+            host: 'app.staging.example.com',
+            translations: {appVersion, translationVersion},
+            languageForParam: 'foo'
+        })
+
+        const handler = getHandler({
+            ...originConfig,
+            previewDeploymentPostfix: '.app.example.com',
+            blockIframes: 'true',
+            isLocalised: 'true'
+        })
+        const response = await handler(event, mockContext, mockCallback)
+
+        expect(response).toEqual({
+            headers: {
+                ...securityHeaders,
+                'x-frame-options': [{key: 'X-Frame-Options', value: 'DENY'}],
+                ...defaultHeaders,
+                ...cacheControlHeaders,
+                ...getTranslationHeaders({
+                    cookieHash: translationVersion,
+                    preloadHash: appVersion,
+                    language: 'en'
+                })
+            },
+            status: '200',
+            statusDescription: 'OK'
+        })
+    })
+
+    test(`
         When a custom language is selected via a query parameter
         And a custom language is selected via a cookie
         Then it adds a preload header for the query param language

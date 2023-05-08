@@ -159,6 +159,39 @@ const DEFAULT_LANGUAGE = 'en';
 const LANG_QUERY_PARAM = 'lang';
 const LANG_COOKIE_NAME = 'x-pleo-language';
 const TRANSLATION_VERSION_COOKIE_NAME = 'translation-version';
+var SupportedLanguage;
+(function (SupportedLanguage) {
+    SupportedLanguage["DA"] = "da";
+    SupportedLanguage["SV"] = "sv";
+    SupportedLanguage["EN"] = "en";
+    SupportedLanguage["DE"] = "de";
+    SupportedLanguage["DE_AT"] = "de-AT";
+    SupportedLanguage["ES"] = "es";
+    SupportedLanguage["FR"] = "fr";
+    SupportedLanguage["FR_BE"] = "fr-BE";
+    SupportedLanguage["FI"] = "fi";
+    SupportedLanguage["NL"] = "nl";
+    SupportedLanguage["NL_BE"] = "nl-BE";
+    SupportedLanguage["PT"] = "pt";
+    SupportedLanguage["IT"] = "it";
+    SupportedLanguage["NO"] = "no";
+})(SupportedLanguage || (SupportedLanguage = {}));
+const SUPPORTED_LANGUAGE_LIST = [
+    SupportedLanguage.EN,
+    SupportedLanguage.DE,
+    SupportedLanguage.DE_AT,
+    SupportedLanguage.ES,
+    SupportedLanguage.SV,
+    SupportedLanguage.FR,
+    SupportedLanguage.FR_BE,
+    SupportedLanguage.DA,
+    SupportedLanguage.FI,
+    SupportedLanguage.NL,
+    SupportedLanguage.NL_BE,
+    SupportedLanguage.PT,
+    SupportedLanguage.IT,
+    SupportedLanguage.NO
+];
 /**
  * Modifies the response object to enrich it with headers used to serve translations for the app.
  */
@@ -222,11 +255,15 @@ const addPreloadHeader = ({ response, request, translationVersion, appVersion })
     let headers = response.headers;
     const urlParams = new URLSearchParams(request.querystring);
     const language = (_b = (_a = urlParams.get(LANG_QUERY_PARAM)) !== null && _a !== void 0 ? _a : getCookie(request.headers, LANG_COOKIE_NAME)) !== null && _b !== void 0 ? _b : DEFAULT_LANGUAGE;
+    // Make sure that the language in the URL parameter is supported
+    const validatedLanguage = SUPPORTED_LANGUAGE_LIST.map((supportedLanguage) => supportedLanguage.toLowerCase()).includes(language.toLowerCase())
+        ? language
+        : DEFAULT_LANGUAGE;
     // If the language guessed is the default language, instead of using the translation version,
     // we use the version of the app. The default language is deployed together with the app, and not
     // separately, so it follows the app versioning and the translations versioning.
-    const hash = language === DEFAULT_LANGUAGE ? appVersion : translationVersion;
-    headers = utils_setHeader(headers, 'Link', `</static/translations/${language}/messages.${hash}.js>; rel="preload"; as="script"; crossorigin`);
+    const hash = validatedLanguage === DEFAULT_LANGUAGE ? appVersion : translationVersion;
+    headers = utils_setHeader(headers, 'Link', `</static/translations/${validatedLanguage}/messages.${hash}.js>; rel="preload"; as="script"; crossorigin`);
     return Object.assign(Object.assign({}, response), { headers });
 };
 /**
