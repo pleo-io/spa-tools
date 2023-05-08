@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v1.4.0...terraform-module-v2.0.0) (2023-05-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update version of the runtime to Node 18 ([#75](https://github.com/pleo-io/spa-tools/issues/75))
+
+### Features
+
+* Update version of the runtime to Node 18 ([#75](https://github.com/pleo-io/spa-tools/issues/75)) ([5f4a25e](https://github.com/pleo-io/spa-tools/commit/5f4a25ecf3f38ddb2ad5d5850425b648a2ea7223))
+
 ## [1.4.0](https://github.com/pleo-io/pleo-spa-cicd/compare/terraform-module-v1.3.0...terraform-module-v1.4.0) (2023-05-04)
 
 
