@@ -9,9 +9,10 @@
  */
 
 import {CloudFrontRequest, CloudFrontResponse} from 'aws-lambda'
-import {S3} from 'aws-sdk'
+import {S3Client} from '@aws-sdk/client-s3'
 import {Config} from '../config'
-import {fetchFileFromS3Bucket, getCookie, getHeader, setHeader} from '../utils'
+import {getCookie, getHeader, setHeader} from '../utils'
+import {fetchFileFromS3Bucket} from '../s3'
 
 const TRANSLATION_VERSION_HEADER = 'X-Translation-Version'
 const APP_VERSION_HEADER = 'X-App-Version'
@@ -170,7 +171,7 @@ export const addPreloadHeader = ({
 /**
  * Get the latest translation cursor file from S3 bucket
  */
-export const getTranslationVersion = async (s3: S3, config: Config) => {
+export const getTranslationVersion = async (s3: S3Client, config: Config) => {
     try {
         if (!config.isLocalised) {
             return

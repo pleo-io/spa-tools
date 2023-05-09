@@ -1,9 +1,14 @@
 import crypto from 'crypto'
 import {CloudFrontRequestEvent} from 'aws-lambda'
-import S3 from 'aws-sdk/clients/s3'
 import {getHandler} from './viewer-request'
+import {fetchFileFromS3Bucket} from '../s3'
+import {S3Client} from '@aws-sdk/client-s3'
 
-jest.mock('aws-sdk/clients/s3', () => jest.fn().mockReturnValue({getObject: jest.fn()}))
+jest.mock('../s3')
+jest.mock('@aws-sdk/client-s3')
+
+const mockedFetchFileFromS3Bucket = jest.mocked(fetchFileFromS3Bucket)
+const mockS3 = new S3Client({})
 
 beforeEach(() => {
     jest.resetAllMocks()
@@ -23,13 +28,13 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'app.example.com'
-        const s3 = getMockedS3(appVersion)
         const event = mockRequestEvent({host})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
-        const handler = getHandler({...originConfig}, s3)
+        const handler = getHandler({...originConfig}, mockS3)
         const request = await handler(event, mockContext, mockCallback)
 
-        expectAppVersionFetched(s3, 'deploys/master')
+        expectAppVersionFetched('deploys/master')
         const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
@@ -41,13 +46,13 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'app.example.com'
-        const s3 = getMockedS3(appVersion)
         const event = mockRequestEvent({host})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
-        const handler = getHandler({...originConfig, defaultBranchName: 'main'}, s3)
+        const handler = getHandler({...originConfig, defaultBranchName: 'main'}, mockS3)
         const request = await handler(event, mockContext, mockCallback)
 
-        expectAppVersionFetched(s3, 'deploys/main')
+        expectAppVersionFetched('deploys/main')
         const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
@@ -58,17 +63,17 @@ describe(`Viewer request Lambda@Edge`, () => {
         Then it modifies the request to fetch the latest default branch HTML
     `, async () => {
         const appVersion = getRandomSha()
-        const s3 = getMockedS3(appVersion)
         const host = 'app.staging.example.com'
         const handler = getHandler(
             {...originConfig, previewDeploymentPostfix: '.app.staging.example.com'},
-            s3
+            mockS3
         )
         const event = mockRequestEvent({host})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const request = await handler(event, mockContext, mockCallback)
 
-        expectAppVersionFetched(s3, 'deploys/master')
+        expectAppVersionFetched('deploys/master')
         const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
@@ -78,34 +83,34 @@ describe(`Viewer request Lambda@Edge`, () => {
         it modifies the request to fetch the latest HTML for my-feature branch
     `, async () => {
         const appVersion = getRandomSha()
-        const s3 = getMockedS3(appVersion)
         const host = 'my-feature.app.staging.example.com'
         const event = mockRequestEvent({host})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
             {...originConfig, previewDeploymentPostfix: '.app.staging.example.com'},
-            s3
+            mockS3
         )
         const request = await handler(event, mockContext, mockCallback)
 
-        expectAppVersionFetched(s3, 'deploys/my-feature')
+        expectAppVersionFetched('deploys/my-feature')
         const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
 
     test(`Handles requests for specific html files`, async () => {
         const appVersion = getRandomSha()
-        const s3 = getMockedS3(appVersion)
         const host = 'my-feature.app.staging.example.com'
         const event = mockRequestEvent({host, uri: '/iframe.html'})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
             {...originConfig, previewDeploymentPostfix: '.app.staging.example.com'},
-            s3
+            mockS3
         )
         const request = await handler(event, mockContext, mockCallback)
 
-        expectAppVersionFetched(s3, 'deploys/my-feature')
+        expectAppVersionFetched('deploys/my-feature')
         const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/iframe.html`})
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
@@ -113,16 +118,19 @@ describe(`Viewer request Lambda@Edge`, () => {
     test(`Handles requests for well known files`, async () => {
         const appVersion = getRandomSha()
         const host = 'my-feature.app.staging.example.com'
-        const s3 = getMockedS3(appVersion)
         const event = mockRequestEvent({host, uri: '/.well-known/apple-app-site-association'})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
-            {...originConfig, previewDeploymentPostfix: '.app.staging.example.com'},
-            s3
+            {
+                ...originConfig,
+                previewDeploymentPostfix: '.app.staging.example.com'
+            },
+            mockS3
         )
         const request = await handler(event, mockContext, mockCallback)
 
-        expectAppVersionFetched(s3, 'deploys/my-feature')
+        expectAppVersionFetched('deploys/my-feature')
         const expectedEvent = mockRequestEvent({
             host,
             uri: `/html/${appVersion}/.well-known/apple-app-site-association`
@@ -137,16 +145,16 @@ describe(`Viewer request Lambda@Edge`, () => {
         const appVersion = getRandomSha()
         const requestedAppVersion = getRandomSha()
         const host = `preview-${requestedAppVersion}.app.staging.example.com`
-        const s3 = getMockedS3(appVersion)
         const event = mockRequestEvent({host})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
             {...originConfig, previewDeploymentPostfix: '.app.staging.example.com'},
-            s3
+            mockS3
         )
         const request = await handler(event, mockContext, mockCallback)
 
-        expect(s3.getObject).not.toHaveBeenCalled()
+        expect(mockedFetchFileFromS3Bucket).not.toHaveBeenCalled()
         const expectedEvent = mockRequestEvent({
             host,
             uri: `/html/${requestedAppVersion}/index.html`
@@ -163,13 +171,15 @@ describe(`Viewer request Lambda@Edge`, () => {
         const appVersion = getRandomSha()
         const translationVersion = getRandomInt()
         const host = 'app.example.com'
-        const s3 = getMockedS3(appVersion, translationVersion)
         const event = mockRequestEvent({host})
 
-        const handler = getHandler({...originConfig, isLocalised: 'true'}, s3)
+        mockedFetchFileFromS3Bucket.mockResolvedValueOnce(appVersion)
+        mockedFetchFileFromS3Bucket.mockResolvedValueOnce(translationVersion)
+
+        const handler = getHandler({...originConfig, isLocalised: 'true'}, mockS3)
         const request = await handler(event, mockContext, mockCallback)
 
-        expectVersionsFetched(s3, 'deploys/master', 'translation-deploy/latest')
+        expectVersionsFetched('deploys/master', 'translation-deploy/latest')
         const expectedEvent = mockRequestEvent({
             host,
             translationVersion,
@@ -187,14 +197,16 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'app.example.com'
-        const s3 = getMockedS3(appVersion, new Error('network error, yo'))
         const event = mockRequestEvent({host})
         jest.spyOn(console, 'error').mockImplementationOnce(() => {})
 
-        const handler = getHandler({...originConfig, isLocalised: 'true'}, s3)
+        mockedFetchFileFromS3Bucket.mockResolvedValueOnce(appVersion)
+        mockedFetchFileFromS3Bucket.mockRejectedValueOnce(new Error('nope'))
+
+        const handler = getHandler({...originConfig, isLocalised: 'true'}, mockS3)
         const request = await handler(event, mockContext, mockCallback)
 
-        expectVersionsFetched(s3, 'deploys/master', 'translation-deploy/latest')
+        expectVersionsFetched('deploys/master', 'translation-deploy/latest')
         const expectedEvent = mockRequestEvent({
             host,
             translationVersion: undefined,
@@ -209,38 +221,28 @@ describe(`Viewer request Lambda@Edge`, () => {
         When requesting a preview of an unknown branch,
         Then it requests the non-existing file to trigger a 404 error
     `, async () => {
-        const s3 = getMockedS3(new Error('network error, yo'))
         const host = 'what-is-this-branch.app.staging.example.com'
         jest.spyOn(console, 'error').mockImplementationOnce(() => {})
         const event = mockRequestEvent({host})
 
+        mockedFetchFileFromS3Bucket.mockRejectedValueOnce(
+            new Error(
+                `Empty response from S3 for deploys/what-is-this-branch in ${originConfig.originBucketName} bucket`
+            )
+        )
+
         const handler = getHandler(
             {...originConfig, previewDeploymentPostfix: '.app.staging.example.com'},
-            s3
+            mockS3
         )
         const request = await handler(event, mockContext, mockCallback)
 
-        expectAppVersionFetched(s3, 'deploys/what-is-this-branch')
+        expectAppVersionFetched('deploys/what-is-this-branch')
         const expectedEvent = mockRequestEvent({host, uri: `/404`})
         expect(request).toEqual(requestFromEvent(expectedEvent))
         expect(console.error).toHaveBeenCalledTimes(1)
     })
 })
-
-const getMockedS3 = (...values: Array<string | Error>) => {
-    const MockedS3 = S3 as jest.MockedClass<typeof S3>
-    const s3 = new MockedS3()
-    const mockedPromise = jest.fn()
-    values.forEach((value) => {
-        if (value instanceof Error) {
-            mockedPromise.mockReturnValueOnce(value)
-        } else {
-            mockedPromise.mockReturnValueOnce({Body: value})
-        }
-    })
-    s3.getObject = jest.fn().mockReturnValue({promise: mockedPromise})
-    return s3
-}
 
 /**
  * Returns a mock Cloudfront viewer request event with the specified host and URI.
@@ -318,22 +320,25 @@ const requestFromEvent = (event: CloudFrontRequestEvent) => event.Records[0].cf.
 const getRandomSha = () => crypto.randomBytes(20).toString('hex')
 const getRandomInt = () => crypto.randomInt(100000, 199999).toString()
 
-function expectAppVersionFetched(s3: S3, key: string) {
-    expect(s3.getObject).toHaveBeenCalledTimes(1)
-    expect(s3.getObject).toHaveBeenCalledWith({
-        Bucket: originConfig.originBucketName,
-        Key: key
-    })
+function expectAppVersionFetched(key: string) {
+    expect(mockedFetchFileFromS3Bucket).toHaveBeenCalledTimes(1)
+    expect(mockedFetchFileFromS3Bucket).toHaveBeenCalledWith(
+        key,
+        originConfig.originBucketName,
+        mockS3
+    )
 }
 
-function expectVersionsFetched(s3: S3, appKey: string, translationKey: string) {
-    expect(s3.getObject).toHaveBeenCalledTimes(2)
-    expect(s3.getObject).toHaveBeenCalledWith({
-        Bucket: 'test-origin-bucket',
-        Key: appKey
-    })
-    expect(s3.getObject).toHaveBeenLastCalledWith({
-        Bucket: 'test-origin-bucket',
-        Key: translationKey
-    })
+function expectVersionsFetched(appKey: string, translationKey: string) {
+    expect(mockedFetchFileFromS3Bucket).toHaveBeenCalledTimes(2)
+    expect(mockedFetchFileFromS3Bucket).toHaveBeenCalledWith(
+        appKey,
+        originConfig.originBucketName,
+        mockS3
+    )
+    expect(mockedFetchFileFromS3Bucket).toHaveBeenLastCalledWith(
+        translationKey,
+        originConfig.originBucketName,
+        mockS3
+    )
 }

@@ -1,5 +1,4 @@
 import {CloudFrontHeaders, CloudFrontRequest} from 'aws-lambda'
-import {S3} from 'aws-sdk'
 
 /**
  * Appends a custom header to a passed CloudFront header map
@@ -59,20 +58,4 @@ export function getCookie(headers: CloudFrontHeaders, cookieName: string) {
     }
 
     return null
-}
-
-/**
- * Fetches a file from the S3 origin bucket and returns its content
- * @param key key for the S3 bucket
- * @param bucket name of the S3 bucket
- * @param s3 S3 instance
- * @returns content of the file
- */
-export async function fetchFileFromS3Bucket(key: string, bucket: string, s3: S3) {
-    const response = await s3.getObject({Bucket: bucket, Key: key}).promise()
-    if (!response.Body) {
-        throw new Error(`Empty response from S3 for ${key} in ${bucket} bucket`)
-    }
-
-    return response.Body.toString('utf-8').trim()
 }
