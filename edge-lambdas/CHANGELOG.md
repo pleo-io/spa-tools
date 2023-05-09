@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/pleo-io/spa-tools/compare/spa-edge-lambdas-v1.4.0...spa-edge-lambdas-v1.4.1) (2023-05-09)
+
+
+### Bug Fixes
+
+* **translations:** validate URL language parameter before preload ([#77](https://github.com/pleo-io/spa-tools/issues/77)) ([d1f0b6e](https://github.com/pleo-io/spa-tools/commit/d1f0b6e8347f76c00a7d99cf27d35ffaea0d875e))
+
 ## [1.4.0](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-edge-lambdas-v1.3.0...spa-edge-lambdas-v1.4.0) (2023-05-04)
 
 

@@ -1,6 +1,6 @@
 {
     "private": true,
-    "version": "1.4.0",
+    "version": "1.4.1",
     "name": "@pleo-io/spa-edge-lambdas",
     "dependencies": {
         "aws-sdk": "2.1370.0"
