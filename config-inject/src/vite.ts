@@ -17,7 +17,7 @@ const DEFAULT_ENV = 'dev'
 Inline runtime configuration during development.
 Inspiration: https://github.com/vitejs/vite/issues/3105
 @see https://vitejs.dev/guide/api-plugin.html#transformindexhtml
-@param config - The Vite config environment.
+@param config
 @param env - The name of the environment of the config inlined (defaults to "dev")
 @returns Returns a Vite plugin definition or null if in production mode.
 */
