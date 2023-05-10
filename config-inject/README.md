@@ -87,11 +87,12 @@ Configure the tool by adding a `spaConfig` namespace to your `package.json` file
 options are as follows:
 
 -   `configDir` (string, required): The location of your app configuration files.
--   `buildDir` (string, required): The location of the HTML template file.
+-   `buildDir` (string, required): The location of the HTML template file. Can be overridden with
+    `SPA_BUILD_DIR` env var
 -   `templateFileName` (string, optional, default: `_index.html`): The name of the template HTML
-    file (relative to build dir).
+    file (relative to build dir). Can be overridden with `SPA_TEMPLATE_FILE_NAME` env var
 -   `outputFileName` (string, optional, default: `index.html`): The name of the output HTML file
-    (relative to build dir).
+    (relative to build dir). Can be overridden with `SPA_OUTPUT_FILE_NAME` env var
 -   `devConfigOverrideFile` (string, optional, default: `config.dev.json`): The name of the
     development config override file.
 
@@ -101,14 +102,19 @@ To inject the dev config when running the app locally, add the Vite plugin to yo
 
 ```ts
 import {defineConfig} from 'vite'
-import {inlineDevelopmentConfig} from '@pleo-io/spa-config-inject/vite'
+import {inlineLocalConfig} from '@pleo-io/spa-config-inject/vite'
 
 export default defineConfig((config) => {
     return {
-        plugins: [inlineDevelopmentConfig(config)]
+        plugins: [inlineLocalConfig({isDisabled: config.mode === 'production'})]
     }
 })
 ```
+
+Options that can be passed to `inlineLocalConfig`:
+
+-   `isDisabled`: Disables the plugin - usually in production mode (defaults to false)
+-   `env`: The name of the environment for which the config is injected (defaults to `dev`)
 
 ## Dev overrides
 
