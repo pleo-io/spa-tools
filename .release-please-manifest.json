@@ -3,5 +3,5 @@
   "reusable-workflows": "8.2.0",
   "config-inject": "0.3.0",
   "terraform-module": "2.0.0",
-  "edge-lambdas": "1.4.0"
+  "edge-lambdas": "1.4.1"
 }
