@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v0.3.0...spa-config-inject-v1.0.0) (2023-05-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* Support repos with multiple apps that inject config ([#80](https://github.com/pleo-io/spa-tools/issues/80))
+
+### Features
+
+* Support repos with multiple apps that inject config ([#80](https://github.com/pleo-io/spa-tools/issues/80)) ([b8393cb](https://github.com/pleo-io/spa-tools/commit/b8393cbffc7452c6d5d276c1b3a6c7ac2d96768f))
+
 ## [0.3.0](https://github.com/pleo-io/pleo-spa-cicd/compare/spa-config-inject-v0.2.8...spa-config-inject-v0.3.0) (2023-05-04)
 
 
