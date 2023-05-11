@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/pleo-io/spa-tools/compare/spa-edge-lambdas-v1.4.1...spa-edge-lambdas-v1.4.2) (2023-05-11)
+
+
+### Bug Fixes
+
+* Use AWS SDK v3 in Edge Lambdas ([#79](https://github.com/pleo-io/spa-tools/issues/79)) ([ba4a0db](https://github.com/pleo-io/spa-tools/commit/ba4a0db85bf56493e3708ce0dc2638b15752e182))
+
 ## [1.4.1](https://github.com/pleo-io/spa-tools/compare/spa-edge-lambdas-v1.4.0...spa-edge-lambdas-v1.4.1) (2023-05-09)
 
 
