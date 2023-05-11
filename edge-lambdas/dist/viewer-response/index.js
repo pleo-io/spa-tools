@@ -135,7 +135,9 @@ function s3_fetchFileFromS3Bucket(key, bucket, s3) {
         if (!response.Body) {
             throw new Error(`Empty response from S3 for ${key} in ${bucket} bucket`);
         }
-        return response.Body.transformToString();
+        const fileContents = yield response.Body.transformToString();
+        console.log('fileContents', fileContents);
+        return fileContents;
     });
 }
 

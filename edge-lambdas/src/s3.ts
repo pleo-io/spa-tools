@@ -14,5 +14,7 @@ export async function fetchFileFromS3Bucket(key: string, bucket: string, s3: S3C
         throw new Error(`Empty response from S3 for ${key} in ${bucket} bucket`)
     }
 
-    return response.Body.transformToString()
+    const fileContents = await response.Body.transformToString()
+    console.log('fileContents', fileContents)
+    return fileContents
 }
