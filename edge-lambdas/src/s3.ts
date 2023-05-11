@@ -15,6 +15,5 @@ export async function fetchFileFromS3Bucket(key: string, bucket: string, s3: S3C
     }
 
     const fileContents = await response.Body.transformToString()
-    console.log('fileContents', fileContents)
-    return fileContents
+    return fileContents.trim()
 }
