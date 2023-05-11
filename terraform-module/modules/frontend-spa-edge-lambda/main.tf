@@ -3,7 +3,7 @@
 
 # Using local_sensitive_file to avoid Terraform printing the verbose content of the source file
 resource "local_sensitive_file" "lambda_source" {
-  content  = file("${path.module}/../../../edge-lambdas/dist/${var.event_type}/index.js")
+  content  = file("${path.module}/../../edge-lambdas/dist/${var.event_type}/index.js")
   filename = "${path.root}/dist/${var.app_name}/${var.event_type}/index.js"
 }
 
