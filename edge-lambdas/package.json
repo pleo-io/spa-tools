@@ -3,14 +3,14 @@
     "version": "1.4.1",
     "name": "@pleo-io/spa-edge-lambdas",
     "dependencies": {
-        "aws-sdk": "2.1370.0"
+        "@aws-sdk/client-s3": "^3.329.0"
     },
     "devDependencies": {
+        "@swc/jest": "0.2.26",
         "@types/aws-lambda": "8.10.115",
         "@types/jest": "29.5.1",
-        "@types/node": "18.16.3",
+        "@types/node": "20.1.1",
         "@vercel/ncc": "0.36.1",
-        "@swc/jest": "0.2.26",
         "jest": "29.5.0",
         "prettier": "2.8.8",
         "typescript": "5.0.4"
@@ -24,6 +24,10 @@
         "arrowParens": "always",
         "trailingComma": "none",
         "proseWrap": "always"
+    },
+    "engines": {
+        "node": "18.x",
+        "pnpm": "8.x"
     },
     "jest": {
         "clearMocks": true,

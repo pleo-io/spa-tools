@@ -1,9 +1,10 @@
 import * as path from 'path'
 
 import {CloudFrontRequest, CloudFrontRequestHandler} from 'aws-lambda'
-import S3 from 'aws-sdk/clients/s3'
+import {S3Client} from '@aws-sdk/client-s3'
 
-import {fetchFileFromS3Bucket, getHeader} from '../utils'
+import {getHeader} from '../utils'
+import {fetchFileFromS3Bucket} from '../s3'
 import {Config} from '../config'
 import {addTranslationInfoToRequest, getTranslationVersion} from '../addons/translations'
 
@@ -29,7 +30,7 @@ const DEFAULT_BRANCH_DEFAULT_NAME = 'master'
  * If the translations are enabled via configuration, this lambda will also fetch the current translation
  * version from S3 and pass it to the response lambda via custom headers on the request object.
  */
-export function getHandler(config: Config, s3: S3) {
+export function getHandler(config: Config, s3: S3Client) {
     const handler: CloudFrontRequestHandler = async (event) => {
         const request = event.Records[0].cf.request
 
@@ -83,7 +84,7 @@ function getUri(request: CloudFrontRequest, appVersion: string) {
  * It can be either a specific version requested via preview link with a hash, or the latest
  * version for a branch requested (preview or main), which we fetch from cursor files stored in S3
  */
-async function getAppVersion(request: CloudFrontRequest, config: Config, s3: S3) {
+async function getAppVersion(request: CloudFrontRequest, config: Config, s3: S3Client) {
     const host = getHeader(request, 'host') ?? null
 
     // Preview name is the first segment of the url e.g. my-branch for my-branch.app.staging.example.com
@@ -120,7 +121,7 @@ function getPreviewHash(previewName?: string) {
  * Fetch a cursor deploy file from the S3 bucket and returns its content, which is the current
  * active app version for that branch).
  */
-async function fetchAppVersion(branch: string, config: Config, s3: S3) {
+async function fetchAppVersion(branch: string, config: Config, s3: S3Client) {
     try {
         return await fetchFileFromS3Bucket(`deploys/${branch}`, config.originBucketName, s3)
     } catch (error) {

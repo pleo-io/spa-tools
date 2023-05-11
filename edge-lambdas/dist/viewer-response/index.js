@@ -61,15 +61,6 @@ function getConfig() {
 }
 
 ;// CONCATENATED MODULE: ./src/utils.ts
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 /**
  * Appends a custom header to a passed CloudFront header map
  * @param headers - CloudFront headers map
@@ -116,6 +107,20 @@ function getCookie(headers, cookieName) {
     }
     return null;
 }
+
+;// CONCATENATED MODULE: external "@aws-sdk/client-s3"
+const client_s3_namespaceObject = require("@aws-sdk/client-s3");
+;// CONCATENATED MODULE: ./src/s3.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
 /**
  * Fetches a file from the S3 origin bucket and returns its content
  * @param key key for the S3 bucket
@@ -123,13 +128,15 @@ function getCookie(headers, cookieName) {
  * @param s3 S3 instance
  * @returns content of the file
  */
-function utils_fetchFileFromS3Bucket(key, bucket, s3) {
+function s3_fetchFileFromS3Bucket(key, bucket, s3) {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield s3.getObject({ Bucket: bucket, Key: key }).promise();
+        const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+        const response = yield s3.send(command);
         if (!response.Body) {
             throw new Error(`Empty response from S3 for ${key} in ${bucket} bucket`);
         }
-        return response.Body.toString('utf-8').trim();
+        const fileContents = yield response.Body.transformToString();
+        return fileContents.trim();
     });
 }
 
@@ -152,6 +159,7 @@ var translations_awaiter = (undefined && undefined.__awaiter) || function (thisA
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 
 const TRANSLATION_VERSION_HEADER = 'X-Translation-Version';
 const APP_VERSION_HEADER = 'X-App-Version';
