@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.0.0...terraform-module-v2.1.0) (2023-05-11)
+
+
+### Features
+
+* Move edge lambda code to terraform-module package ([#83](https://github.com/pleo-io/spa-tools/issues/83)) ([6d63fe0](https://github.com/pleo-io/spa-tools/commit/6d63fe01992bb18d53f634acdc7b259a26a5c34a))
+
 ## [2.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v1.4.0...terraform-module-v2.0.0) (2023-05-08)
 
 
