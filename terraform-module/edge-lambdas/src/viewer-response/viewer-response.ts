@@ -1,7 +1,7 @@
-import {CloudFrontResponse, CloudFrontResponseHandler} from 'aws-lambda'
+import {CloudFrontRequest, CloudFrontResponse, CloudFrontResponseHandler} from 'aws-lambda'
 import {Config} from '../config'
 import {addTranslationInfoToResponse} from '../addons/translations'
-import {setHeader} from '../utils'
+import {APP_VERSION_HEADER, getHeader, setHeader} from '../utils'
 
 /**
  * Edge Lambda handler triggered on "viewer-response" event, on the default CF behavior of the web app CF distribution.
@@ -20,6 +20,7 @@ export function getHandler(config: Config) {
         response = addSecurityHeaders(response, config)
         response = addCacheHeader(response)
         response = addRobotsHeader(response, config)
+        response = addVersionHeader(response, request)
         response = addTranslationInfoToResponse(response, request, config)
 
         return response
@@ -72,5 +73,13 @@ export const addRobotsHeader = (response: CloudFrontResponse, config: Config) =>
         headers = setHeader(headers, 'X-Robots-Tag', 'noindex, nofollow')
     }
 
+    return {...response, headers}
+}
+
+// Add a custom version header to the response (used e.g. for checking for new SPA versions)
+// Version is retrieved from a header set on request by the viewer-request lambda
+export function addVersionHeader(response: CloudFrontResponse, request: CloudFrontRequest) {
+    const appVersion = getHeader(request, APP_VERSION_HEADER)
+    let headers = setHeader(response.headers, APP_VERSION_HEADER, appVersion)
     return {...response, headers}
 }

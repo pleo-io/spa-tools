@@ -28,14 +28,18 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'app.example.com'
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion})
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler({...originConfig}, mockS3)
         const request = await handler(event, mockContext, mockCallback)
 
         expectAppVersionFetched('deploys/master')
-        const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
+        const expectedEvent = mockRequestEvent({
+            host,
+            uri: `/html/${appVersion}/index.html`,
+            appVersion
+        })
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
 
@@ -46,14 +50,18 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'app.example.com'
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion})
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler({...originConfig, defaultBranchName: 'main'}, mockS3)
         const request = await handler(event, mockContext, mockCallback)
 
         expectAppVersionFetched('deploys/main')
-        const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
+        const expectedEvent = mockRequestEvent({
+            host,
+            uri: `/html/${appVersion}/index.html`,
+            appVersion
+        })
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
 
@@ -68,13 +76,17 @@ describe(`Viewer request Lambda@Edge`, () => {
             {...originConfig, previewDeploymentPostfix: '.app.staging.example.com'},
             mockS3
         )
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion})
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const request = await handler(event, mockContext, mockCallback)
 
         expectAppVersionFetched('deploys/master')
-        const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
+        const expectedEvent = mockRequestEvent({
+            host,
+            uri: `/html/${appVersion}/index.html`,
+            appVersion
+        })
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
 
@@ -84,7 +96,7 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'my-feature.app.staging.example.com'
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion})
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
@@ -94,14 +106,18 @@ describe(`Viewer request Lambda@Edge`, () => {
         const request = await handler(event, mockContext, mockCallback)
 
         expectAppVersionFetched('deploys/my-feature')
-        const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/index.html`})
+        const expectedEvent = mockRequestEvent({
+            host,
+            uri: `/html/${appVersion}/index.html`,
+            appVersion
+        })
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
 
     test(`Handles requests for specific html files`, async () => {
         const appVersion = getRandomSha()
         const host = 'my-feature.app.staging.example.com'
-        const event = mockRequestEvent({host, uri: '/iframe.html'})
+        const event = mockRequestEvent({host, uri: '/iframe.html', appVersion})
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
@@ -111,14 +127,22 @@ describe(`Viewer request Lambda@Edge`, () => {
         const request = await handler(event, mockContext, mockCallback)
 
         expectAppVersionFetched('deploys/my-feature')
-        const expectedEvent = mockRequestEvent({host, uri: `/html/${appVersion}/iframe.html`})
+        const expectedEvent = mockRequestEvent({
+            host,
+            uri: `/html/${appVersion}/iframe.html`,
+            appVersion
+        })
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
 
     test(`Handles requests for well known files`, async () => {
         const appVersion = getRandomSha()
         const host = 'my-feature.app.staging.example.com'
-        const event = mockRequestEvent({host, uri: '/.well-known/apple-app-site-association'})
+        const event = mockRequestEvent({
+            host,
+            uri: '/.well-known/apple-app-site-association',
+            appVersion
+        })
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
@@ -133,7 +157,8 @@ describe(`Viewer request Lambda@Edge`, () => {
         expectAppVersionFetched('deploys/my-feature')
         const expectedEvent = mockRequestEvent({
             host,
-            uri: `/html/${appVersion}/.well-known/apple-app-site-association`
+            uri: `/html/${appVersion}/.well-known/apple-app-site-association`,
+            appVersion
         })
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
@@ -145,7 +170,7 @@ describe(`Viewer request Lambda@Edge`, () => {
         const appVersion = getRandomSha()
         const requestedAppVersion = getRandomSha()
         const host = `preview-${requestedAppVersion}.app.staging.example.com`
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion})
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
         const handler = getHandler(
@@ -157,7 +182,8 @@ describe(`Viewer request Lambda@Edge`, () => {
         expect(mockedFetchFileFromS3Bucket).not.toHaveBeenCalled()
         const expectedEvent = mockRequestEvent({
             host,
-            uri: `/html/${requestedAppVersion}/index.html`
+            uri: `/html/${requestedAppVersion}/index.html`,
+            appVersion: requestedAppVersion
         })
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
@@ -171,7 +197,7 @@ describe(`Viewer request Lambda@Edge`, () => {
         const appVersion = getRandomSha()
         const translationVersion = getRandomInt()
         const host = 'app.example.com'
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion})
 
         mockedFetchFileFromS3Bucket.mockResolvedValueOnce(appVersion)
         mockedFetchFileFromS3Bucket.mockResolvedValueOnce(translationVersion)
@@ -197,7 +223,7 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'app.example.com'
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion})
         jest.spyOn(console, 'error').mockImplementationOnce(() => {})
 
         mockedFetchFileFromS3Bucket.mockResolvedValueOnce(appVersion)
@@ -223,7 +249,7 @@ describe(`Viewer request Lambda@Edge`, () => {
     `, async () => {
         const host = 'what-is-this-branch.app.staging.example.com'
         jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-        const event = mockRequestEvent({host})
+        const event = mockRequestEvent({host, appVersion: 'unknown'})
 
         mockedFetchFileFromS3Bucket.mockRejectedValueOnce(
             new Error(
@@ -238,7 +264,7 @@ describe(`Viewer request Lambda@Edge`, () => {
         const request = await handler(event, mockContext, mockCallback)
 
         expectAppVersionFetched('deploys/what-is-this-branch')
-        const expectedEvent = mockRequestEvent({host, uri: `/404`})
+        const expectedEvent = mockRequestEvent({host, uri: `/404`, appVersion: 'unknown'})
         expect(request).toEqual(requestFromEvent(expectedEvent))
         expect(console.error).toHaveBeenCalledTimes(1)
     })
@@ -256,7 +282,7 @@ const mockRequestEvent = ({
     uri = '/'
 }: {
     host: string
-    appVersion?: string
+    appVersion: string
     translationVersion?: string
     uri?: string
 }): CloudFrontRequestEvent => ({
@@ -298,10 +324,10 @@ const mockRequestEvent = ({
                                   }
                               ]
                             : undefined,
-                        'x-app-version': appVersion
+                        'x-pleo-spa-version': appVersion
                             ? [
                                   {
-                                      key: 'X-App-Version',
+                                      key: 'X-Pleo-SPA-Version',
                                       value: appVersion
                                   }
                               ]
