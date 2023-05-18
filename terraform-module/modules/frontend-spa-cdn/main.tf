@@ -49,6 +49,8 @@ resource "aws_cloudfront_distribution" "this" {
       }
     }
 
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.default_behaviour_headers_policy.id
+
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 1
@@ -112,4 +114,52 @@ resource "aws_s3_bucket_object" "object" {
   key          = local.error_page_key
   source       = local.error_page_file
   content_type = "text/html"
+}
+
+resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_policy" {
+  name = "${var.app_name}-default-headers-policy"
+  security_headers_config {
+    content_type_options {
+      override = true
+    }
+    frame_options {
+      frame_option = var.block_iframes ? "DENY" : "SAMEORIGIN"
+      override     = true
+    }
+    referrer_policy {
+      referrer_policy = "same-origin"
+      override        = true
+    }
+    xss_protection {
+      mode_block = true
+      protection = true
+      override   = true
+    }
+    strict_transport_security {
+      access_control_max_age_sec = "63072000"
+      include_subdomains         = true
+      preload                    = true
+      override                   = true
+    }
+  }
+
+  custom_headers_config {
+
+    // Adds cache control HTTP headers to the response to remove any caching
+    // Since we're only handling skeleton HTML files in this behaviour, disabling
+    // caching has little performance overhead. All static assets are cached aggressively
+    // in another behaviour.
+    items {
+      header   = "Cache-Control"
+      override = true
+      value    = "max-age=0,no-cache,no-store,must-revalidate"
+    }
+
+    // Adds robots tag HTTP header to the response to prevent indexing by bots (unless in production)
+    items {
+      header   = "X-Robots-Tag"
+      override = true
+      value    = var.env == "production" ? "all" : "noindex, nofollow"
+    }
+  }
 }
