@@ -5454,7 +5454,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var endpoint = __nccwpck_require__(9960);
 var universalUserAgent = __nccwpck_require__(4930);
 var isPlainObject = __nccwpck_require__(366);
-var nodeFetch = _interopDefault(__nccwpck_require__(1822));
+var nodeFetch = _interopDefault(__nccwpck_require__(3642));
 var requestError = __nccwpck_require__(9913);
 
 const VERSION = "5.6.3";
@@ -5881,7 +5881,7 @@ exports.isPlainObject = isPlainObject;
 
 /***/ }),
 
-/***/ 1822:
+/***/ 3642:
 /***/ ((module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -11141,7 +11141,7 @@ function runAction(action) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            return action();
+            return yield action();
         }
         catch (error) {
             if (error instanceof Error) {

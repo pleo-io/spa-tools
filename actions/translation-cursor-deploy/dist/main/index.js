@@ -4236,7 +4236,7 @@ function runAction(action) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            return action();
+            return yield action();
         }
         catch (error) {
             if (error instanceof Error) {
