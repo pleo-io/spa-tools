@@ -90,7 +90,7 @@ export async function removeFileFromS3({key, bucket}: {key: string; bucket: stri
  */
 export async function runAction(action: () => Promise<unknown>) {
     try {
-        return action()
+        return await action()
     } catch (error: unknown) {
         if (error instanceof Error) {
             core.error(error.stack ?? error.message)
