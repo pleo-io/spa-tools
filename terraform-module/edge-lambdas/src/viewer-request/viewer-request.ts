@@ -3,7 +3,7 @@ import * as path from 'path'
 import {CloudFrontRequest, CloudFrontRequestHandler} from 'aws-lambda'
 import {S3Client} from '@aws-sdk/client-s3'
 
-import {getHeader} from '../utils'
+import {APP_VERSION_HEADER, getHeader, setHeader} from '../utils'
 import {fetchFileFromS3Bucket} from '../s3'
 import {Config} from '../config'
 import {addTranslationInfoToRequest, getTranslationVersion} from '../addons/translations'
@@ -43,8 +43,11 @@ export function getHandler(config: Config, s3: S3Client) {
                 getTranslationVersion(s3, config)
             ])
 
+            // Set app version header on request, so it can be picked up by the viewer response lambda
+            request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion)
+
             // If needed, pass the versions to the viewer response lambda via custom headers on the request
-            addTranslationInfoToRequest({request, translationVersion, appVersion, config})
+            addTranslationInfoToRequest({request, translationVersion, config})
 
             // We instruct the CDN to return a file that corresponds to the app version calculated
             const uri = getUri(request, appVersion)

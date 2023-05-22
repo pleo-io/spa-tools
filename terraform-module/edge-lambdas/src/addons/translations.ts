@@ -11,11 +11,10 @@
 import {CloudFrontRequest, CloudFrontResponse} from 'aws-lambda'
 import {S3Client} from '@aws-sdk/client-s3'
 import {Config} from '../config'
-import {getCookie, getHeader, setHeader} from '../utils'
+import {APP_VERSION_HEADER, getCookie, getHeader, setHeader} from '../utils'
 import {fetchFileFromS3Bucket} from '../s3'
 
 const TRANSLATION_VERSION_HEADER = 'X-Translation-Version'
-const APP_VERSION_HEADER = 'X-App-Version'
 const DEFAULT_LANGUAGE = 'en'
 const LANG_QUERY_PARAM = 'lang'
 const LANG_COOKIE_NAME = 'x-pleo-language'
@@ -75,12 +74,10 @@ export function addTranslationInfoToResponse(
 export function addTranslationInfoToRequest({
     request,
     translationVersion,
-    appVersion,
     config
 }: {
     request: CloudFrontRequest
     translationVersion: string
-    appVersion: string
     config: Config
 }) {
     if (!config.isLocalised) {
@@ -90,7 +87,6 @@ export function addTranslationInfoToRequest({
     if (translationVersion) {
         request.headers = setHeader(request.headers, TRANSLATION_VERSION_HEADER, translationVersion)
     }
-    request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion)
 }
 
 /**
