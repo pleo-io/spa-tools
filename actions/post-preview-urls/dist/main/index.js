@@ -9612,7 +9612,7 @@ var import_exec = __toESM(require_exec());
 var core = __toESM(require_core());
 async function runAction(action) {
   try {
-    return action();
+    return await action();
   } catch (error2) {
     if (error2 instanceof Error) {
       core.error(error2.stack ?? error2.message);
