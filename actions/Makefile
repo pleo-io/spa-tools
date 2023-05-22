@@ -9,8 +9,8 @@ build: post-preview-urls/README.md post-preview-urls/dist/main/index.js
 build:
 	./node_modules/.bin/prettier -w .
 
-%/dist/main/index.js: %/main.ts utils.ts node_modules
-	./node_modules/.bin/ncc build $< --out $(dir $@)
+%/dist/main/index.js: %/index.ts utils.ts node_modules Makefile
+	./node_modules/.bin/tsup $< --out-dir $(dir $@) --config tsup.config.ts
 
 %/README.md: %/action.yml node_modules
 	cd $(dir $<) && ../node_modules/.bin/action-docs --update-readme --no-banner

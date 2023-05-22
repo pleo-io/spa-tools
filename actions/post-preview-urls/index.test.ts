@@ -1,5 +1,5 @@
 import {stripIndent as strip} from 'common-tags'
-import {postPreviewUrls} from './main'
+import {postPreviewUrls} from './index'
 import * as github from '@actions/github'
 
 jest.mock('../utils')
