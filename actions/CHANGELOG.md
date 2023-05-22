@@ -11,6 +11,13 @@
 
 -   chore: Use pnpm 8 internally
 
+## [8.1.2](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.1.1...spa-github-actions-v8.1.2) (2023-05-22)
+
+
+### Bug Fixes
+
+* Modernize actions setup ([#89](https://github.com/pleo-io/spa-tools/issues/89)) ([a97c73b](https://github.com/pleo-io/spa-tools/commit/a97c73b335e2a818ff92da8fb974749ecb72d0d8))
+
 ## [8.1.1](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.1.0...spa-github-actions-v8.1.1) (2023-05-19)
 
 
