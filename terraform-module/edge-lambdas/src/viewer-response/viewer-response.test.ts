@@ -20,7 +20,8 @@ describe(`Viewer response Lambda@Edge`, () => {
         const translationVersion = getRandomInt()
         const event = mockResponseEvent({
             host: 'app.staging.example.com',
-            translations: {appVersion, translationVersion}
+            appVersion,
+            translationVersion
         })
 
         const handler = getHandler({
@@ -32,7 +33,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...defaultHeaders,
+                ...defaultHeaders(appVersion),
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: appVersion,
@@ -49,7 +50,8 @@ describe(`Viewer response Lambda@Edge`, () => {
         Then it does not add a preload header 
         And it does not add a translation cookie
     `, async () => {
-        const event = mockResponseEvent({host: 'app.staging.example.com'})
+        const appVersion = getRandomSha()
+        const event = mockResponseEvent({host: 'app.staging.example.com', appVersion})
 
         const handler = getHandler({
             ...originConfig,
@@ -59,7 +61,7 @@ describe(`Viewer response Lambda@Edge`, () => {
         const response = await handler(event, mockContext, mockCallback)
 
         expect(response).toEqual({
-            headers: defaultHeaders,
+            headers: defaultHeaders(appVersion),
             status: '200',
             statusDescription: 'OK'
         })
@@ -71,11 +73,12 @@ describe(`Viewer response Lambda@Edge`, () => {
         And the custom language is used for the preload header
         And it adds a translation cookie using the translation version
     `, async () => {
-        const appVersion = getRandomSha()
         const translationVersion = getRandomInt()
+        const appVersion = getRandomSha()
         const event = mockResponseEvent({
             host: 'app.staging.example.com',
-            translations: {appVersion, translationVersion},
+            appVersion,
+            translationVersion,
             languageForCookie: 'da'
         })
 
@@ -88,7 +91,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...defaultHeaders,
+                ...defaultHeaders(appVersion),
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: translationVersion,
@@ -109,7 +112,8 @@ describe(`Viewer response Lambda@Edge`, () => {
         const translationVersion = getRandomInt()
         const event = mockResponseEvent({
             host: 'app.staging.example.com',
-            translations: {appVersion, translationVersion},
+            appVersion,
+            translationVersion,
             languageForCookie: 'en'
         })
 
@@ -122,7 +126,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...defaultHeaders,
+                ...defaultHeaders(appVersion),
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: appVersion,
@@ -142,7 +146,8 @@ describe(`Viewer response Lambda@Edge`, () => {
         const translationVersion = getRandomInt()
         const event = mockResponseEvent({
             host: 'app.staging.example.com',
-            translations: {appVersion, translationVersion},
+            appVersion,
+            translationVersion,
             languageForParam: 'da'
         })
 
@@ -155,7 +160,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...defaultHeaders,
+                ...defaultHeaders(appVersion),
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: translationVersion,
@@ -175,7 +180,8 @@ describe(`Viewer response Lambda@Edge`, () => {
         const translationVersion = getRandomInt()
         const event = mockResponseEvent({
             host: 'app.staging.example.com',
-            translations: {appVersion, translationVersion},
+            appVersion,
+            translationVersion,
             languageForParam: 'foo'
         })
 
@@ -188,7 +194,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...defaultHeaders,
+                ...defaultHeaders(appVersion),
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: appVersion,
@@ -209,7 +215,8 @@ describe(`Viewer response Lambda@Edge`, () => {
         const translationVersion = getRandomInt()
         const event = mockResponseEvent({
             host: 'app.staging.example.com',
-            translations: {appVersion, translationVersion},
+            appVersion,
+            translationVersion,
             languageForParam: 'da',
             languageForCookie: 'fr'
         })
@@ -223,7 +230,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...defaultHeaders,
+                ...defaultHeaders(appVersion),
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: translationVersion,
@@ -236,10 +243,11 @@ describe(`Viewer response Lambda@Edge`, () => {
     })
 })
 
-const defaultHeaders = {
+const defaultHeaders = (appVersion: string) => ({
     'last-modified': [{key: 'Last-Modified', value: '2016-11-25'}],
-    'x-amz-meta-last-modified': [{key: 'X-Amz-Meta-Last-Modified', value: '2016-01-01'}]
-}
+    'x-amz-meta-last-modified': [{key: 'X-Amz-Meta-Last-Modified', value: '2016-01-01'}],
+    'x-pleo-spa-version': [{key: 'X-Pleo-SPA-Version', value: appVersion}]
+})
 
 const getTranslationHeaders = ({
     cookieHash,
@@ -275,16 +283,15 @@ const getTranslationHeaders = ({
  */
 export const mockResponseEvent = ({
     host,
-    translations,
+    translationVersion,
+    appVersion,
     uri = '/',
     languageForCookie,
     languageForParam
 }: {
     host: string
-    translations?: {
-        appVersion: string
-        translationVersion?: string
-    }
+    appVersion: string
+    translationVersion?: string
     uri?: string
     languageForCookie?: string
     languageForParam?: string
@@ -307,18 +314,18 @@ export const mockResponseEvent = ({
                                 value: host
                             }
                         ],
-                        ...(translations
+                        'x-pleo-spa-version': [
+                            {
+                                key: 'X-Pleo-SPA-Version',
+                                value: appVersion
+                            }
+                        ],
+                        ...(translationVersion
                             ? {
                                   'x-translation-version': [
                                       {
                                           key: 'X-Translation-Version',
-                                          value: translations.translationVersion
-                                      }
-                                  ],
-                                  'x-app-version': [
-                                      {
-                                          key: 'X-App-Version',
-                                          value: translations.appVersion
+                                          value: translationVersion
                                       }
                                   ]
                               }
@@ -339,7 +346,7 @@ export const mockResponseEvent = ({
                 response: {
                     status: '200',
                     statusDescription: 'OK',
-                    headers: defaultHeaders
+                    headers: defaultHeaders(appVersion)
                 }
             }
         }

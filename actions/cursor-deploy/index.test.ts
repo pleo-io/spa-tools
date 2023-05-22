@@ -1,5 +1,5 @@
 import {stripIndents as strip} from 'common-tags'
-import {cursorDeploy, branchNameToHostnameLabel} from './main'
+import {cursorDeploy, branchNameToHostnameLabel} from './index'
 import * as utils from '../utils'
 
 jest.mock('../utils')

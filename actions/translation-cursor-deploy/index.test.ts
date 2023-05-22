@@ -1,5 +1,5 @@
 import {stripIndents as strip} from 'common-tags'
-import {cursorDeploy} from './main'
+import {cursorDeploy} from './index'
 import * as utils from '../utils'
 import * as helpers from './helpers'
 

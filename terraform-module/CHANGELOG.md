@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.1.0...terraform-module-v2.2.0) (2023-05-22)
+
+
+### Features
+
+* Add X-Pleo-SPA-Version header to the HTML response ([#86](https://github.com/pleo-io/spa-tools/issues/86)) ([eef1ffd](https://github.com/pleo-io/spa-tools/commit/eef1ffd934a7a1fbe6202d6d7cd83f988d10bf2a))
+
 ## [2.1.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.0.0...terraform-module-v2.1.0) (2023-05-11)
 
 

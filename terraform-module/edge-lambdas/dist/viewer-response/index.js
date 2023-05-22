@@ -107,6 +107,7 @@ function getCookie(headers, cookieName) {
     }
     return null;
 }
+const APP_VERSION_HEADER = 'X-Pleo-SPA-Version';
 
 ;// CONCATENATED MODULE: external "@aws-sdk/client-s3"
 const client_s3_namespaceObject = require("@aws-sdk/client-s3");
@@ -162,7 +163,6 @@ var translations_awaiter = (undefined && undefined.__awaiter) || function (thisA
 
 
 const TRANSLATION_VERSION_HEADER = 'X-Translation-Version';
-const APP_VERSION_HEADER = 'X-App-Version';
 const DEFAULT_LANGUAGE = 'en';
 const LANG_QUERY_PARAM = 'lang';
 const LANG_COOKIE_NAME = 'x-pleo-language';
@@ -208,14 +208,13 @@ function addTranslationInfoToResponse(response, request, config) {
  * object as custom headers. This allows the viewer-response lambda to pick up this information
  * and use it enrich the response.
  */
-function addTranslationInfoToRequest({ request, translationVersion, appVersion, config }) {
+function addTranslationInfoToRequest({ request, translationVersion, config }) {
     if (!config.isLocalised) {
         return;
     }
     if (translationVersion) {
         request.headers = setHeader(request.headers, TRANSLATION_VERSION_HEADER, translationVersion);
     }
-    request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion);
 }
 /**
  * Adds a cookie with the current translation version. This value is used by the app to request
@@ -288,6 +287,7 @@ var viewer_response_awaiter = (undefined && undefined.__awaiter) || function (th
     });
 };
 
+
 /**
  * Edge Lambda handler triggered on "viewer-response" event, on the default CF behavior of the web app CF distribution.
  * The default CF behaviour only handles requests for HTML documents and requests for static files (e.g. /, /bills, /settings/accounting etc.)
@@ -301,10 +301,18 @@ function getHandler(config) {
     const handler = (event) => viewer_response_awaiter(this, void 0, void 0, function* () {
         let response = event.Records[0].cf.response;
         const request = event.Records[0].cf.request;
+        response = addVersionHeader(response, request);
         response = addTranslationInfoToResponse(response, request, config);
         return response;
     });
     return handler;
+}
+// Add a custom version header to the response (used e.g. for checking for new SPA versions)
+// Version is retrieved from a header set on request by the viewer-request lambda
+function addVersionHeader(response, request) {
+    const appVersion = getHeader(request, APP_VERSION_HEADER);
+    let headers = utils_setHeader(response.headers, APP_VERSION_HEADER, appVersion);
+    return Object.assign(Object.assign({}, response), { headers });
 }
 
 ;// CONCATENATED MODULE: ./src/viewer-response/index.ts

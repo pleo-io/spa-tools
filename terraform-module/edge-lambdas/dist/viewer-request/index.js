@@ -111,6 +111,7 @@ function utils_getCookie(headers, cookieName) {
     }
     return null;
 }
+const utils_APP_VERSION_HEADER = 'X-Pleo-SPA-Version';
 
 ;// CONCATENATED MODULE: ./src/s3.ts
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -164,7 +165,6 @@ var translations_awaiter = (undefined && undefined.__awaiter) || function (thisA
 
 
 const TRANSLATION_VERSION_HEADER = 'X-Translation-Version';
-const APP_VERSION_HEADER = 'X-App-Version';
 const DEFAULT_LANGUAGE = 'en';
 const LANG_QUERY_PARAM = 'lang';
 const LANG_COOKIE_NAME = 'x-pleo-language';
@@ -210,14 +210,13 @@ function addTranslationInfoToResponse(response, request, config) {
  * object as custom headers. This allows the viewer-response lambda to pick up this information
  * and use it enrich the response.
  */
-function addTranslationInfoToRequest({ request, translationVersion, appVersion, config }) {
+function addTranslationInfoToRequest({ request, translationVersion, config }) {
     if (!config.isLocalised) {
         return;
     }
     if (translationVersion) {
         request.headers = utils_setHeader(request.headers, TRANSLATION_VERSION_HEADER, translationVersion);
     }
-    request.headers = utils_setHeader(request.headers, APP_VERSION_HEADER, appVersion);
 }
 /**
  * Adds a cookie with the current translation version. This value is used by the app to request
@@ -325,8 +324,10 @@ function getHandler(config, s3) {
                 getAppVersion(request, config, s3),
                 getTranslationVersion(s3, config)
             ]);
+            // Set app version header on request, so it can be picked up by the viewer response lambda
+            request.headers = utils_setHeader(request.headers, utils_APP_VERSION_HEADER, appVersion);
             // If needed, pass the versions to the viewer response lambda via custom headers on the request
-            addTranslationInfoToRequest({ request, translationVersion, appVersion, config });
+            addTranslationInfoToRequest({ request, translationVersion, config });
             // We instruct the CDN to return a file that corresponds to the app version calculated
             const uri = getUri(request, appVersion);
             request.uri = uri;
