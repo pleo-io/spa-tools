@@ -13,12 +13,6 @@ variable "role_arn" {
   type        = string
 }
 
-variable "block_iframes" {
-  description = "Should add custom header blocking access via iframes?"
-  default     = true
-  type        = bool
-}
-
 variable "is_localised" {
   description = "Should fetch translation hash and add cookie & preload header for translation files?"
   default     = true

@@ -23,7 +23,6 @@ module "lambdas" {
   event_type               = each.key
   role_arn                 = module.lambda_role.role_arn
   env                      = var.env
-  block_iframes            = var.block_iframes
   is_localised             = var.is_localised
   default_repo_branch_name = var.default_repo_branch_name
   bucket_name              = module.s3.bucket_name
@@ -48,11 +47,12 @@ module "certificate" {
 }
 
 module "cdn" {
-  source      = "./modules/frontend-spa-cdn"
-  app_name    = var.app_name
-  env         = var.env
-  domain_name = local.domain_name
-  bucket_name = module.s3.bucket_name
+  source        = "./modules/frontend-spa-cdn"
+  app_name      = var.app_name
+  env           = var.env
+  domain_name   = local.domain_name
+  bucket_name   = module.s3.bucket_name
+  block_iframes = var.block_iframes
 
   bucket_regional_domain_name     = module.s3.bucket_regional_domain_name
   cloudfront_access_identity_path = module.s3.cloudfront_access_identity_path

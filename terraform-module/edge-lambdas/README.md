@@ -93,12 +93,7 @@ behavior which they are associated with.
         > cursor file request further.
 
 -   Viewer Response - triggered just before the response is returned to the user's browser.
-    Currently we use it set a few headers on the response:
-    -   security-related headers like `X-XSS-Protection`.
-    -   `X-Robots-Tag` - replaces the `robots.txt` file - we only apply this in staging to avoid the
-        preview deployments and main staging deployment from being indexed.
-    -   `Cache-Control` - we need to modify this header to make sure HTML files are not cached by
-        user's browser
+    Currently we use it set translation-related headers on the response
 
 #### `.well-known` files
 

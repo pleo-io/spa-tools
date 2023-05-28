@@ -46,3 +46,9 @@ variable "edge_lambdas" {
     arn        = string
   }))
 }
+
+variable "block_iframes" {
+  description = "Should add custom header blocking access via iframes?"
+  default     = true
+  type        = bool
+}

@@ -11,80 +11,6 @@ const mockCallback = () => {}
 
 describe(`Viewer response Lambda@Edge`, () => {
     test(`
-        When processing a response for the default branch
-        Then it adds security custom header to the response
-        And it adds cache control custom header to the response
-    `, async () => {
-        const appVersion = getRandomSha()
-        const event = mockResponseEvent({host: 'app.example.com', appVersion})
-
-        const handler = getHandler(originConfig)
-        const response = await handler(event, mockContext, mockCallback)
-
-        expect(response).toEqual({
-            headers: {
-                ...securityHeaders,
-                ...cacheControlHeaders,
-                ...defaultHeaders(appVersion)
-            },
-            status: '200',
-            statusDescription: 'OK'
-        })
-    })
-
-    test(`
-        When blocking robots is turned on
-        Then it adds robots custom header to the response
-    `, async () => {
-        const appVersion = getRandomSha()
-        const event = mockResponseEvent({host: 'app.staging.example.com', appVersion})
-
-        const handler = getHandler({
-            ...originConfig,
-            previewDeploymentPostfix: '.app.staging.example.com',
-            blockRobots: 'true'
-        })
-        const response = await handler(event, mockContext, mockCallback)
-
-        expect(response).toEqual({
-            headers: {
-                ...securityHeaders,
-                ...defaultHeaders(appVersion),
-                ...cacheControlHeaders,
-                'x-robots-tag': [{key: 'X-Robots-Tag', value: 'noindex, nofollow'}]
-            },
-            status: '200',
-            statusDescription: 'OK'
-        })
-    })
-
-    test(`
-        When blocking iFrames is turned on
-        Then it adds frame blocking custom header to the response
-    `, async () => {
-        const appVersion = getRandomSha()
-        const event = mockResponseEvent({host: 'app.staging.example.com', appVersion})
-
-        const handler = getHandler({
-            ...originConfig,
-            previewDeploymentPostfix: '.app.example.com',
-            blockIframes: 'true'
-        })
-        const response = await handler(event, mockContext, mockCallback)
-
-        expect(response).toEqual({
-            headers: {
-                ...securityHeaders,
-                'x-frame-options': [{key: 'X-Frame-Options', value: 'DENY'}],
-                ...defaultHeaders(appVersion),
-                ...cacheControlHeaders
-            },
-            status: '200',
-            statusDescription: 'OK'
-        })
-    })
-
-    test(`
         When the translations addon is on
         And there is no language cookie or param
         Then it adds a preload header using the app version and default language
@@ -107,9 +33,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...securityHeaders,
                 ...defaultHeaders(appVersion),
-                ...cacheControlHeaders,
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: appVersion,
@@ -137,11 +61,7 @@ describe(`Viewer response Lambda@Edge`, () => {
         const response = await handler(event, mockContext, mockCallback)
 
         expect(response).toEqual({
-            headers: {
-                ...securityHeaders,
-                ...defaultHeaders(appVersion),
-                ...cacheControlHeaders
-            },
+            headers: defaultHeaders(appVersion),
             status: '200',
             statusDescription: 'OK'
         })
@@ -171,9 +91,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...securityHeaders,
                 ...defaultHeaders(appVersion),
-                ...cacheControlHeaders,
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: translationVersion,
@@ -208,9 +126,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         expect(response).toEqual({
             headers: {
-                ...securityHeaders,
                 ...defaultHeaders(appVersion),
-                ...cacheControlHeaders,
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: appVersion,
@@ -238,17 +154,13 @@ describe(`Viewer response Lambda@Edge`, () => {
         const handler = getHandler({
             ...originConfig,
             previewDeploymentPostfix: '.app.example.com',
-            blockIframes: 'true',
             isLocalised: 'true'
         })
         const response = await handler(event, mockContext, mockCallback)
 
         expect(response).toEqual({
             headers: {
-                ...securityHeaders,
-                'x-frame-options': [{key: 'X-Frame-Options', value: 'DENY'}],
                 ...defaultHeaders(appVersion),
-                ...cacheControlHeaders,
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: translationVersion,
@@ -276,17 +188,13 @@ describe(`Viewer response Lambda@Edge`, () => {
         const handler = getHandler({
             ...originConfig,
             previewDeploymentPostfix: '.app.example.com',
-            blockIframes: 'true',
             isLocalised: 'true'
         })
         const response = await handler(event, mockContext, mockCallback)
 
         expect(response).toEqual({
             headers: {
-                ...securityHeaders,
-                'x-frame-options': [{key: 'X-Frame-Options', value: 'DENY'}],
                 ...defaultHeaders(appVersion),
-                ...cacheControlHeaders,
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: appVersion,
@@ -316,17 +224,13 @@ describe(`Viewer response Lambda@Edge`, () => {
         const handler = getHandler({
             ...originConfig,
             previewDeploymentPostfix: '.app.example.com',
-            blockIframes: 'true',
             isLocalised: 'true'
         })
         const response = await handler(event, mockContext, mockCallback)
 
         expect(response).toEqual({
             headers: {
-                ...securityHeaders,
-                'x-frame-options': [{key: 'X-Frame-Options', value: 'DENY'}],
                 ...defaultHeaders(appVersion),
-                ...cacheControlHeaders,
                 ...getTranslationHeaders({
                     cookieHash: translationVersion,
                     preloadHash: translationVersion,
@@ -344,21 +248,6 @@ const defaultHeaders = (appVersion: string) => ({
     'x-amz-meta-last-modified': [{key: 'X-Amz-Meta-Last-Modified', value: '2016-01-01'}],
     'x-pleo-spa-version': [{key: 'X-Pleo-SPA-Version', value: appVersion}]
 })
-
-const securityHeaders = {
-    'x-content-type-options': [{key: 'X-Content-Type-Options', value: 'nosniff'}],
-    'referrer-policy': [{key: 'Referrer-Policy', value: 'same-origin'}],
-    'x-xss-protection': [{key: 'X-XSS-Protection', value: '1; mode=block'}]
-}
-
-const cacheControlHeaders = {
-    'cache-control': [
-        {
-            key: 'Cache-Control',
-            value: 'max-age=0,no-cache,no-store,must-revalidate'
-        }
-    ]
-}
 
 const getTranslationHeaders = ({
     cookieHash,
