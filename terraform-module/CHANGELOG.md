@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.2.0...terraform-module-v2.3.0) (2023-05-28)
+
+
+### Features
+
+* Use Cloudfront response headers policy ([#87](https://github.com/pleo-io/spa-tools/issues/87)) ([0f6522f](https://github.com/pleo-io/spa-tools/commit/0f6522f690fcac25188a544c7b0e137e724472ac))
+
 ## [2.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.1.0...terraform-module-v2.2.0) (2023-05-22)
 
 
