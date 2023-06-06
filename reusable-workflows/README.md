@@ -36,8 +36,8 @@ uploads the result to an S3 registry bucket.
 | ---------------- | ------------------------------------------------- | -------- | ---------- | :------: |
 | `app_name`       | Name of the app, unique for the repo, kebab-cased | `string` | n/a        |   yes    |
 | `bucket_name`    | Name of the S3 registry bucket                    | `string` | n/a        |   yes    |
-| `build_dir`      | Location of the deploy bundle after build         | `string` | n/a        |   yes    |
 | `build_cmd`      | Command for building the deploy bundle            | `string` | n/a        |   yes    |
+| `build_dir`      | Location of the deploy bundle after build         | `string` | n/a        |   yes    |
 | `registry_scope` | Org scope for the GitHub Package Registry         | `string` | `@pleo-io` |    no    |
 
 #### Secrets
@@ -81,13 +81,13 @@ the cursor file for the current branch.
 
 | Name                | Description                                     | Type     | Default    | Required |
 | ------------------- | ----------------------------------------------- | -------- | ---------- | :------: |
-| `environment`       | Name of the deployment environment              | `string` | n/a        |   yes    |
-| `bundle_uri`        | S3 URI of the bundle in the registry bucket     | `string` | n/a        |   yes    |
-| `tree_hash`         | Tree hash of the code to deploy                 | `string` | n/a        |   yes    |
 | `bucket_name`       | Name of the S3 origin bucket                    | `string` | n/a        |   yes    |
+| `bundle_uri`        | S3 URI of the bundle in the registry bucket     | `string` | n/a        |   yes    |
 | `domain_name`       | Domain name for the app (e.g. app.example.com)  | `string` | n/a        |   yes    |
-| `inject_config_cmd` | Command to run to inject the environment config | `string` | n/a        |    no    |
+| `environment`       | Name of the deployment environment              | `string` | n/a        |   yes    |
+| `tree_hash`         | Tree hash of the code to deploy                 | `string` | n/a        |   yes    |
 | `bundle_dir`        | Directory where the bundle should be unpacked   | `string` | `dist`     |    no    |
+| `inject_config_cmd` | Command to run to inject the environment config | `string` | n/a        |    no    |
 | `registry_scope`    | Org scope for the GitHub Package Registry       | `string` | `@pleo-io` |    no    |
 
 #### Secrets

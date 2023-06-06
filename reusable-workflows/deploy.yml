@@ -120,6 +120,15 @@ jobs:
            --recursive \
            --exclude "static/*"
 
+      - name: Update .well-known Files If Exists
+        run: |
+           aws s3 cp \
+            s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
+            s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
+            --content-type 'application/json' \
+            --cache-control 'public,max-age=3600' \
+            --metadata-directive REPLACE || echo "Failed updating .well-known files"
+
       - name: Update Cursor File
         id: cursor-update
         uses: pleo-io/spa-tools/actions/cursor-deploy@spa-github-actions-v8.0.2
