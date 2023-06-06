@@ -124,6 +124,10 @@ jobs:
            --recursive \
            --exclude "static/*"
 
+      - name: Post Upload Hook
+        if: inputs.post_upload_cmd
+        run: ${{inputs.post_upload_cmd }}
+
       - name: Update Cursor File
         id: cursor-update
         uses: pleo-io/spa-tools/actions/cursor-deploy@spa-github-actions-v8.0.2
