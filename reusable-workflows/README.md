@@ -88,7 +88,6 @@ the cursor file for the current branch.
 | `tree_hash`         | Tree hash of the code to deploy                 | `string` | n/a        |   yes    |
 | `bundle_dir`        | Directory where the bundle should be unpacked   | `string` | `dist`     |    no    |
 | `inject_config_cmd` | Command to run to inject the environment config | `string` | n/a        |    no    |
-| `post_upload_cmd`   | Command to run after files were uploaded to S3  | `string` | n/a        |    no    |
 | `registry_scope`    | Org scope for the GitHub Package Registry       | `string` | `@pleo-io` |    no    |
 
 #### Secrets

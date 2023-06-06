@@ -38,10 +38,6 @@ on:
         required: false
         description: "Command to run to inject the environment config"
         type: string
-      post_upload_cmd:
-        required: false
-        description: "Command to run after files were uploaded to S3"
-        type: string
       registry_scope:
         required: false
         default: "@pleo-io"
@@ -124,9 +120,14 @@ jobs:
            --recursive \
            --exclude "static/*"
 
-      - name: Post Upload Hook
-        if: inputs.post_upload_cmd
-        run: ${{inputs.post_upload_cmd }}
+      - name: Update .well-known Files If Exists
+        run: |
+           aws s3 cp \
+            s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
+            s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
+            --content-type 'application/json' \
+            --cache-control 'public,max-age=3600' \
+            --metadata-directive REPLACE || echo "Failed updating .well-known files"
 
       - name: Update Cursor File
         id: cursor-update
