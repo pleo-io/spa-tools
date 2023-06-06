@@ -38,6 +38,10 @@ on:
         required: false
         description: "Command to run to inject the environment config"
         type: string
+      post_upload_cmd:
+        required: false
+        description: "Command to run after files were uploaded to S3"
+        type: string
       registry_scope:
         required: false
         default: "@pleo-io"
