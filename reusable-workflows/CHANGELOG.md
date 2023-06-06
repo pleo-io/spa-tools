@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.3.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.2.0...reusable-workflows-v8.3.0) (2023-06-06)
+
+
+### Features
+
+* Add handling of well-known/apple-app-site-association ([#97](https://github.com/pleo-io/spa-tools/issues/97)) ([29f74a9](https://github.com/pleo-io/spa-tools/commit/29f74a92f4700574215401e40c468ab77027048c))
+
 ## [8.2.0](https://github.com/pleo-io/pleo-spa-cicd/compare/reusable-workflows-v8.1.0...reusable-workflows-v8.2.0) (2023-05-04)
 
 
