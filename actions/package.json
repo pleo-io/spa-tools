@@ -6,7 +6,7 @@
         "preinstall": "npx only-allow pnpm"
     },
     "engines": {
-        "node": "16.x",
+        "node": "20",
         "pnpm": "8.x"
     },
     "dependencies": {
