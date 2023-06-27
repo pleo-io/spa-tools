@@ -38,7 +38,7 @@ jobs:
           version: 8
       - uses: actions/setup-node@v3.6.0
         with:
-          node-version: "16.x"
+          node-version: "20"
           scope: "@pleo-io"
           cache: "pnpm"
           registry-url: "https://npm.pkg.github.com"

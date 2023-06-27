@@ -26,7 +26,7 @@
         "proseWrap": "always"
     },
     "engines": {
-        "node": "18.x",
+        "node": ">=18",
         "pnpm": "8.x"
     },
     "jest": {
