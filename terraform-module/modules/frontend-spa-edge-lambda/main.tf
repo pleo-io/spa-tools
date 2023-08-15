@@ -11,7 +11,7 @@ resource "local_file" "lambda_config" {
   content = jsonencode({
     "originBucketName"         = var.bucket_name
     "originBucketRegion"       = var.bucket_region
-    "previewDeploymentPostfix" = var.env == "staging" ? ".${var.domain_name}" : ""
+    "previewDeploymentPostfix"  = var.env == "production" ? "" : ".${var.domain_name}"
     "isLocalised"              = var.is_localised == true ? "true" : "false"
     "defaultBranchName"        = var.default_repo_branch_name
   })
