@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.4.0...terraform-module-v2.4.1) (2023-08-23)
+
+
+### Bug Fixes
+
+* Don't set ACLs on newly created S3 bucket ([#120](https://github.com/pleo-io/spa-tools/issues/120)) ([b49e7cf](https://github.com/pleo-io/spa-tools/commit/b49e7cfaad1c217c56636bb081eabbd07d018588))
+
 ## [2.4.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.3.0...terraform-module-v2.4.0) (2023-06-27)
 
 
