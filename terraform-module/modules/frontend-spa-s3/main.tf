@@ -19,7 +19,7 @@ resource "aws_s3_bucket" "origin" {
 
 resource "aws_s3_bucket_acl" "origin" {
   bucket = aws_s3_bucket.origin.id
-  acl    = "private"
+  acl    = null
 }
 
 resource "aws_s3_bucket_public_access_block" "origin" {
