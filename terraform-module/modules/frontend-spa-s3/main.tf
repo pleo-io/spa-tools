@@ -19,7 +19,15 @@ resource "aws_s3_bucket" "origin" {
 
 resource "aws_s3_bucket_acl" "origin" {
   bucket = aws_s3_bucket.origin.id
-  acl    = null
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_ownership_controls" "origin" {
+  bucket = aws_s3_bucket.origin.id
+
+  rule {
+    object_ownership = "ObjectWriter"
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "origin" {
