@@ -17,11 +17,6 @@ resource "aws_s3_bucket" "origin" {
   }
 }
 
-resource "aws_s3_bucket_acl" "origin" {
-  bucket = aws_s3_bucket.origin.id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_ownership_controls" "origin" {
   bucket = aws_s3_bucket.origin.id
 
