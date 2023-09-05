@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.4.1...terraform-module-v2.4.2) (2023-09-05)
+
+
+### Bug Fixes
+
+* S3 bucket creation ([#129](https://github.com/pleo-io/spa-tools/issues/129)) ([d4f58c3](https://github.com/pleo-io/spa-tools/commit/d4f58c3ae45d9e85f8acee0089dde251f8782ca7))
+
 ## [2.4.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.4.0...terraform-module-v2.4.1) (2023-08-23)
 
 
