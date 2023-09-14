@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.5.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.4.0...reusable-workflows-v8.5.0) (2023-09-14)
+
+
+### Features
+
+* add environment suffix to github artifact ([#140](https://github.com/pleo-io/spa-tools/issues/140)) ([7f0680d](https://github.com/pleo-io/spa-tools/commit/7f0680dc668d67661fd10233be3b7177a766d479))
+
 ## [8.4.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.3.0...reusable-workflows-v8.4.0) (2023-06-27)
 
 
