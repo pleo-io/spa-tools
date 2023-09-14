@@ -149,7 +149,7 @@ jobs:
       - name: Upload Deployed Bundle as Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: bundle-${{ inputs.tree_hash }}-{{ inputs.environment }}
+          name: bundle-${{ inputs.tree_hash }}-${{ inputs.environment }}
           path: bundle.tar.gz
 
       - name: Verify app deployment
