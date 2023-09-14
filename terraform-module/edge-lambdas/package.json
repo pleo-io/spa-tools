@@ -7,7 +7,7 @@
     },
     "devDependencies": {
         "@swc/jest": "0.2.29",
-        "@types/aws-lambda": "8.10.119",
+        "@types/aws-lambda": "8.10.121",
         "@types/jest": "29.5.4",
         "@types/node": "20.6.0",
         "@vercel/ncc": "0.38.0",
