@@ -1,5 +1,12 @@
 # Changelog
 
+## [8.5.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.5.0...reusable-workflows-v8.5.1) (2023-09-15)
+
+
+### Bug Fixes
+
+* add missing $ to artifact name template ([#142](https://github.com/pleo-io/spa-tools/issues/142)) ([66c2763](https://github.com/pleo-io/spa-tools/commit/66c2763bc6d3e7101913e233fa7b3551bda1a371))
+
 ## [8.5.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.4.0...reusable-workflows-v8.5.0) (2023-09-14)
 
 
