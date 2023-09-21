@@ -52,3 +52,9 @@ variable "block_iframes" {
   default     = true
   type        = bool
 }
+
+variable "is_indexed" {
+  description = "Should allow search engine indexing in production?"
+  default     = true
+  type        = bool
+}

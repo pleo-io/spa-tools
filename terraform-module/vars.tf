@@ -40,3 +40,9 @@ variable "default_repo_branch_name" {
   default     = "master"
   type        = string
 }
+
+variable "is_indexed" {
+  description = "Should allow search engine indexing in production?"
+  default     = true
+  type        = bool
+}
