@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.4.2...terraform-module-v2.5.0) (2023-09-21)
+
+
+### Features
+
+* add variable to disable indexing ([#149](https://github.com/pleo-io/spa-tools/issues/149)) ([b112aac](https://github.com/pleo-io/spa-tools/commit/b112aaca62c7233cd7760c319a2d24575b331e58))
+
 ## [2.4.2](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.4.1...terraform-module-v2.4.2) (2023-09-05)
 
 
