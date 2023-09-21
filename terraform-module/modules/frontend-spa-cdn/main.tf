@@ -159,7 +159,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
     items {
       header   = "X-Robots-Tag"
       override = true
-      value    = var.env == "production" ? "all" : "noindex, nofollow"
+      value    = var.is_robots_indexing_allowed && var.env == "production" ? "all" : "noindex, nofollow"
     }
   }
 }

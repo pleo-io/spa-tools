@@ -54,6 +54,7 @@ module "cdn" {
   bucket_name   = module.s3.bucket_name
   block_iframes = var.block_iframes
 
+  is_robots_indexing_allowed      = var.is_robots_indexing_allowed
   bucket_regional_domain_name     = module.s3.bucket_regional_domain_name
   cloudfront_access_identity_path = module.s3.cloudfront_access_identity_path
   edge_lambdas = [

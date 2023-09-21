@@ -80,6 +80,7 @@ No resources.
 | <a name="input_default_repo_branch_name"></a> [default\_repo\_branch\_name](#input\_default\_repo\_branch\_name) | Name of the default branch of the project repo | `string` | `"master"` | no |
 | <a name="input_env"></a> [env](#input\_env) | Environment (production/staging) | `string` | n/a | yes |
 | <a name="input_is_localised"></a> [is\_localised](#input\_is\_localised) | Should fetch translation hash and add cookie & preload header for translation files? | `bool` | `false` | no |
+| <a name="input_is_robots_indexing_allowed"></a> [is\_robots\_indexing\_allowed](#input\_is\_robots\_indexing\_allowed) | Should allow search engine indexing in production? | `bool` | `true` | no |
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Subdomain where the app lives (e.g. 'hello' if the app lives at hello.example.com) | `string` | n/a | yes |
 | <a name="input_zone_domain"></a> [zone\_domain](#input\_zone\_domain) | The domain where the app lives (e.g. 'example.com' if the app lives at hello.example.com) | `string` | n/a | yes |
 
