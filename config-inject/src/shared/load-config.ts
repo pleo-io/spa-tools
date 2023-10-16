@@ -7,7 +7,7 @@ const clientConfigSchema = z.object({
     buildDir: z.string(),
     templateFileName: z.string().default('_index.html'),
     outputFileName: z.string().default('index.html'),
-    devConfigOverrideFile: z.string().default('config.dev.json')
+    localConfigOverrideFile: z.string().default('config.local.json')
 })
 
 /**

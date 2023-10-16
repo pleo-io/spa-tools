@@ -1,5 +1,5 @@
 /**
-@fileoverview A Vite plugin that inlines runtime configuration during development.
+@fileoverview A Vite plugin that inlines runtime configuration during local development.
 */
 
 import type {PluginOption} from 'vite'
@@ -11,14 +11,14 @@ import {assertExists} from './shared/assert-exists'
 import {getMinifiedConfig} from './shared/get-minified-config'
 import {STRING_TO_REPLACE} from './shared/constants'
 
-const DEFAULT_ENV = 'dev'
+const DEFAULT_ENV = 'local'
 
 /**
-Inline runtime configuration during development.
+Inline runtime configuration during local development.
 Inspiration: https://github.com/vitejs/vite/issues/3105
 @see https://vitejs.dev/guide/api-plugin.html#transformindexhtml
 @param config
-@param env - The name of the environment of the config inlined (defaults to "dev")
+@param env - The name of the environment of the config inlined (defaults to "local")
 @returns Returns a Vite plugin definition or null if in production mode.
 */
 export const inlineLocalConfig = (config: {isDisabled?: boolean; env?: string} = {}) => {
@@ -45,7 +45,7 @@ export const inlineLocalConfig = (config: {isDisabled?: boolean; env?: string} =
 
 /**
 Generates local runtime config as a string by merging the
-selected config file and the overrides from dev overrides file.
+selected config file and the overrides from local overrides file.
 @param env - The name of the environment of the config inlined
 @returns Returns a promise that resolves to a string containing the merged local runtime config.
 */
@@ -54,33 +54,31 @@ async function getLocalConfig(env: string) {
 
     const configPath = path.resolve(config.configDir, `config.${env}.mjs`)
     assertExists(configPath)
-    const devConfigPath = path.resolve(configPath)
-    let devRuntimeConfig = (await import(devConfigPath)).config as unknown
+    const localConfigPath = path.resolve(configPath)
+    let localRuntimeConfig = (await import(localConfigPath)).config as unknown
 
-    // We don't use the overrides unless we're using the the default "dev" env
+    // We don't use the overrides unless we're using the the default "local" env
     if (env !== DEFAULT_ENV) {
-        return getMinifiedConfig(devRuntimeConfig)
+        return getMinifiedConfig(localRuntimeConfig)
     }
 
     try {
-        const devConfigOverridePath = path.resolve(config.devConfigOverrideFile)
-        if (fs.existsSync(devConfigOverridePath)) {
-            const devConfigOverrideFile = fs.readFileSync(devConfigOverridePath, {
+        const localConfigOverridePath = path.resolve(config.localConfigOverrideFile)
+        if (fs.existsSync(localConfigOverridePath)) {
+            const localConfigOverrideFile = fs.readFileSync(localConfigOverridePath, {
                 encoding: 'utf-8'
             })
-            const devConfigOverride = JSON.parse(devConfigOverrideFile)
-            devRuntimeConfig = merge(devRuntimeConfig, devConfigOverride)
-            if (Object.keys(devConfigOverride).length > 0) {
-                console.log(
-                    `🎉 Overriding ${env} config locally with ${config.devConfigOverrideFile}`
-                )
+            const localConfigOverride = JSON.parse(localConfigOverrideFile)
+            localRuntimeConfig = merge(localRuntimeConfig, localConfigOverride)
+            if (Object.keys(localConfigOverride).length > 0) {
+                console.log(`🎉 Overriding ${env} config with ${config.localConfigOverrideFile}`)
             }
         } else {
-            fs.writeFileSync(devConfigOverridePath, `{}`)
+            fs.writeFileSync(localConfigOverridePath, `{}`)
         }
     } catch (e) {
         console.error(`🛑 Configuration override failed: ${e}`)
     }
 
-    return getMinifiedConfig(devRuntimeConfig)
+    return getMinifiedConfig(localRuntimeConfig)
 }

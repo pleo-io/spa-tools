@@ -7,6 +7,6 @@ import {config as stagingConfig} from './config.staging.mjs'
  */
 export const config = {
     ...stagingConfig,
-    env: 'dev',
-    version: '_DEV_'
+    env: 'local',
+    version: '_LOCAL_'
 }
