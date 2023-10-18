@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v2.0.0...spa-config-inject-v3.0.0) (2023-10-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update Vite peer/dev dependency ([#171](https://github.com/pleo-io/spa-tools/issues/171))
+
+### Miscellaneous Chores
+
+* Update Vite peer/dev dependency ([#171](https://github.com/pleo-io/spa-tools/issues/171)) ([eab287a](https://github.com/pleo-io/spa-tools/commit/eab287aebb77812372af16f4e3a8d830059bcf14))
+
 ## [2.0.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v1.0.0...spa-config-inject-v2.0.0) (2023-10-18)
 
 
