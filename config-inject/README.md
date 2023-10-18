@@ -10,8 +10,8 @@ Available tools are:
 -   **CLI** Given the location of the SPA index HTML file this script reads the config file and
     inlines the config as a string within the HTML file in a selected slot. The interpolated file is
     saved and ready for deployment.
--   **Vite Plugin** In development a Vite plugin injects dev configuration. It's possible to
-    selectively override the default dev config via a git-ignored override file.
+-   **Vite Plugin** In local development a Vite plugin injects local configuration. It's possible to
+    selectively override the default local config via a git-ignored override file.
 -   **Runtime config helper** Allows you to easily extract and use the injected config in your app.
 
 ## Installation
@@ -29,7 +29,7 @@ Your SPA project needs to fulfill a few assumptions:
 -   Configuration files as `mjs` modules under a common directory, following `config.{env}.mjs`
     naming convention. Config modules have a `config` named export which is an object containing
     configuration values. The object can be arbitrary nested, but needs to be JSON-serialisable.
--   `config.dev.mjs` exists and contains configuration used during development.
+-   `config.local.mjs` exists and contains configuration used during local development.
 
 Furthermore, we recommend:
 
@@ -38,7 +38,7 @@ Furthermore, we recommend:
 ```ts
 // config/config.ts
 export type AppConfig = {
-    env: 'staging' | 'production' | 'dev'
+    env: 'staging' | 'production' | 'local'
     version: string
     nested: {
         boi: string
@@ -93,12 +93,12 @@ options are as follows:
     file (relative to build dir). Can be overridden with `SPA_TEMPLATE_FILE_NAME` env var
 -   `outputFileName` (string, optional, default: `index.html`): The name of the output HTML file
     (relative to build dir). Can be overridden with `SPA_OUTPUT_FILE_NAME` env var
--   `devConfigOverrideFile` (string, optional, default: `config.dev.json`): The name of the
-    development config override file.
+-   `localConfigOverrideFile` (string, optional, default: `config.local.json`): The name of the
+    local development config override file.
 
 ## Vite plugin
 
-To inject the dev config when running the app locally, add the Vite plugin to your Vite config:
+To inject the local config when running the app locally, add the Vite plugin to your Vite config:
 
 ```ts
 import {defineConfig} from 'vite'
@@ -114,15 +114,15 @@ export default defineConfig((config) => {
 Options that can be passed to `inlineLocalConfig`:
 
 -   `isDisabled`: Disables the plugin - usually in production mode (defaults to false)
--   `env`: The name of the environment for which the config is injected (defaults to `dev`)
+-   `env`: The name of the environment for which the config is injected (defaults to `local`)
 
-## Dev overrides
+## Local overrides
 
-When running the app in dev mode the first time, an empty `config.dev.json` (or another name if you
-configure it via `devConfigOverrideFile` option) will be created at the root of the project. This
-file allows you to temporarily override the dev config (e.g. change an API route) without having to
-remember to undo your changes before committing. Remember to add that file to `.gitignore` as it's
-not supposed to be versioned.
+When running the app in local mode the first time, an empty `config.local.json` (or another name if
+you configure it via `localConfigOverrideFile` option) will be created at the root of the project.
+This file allows you to temporarily override the local config (e.g. change an API route) without
+having to remember to undo your changes before committing. Remember to add that file to `.gitignore`
+as it's not supposed to be versioned.
 
 ## CLI Usage
 

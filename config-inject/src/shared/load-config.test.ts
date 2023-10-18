@@ -10,7 +10,7 @@ it('returns a parsed and validated config object', () => {
         buildDir: 'test-build',
         templateFileName: '_index.html',
         outputFileName: 'index.html',
-        devConfigOverrideFile: 'config.dev.json'
+        localConfigOverrideFile: 'config.local.json'
     }
 
     expect(configUtils.parseConfig(rawConfig)).toEqual(expectedConfig)
