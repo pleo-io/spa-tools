@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v1.0.0...spa-config-inject-v2.0.0) (2023-10-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update spa-tools package to rename dev to local ([#164](https://github.com/pleo-io/spa-tools/issues/164))
+
+### Code Refactoring
+
+* Update spa-tools package to rename dev to local ([#164](https://github.com/pleo-io/spa-tools/issues/164)) ([10b35b6](https://github.com/pleo-io/spa-tools/commit/10b35b66c63937f3b0c9e90a04976acc277255df))
+
 ## [1.0.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v0.3.0...spa-config-inject-v1.0.0) (2023-05-10)
 
 
