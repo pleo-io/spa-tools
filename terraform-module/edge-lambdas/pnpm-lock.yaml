@@ -23,8 +23,8 @@ devDependencies:
     specifier: 20.8.6
     version: 20.8.6
   '@vercel/ncc':
-    specifier: 0.38.0
-    version: 0.38.0
+    specifier: 0.38.1
+    version: 0.38.1
   jest:
     specifier: 29.7.0
     version: 29.7.0(@types/node@20.8.6)
@@ -1836,8 +1836,8 @@ packages:
       '@types/yargs-parser': 21.0.0
     dev: true
 
-  /@vercel/ncc@0.38.0:
-    resolution: {integrity: sha512-B4YKZMm/EqMptKSFyAq4q2SlgJe+VCmEH6Y8gf/E1pTlWbsUJpuH1ymik2Ex3aYO5mCWwV1kaSYHSQOT8+4vHA==}
+  /@vercel/ncc@0.38.1:
+    resolution: {integrity: sha512-IBBb+iI2NLu4VQn3Vwldyi2QwaXt5+hTyh58ggAMoCGE6DJmPvwL3KPBWcJl1m9LYPChBLE980Jw+CS4Wokqxw==}
     hasBin: true
     dev: true
 
