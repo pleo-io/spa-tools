@@ -81,7 +81,7 @@ jobs:
         if: steps.s3-cache.outputs.processed == 'false'
         run: ${{ inputs.build_cmd }}
         env:
-          DD_API_KEY: ${{ github.ref == 'refs/heads/main' && secrets.DD_API_KEY }}
+          DD_API_KEY: ${{ github.ref == 'refs/heads/main' && secrets.DD_API_KEY || null }}
 
       - name: Get Bundle S3 URI
         id: bundle-uri
