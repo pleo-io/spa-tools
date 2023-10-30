@@ -46,12 +46,12 @@ Use the
 [`secrets: inherit`](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_callsecretsinherit)
 options when using the workflow.
 
-| Name                                      | Description                                                       | Required |
-| ----------------------------------------- | ----------------------------------------------------------------- | :------: |
-| `AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY`     | ID of a AWS key that allows r/w access to the registry bucket     |   yes    |
-| `AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY` | Secret of a AWS key that allows r/w access to the registry bucket |   yes    |
-| `GH_REGISTRY_NPM_TOKEN`                   | Token for NPM package registry                                    |   yes    |
-| `DD_API_KEY`                              | API key for Datadog                                               |   yes    |
+| Name                                      | Description                                                                         | Required |
+| ----------------------------------------- | ----------------------------------------------------------------------------------- | :------: |
+| `AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY`     | ID of a AWS key that allows r/w access to the registry bucket                       |   yes    |
+| `AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY` | Secret of a AWS key that allows r/w access to the registry bucket                   |   yes    |
+| `GH_REGISTRY_NPM_TOKEN`                   | Token for NPM package registry                                                      |   yes    |
+| `DD_API_KEY`                              | API key for Datadog, used to send the Datadog Bundle Plugin's `entries.size` metric |   yes    |
 
 #### Outputs
 
