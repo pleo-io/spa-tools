@@ -15,8 +15,7 @@ on:
         type: string
       build_dir:
         required: true
-        description:
-          "Location of the deploy bundle after running the build command"
+        description: "Location of the deploy bundle after running the build command"
         type: string
       build_cmd:
         required: true
@@ -56,8 +55,7 @@ jobs:
           bucket-name: ${{ inputs.bucket_name }}
           key-prefix: build/${{ inputs.app_name }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
       - uses: pnpm/action-setup@v2
@@ -82,6 +80,9 @@ jobs:
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'
         run: ${{ inputs.build_cmd }}
+        env:
+          DD_TRACK_BUNDLE: ${{ github.ref == 'refs/heads/main' && true || false }}
+          DD_API_KEY: secrets.DD_API_KEY
 
       - name: Get Bundle S3 URI
         id: bundle-uri
@@ -91,8 +92,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v2.0.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
       - name: Compress & Upload Bundle
