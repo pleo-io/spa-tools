@@ -1,5 +1,16 @@
 # Changelog
 
+## [9.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.5.1...reusable-workflows-v9.0.0) (2023-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update spa-tools build workflow to provide Datadog API key as env var ([#179](https://github.com/pleo-io/spa-tools/issues/179))
+
+### Features
+
+* Update spa-tools build workflow to provide Datadog API key as env var ([#179](https://github.com/pleo-io/spa-tools/issues/179)) ([d3978d4](https://github.com/pleo-io/spa-tools/commit/d3978d46d445a8359862b1c20a96762093bba35b))
+
 ## [8.5.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.5.0...reusable-workflows-v8.5.1) (2023-09-15)
 
 
