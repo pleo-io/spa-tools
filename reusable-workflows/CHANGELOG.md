@@ -1,5 +1,16 @@
 # Changelog
 
+## [10.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v9.0.0...reusable-workflows-v10.0.0) (2023-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* Remove now redundant env variables in spa-tools build workflow ([#186](https://github.com/pleo-io/spa-tools/issues/186))
+
+### Miscellaneous Chores
+
+* Remove now redundant env variables in spa-tools build workflow ([#186](https://github.com/pleo-io/spa-tools/issues/186)) ([bc590e9](https://github.com/pleo-io/spa-tools/commit/bc590e98e39c5ebce16fd2403252c814bbecbf64))
+
 ## [9.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v8.5.1...reusable-workflows-v9.0.0) (2023-10-31)
 
 
