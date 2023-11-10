@@ -16,7 +16,7 @@
     },
     "devDependencies": {
         "@swc/jest": "^0.2.26",
-        "@tsconfig/node16": "^1.0.4",
+        "@tsconfig/node16": "^16.0.0",
         "@types/common-tags": "^1.8.1",
         "@types/jest": "^29.5.1",
         "action-docs": "^1.2.0",
