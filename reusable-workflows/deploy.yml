@@ -75,7 +75,7 @@ jobs:
               echo "Could not determine default branch"
               exit 1
           fi
-          SUBDOMAIN=$([[ $GITHUB_REF = "refs/heads/$DEFAULT_BRANCH" ]] && echo "" || echo "preview-${{ inputs.tree_hash }}.")
+          SUBDOMAIN=$([[ $GITHUB_REF = "refs/heads/$DEFAULT_BRANCH" || $GITHUB_REF = "refs/heads/change-freeze-emergency-deploy" ]] && echo "" || echo "preview-${{ inputs.tree_hash }}.")
           echo "url=https://${SUBDOMAIN}${{ inputs.domain_name }}" >> $GITHUB_OUTPUT
 
       - name: Setup AWS Credentials for Registry Bucket Access
