@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.0.0...reusable-workflows-v10.1.0) (2023-12-20)
+
+
+### Features
+
+* Allow production deploy from emergency branch ([#196](https://github.com/pleo-io/spa-tools/issues/196)) ([1e5ef73](https://github.com/pleo-io/spa-tools/commit/1e5ef73a6fc9456c3857d497f05579302c39eac5))
+
 ## [10.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v9.0.0...reusable-workflows-v10.0.0) (2023-11-10)
 
 
