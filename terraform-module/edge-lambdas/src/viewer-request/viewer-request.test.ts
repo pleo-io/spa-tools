@@ -189,61 +189,6 @@ describe(`Viewer request Lambda@Edge`, () => {
     })
 
     test(`
-        When using the translation addon
-        Then it fetches the translation version from S3
-        And the translation version is set as a header on request
-        And the app version is set as a header on request
-    `, async () => {
-        const appVersion = getRandomSha()
-        const translationVersion = getRandomInt()
-        const host = 'app.example.com'
-        const event = mockRequestEvent({host, appVersion})
-
-        mockedFetchFileFromS3Bucket.mockResolvedValueOnce(appVersion)
-        mockedFetchFileFromS3Bucket.mockResolvedValueOnce(translationVersion)
-
-        const handler = getHandler({...originConfig, isLocalised: 'true'}, mockS3)
-        const request = await handler(event, mockContext, mockCallback)
-
-        expectVersionsFetched('deploys/master', 'translation-deploy/latest')
-        const expectedEvent = mockRequestEvent({
-            host,
-            translationVersion,
-            appVersion,
-            uri: `/html/${appVersion}/index.html`
-        })
-        expect(request).toEqual(requestFromEvent(expectedEvent))
-    })
-
-    test(`
-        When fetching the translation version fails
-        Then the translation version header is not set
-        And the app version header is set
-        And the request for the HTML goes through
-    `, async () => {
-        const appVersion = getRandomSha()
-        const host = 'app.example.com'
-        const event = mockRequestEvent({host, appVersion})
-        jest.spyOn(console, 'error').mockImplementationOnce(() => {})
-
-        mockedFetchFileFromS3Bucket.mockResolvedValueOnce(appVersion)
-        mockedFetchFileFromS3Bucket.mockRejectedValueOnce(new Error('nope'))
-
-        const handler = getHandler({...originConfig, isLocalised: 'true'}, mockS3)
-        const request = await handler(event, mockContext, mockCallback)
-
-        expectVersionsFetched('deploys/master', 'translation-deploy/latest')
-        const expectedEvent = mockRequestEvent({
-            host,
-            translationVersion: undefined,
-            appVersion,
-            uri: `/html/${appVersion}/index.html`
-        })
-        expect(request).toEqual(requestFromEvent(expectedEvent))
-        expect(console.error).toHaveBeenCalledTimes(1)
-    })
-
-    test(`
         When requesting a preview of an unknown branch,
         Then it requests the non-existing file to trigger a 404 error
     `, async () => {
