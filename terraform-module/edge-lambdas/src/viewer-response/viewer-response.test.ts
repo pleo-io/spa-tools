@@ -20,7 +20,7 @@ describe(`Viewer response Lambda@Edge`, () => {
 
         const handler = getHandler({
             ...originConfig,
-            previewDeploymentPostfix: '.app.example.com',
+            previewDeploymentPostfix: '.app.example.com'
         })
         const response = await handler(event, mockContext, mockCallback)
 
@@ -30,7 +30,6 @@ describe(`Viewer response Lambda@Edge`, () => {
             statusDescription: 'OK'
         })
     })
-
 })
 
 const defaultHeaders = (appVersion: string) => ({

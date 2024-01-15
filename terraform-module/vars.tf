@@ -29,12 +29,6 @@ variable "block_iframes" {
   type        = bool
 }
 
-variable "is_localised" {
-  description = "Should fetch translation hash and add cookie & preload header for translation files?"
-  default     = false
-  type        = bool
-}
-
 variable "default_repo_branch_name" {
   description = "Name of the default branch of the project repo"
   default     = "master"

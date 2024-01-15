@@ -12,7 +12,6 @@ resource "local_file" "lambda_config" {
     "originBucketName"         = var.bucket_name
     "originBucketRegion"       = var.bucket_region
     "previewDeploymentPostfix" = var.env == "production" ? "" : ".${var.domain_name}"
-    "isLocalised"              = var.is_localised == true ? "true" : "false"
     "defaultBranchName"        = var.default_repo_branch_name
   })
   filename = "${path.root}/dist/${var.app_name}/${var.event_type}/config.json"
