@@ -45,12 +45,11 @@ Note that there are two AWS providers, since we need to access two AWS regions
 - the S3 bucket for origin lives in the default region
 
 <!-- BEGIN_TF_DOCS -->
-
 #### Requirements
 
-| Name                                                   | Version   |
-| ------------------------------------------------------ | --------- |
-| <a name="requirement_aws"></a> [aws](#requirement_aws) | >= 3.75.2 |
+| Name | Version |
+|------|---------|
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.75.2 |
 
 #### Providers
 
@@ -58,14 +57,14 @@ No providers.
 
 #### Modules
 
-| Name                                                                 | Source                             | Version |
-| -------------------------------------------------------------------- | ---------------------------------- | ------- |
-| <a name="module_cdn"></a> [cdn](#module_cdn)                         | ./modules/frontend-spa-cdn         | n/a     |
-| <a name="module_certificate"></a> [certificate](#module_certificate) | ./modules/frontend-spa-certificate | n/a     |
-| <a name="module_dns"></a> [dns](#module_dns)                         | ./modules/frontend-spa-dns         | n/a     |
-| <a name="module_lambda_role"></a> [lambda_role](#module_lambda_role) | ./modules/frontend-spa-lambda-role | n/a     |
-| <a name="module_lambdas"></a> [lambdas](#module_lambdas)             | ./modules/frontend-spa-edge-lambda | n/a     |
-| <a name="module_s3"></a> [s3](#module_s3)                            | ./modules/frontend-spa-s3          | n/a     |
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_cdn"></a> [cdn](#module\_cdn) | ./modules/frontend-spa-cdn | n/a |
+| <a name="module_certificate"></a> [certificate](#module\_certificate) | ./modules/frontend-spa-certificate | n/a |
+| <a name="module_dns"></a> [dns](#module\_dns) | ./modules/frontend-spa-dns | n/a |
+| <a name="module_lambda_role"></a> [lambda\_role](#module\_lambda\_role) | ./modules/frontend-spa-lambda-role | n/a |
+| <a name="module_lambdas"></a> [lambdas](#module\_lambdas) | ./modules/frontend-spa-edge-lambda | n/a |
+| <a name="module_s3"></a> [s3](#module\_s3) | ./modules/frontend-spa-s3 | n/a |
 
 #### Resources
 
@@ -73,21 +72,20 @@ No resources.
 
 #### Inputs
 
-| Name                                                                                                            | Description                                                                                                   | Type     | Default    | Required |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------- | ---------- | :------: |
-| <a name="input_app_name"></a> [app_name](#input_app_name)                                                       | Name of the app (kebab-case)                                                                                  | `string` | n/a        |   yes    |
-| <a name="input_block_iframes"></a> [block_iframes](#input_block_iframes)                                        | Should add custom header blocking access via iframes?                                                         | `bool`   | `true`     |    no    |
-| <a name="input_bucket_prefix"></a> [bucket_prefix](#input_bucket_prefix)                                        | Prefix for the bucket name. Since S3 bucket live in global scope, it's good prefix it with e.g. your org name | `string` | n/a        |   yes    |
-| <a name="input_default_repo_branch_name"></a> [default_repo_branch_name](#input_default_repo_branch_name)       | Name of the default branch of the project repo                                                                | `string` | `"master"` |    no    |
-| <a name="input_env"></a> [env](#input_env)                                                                      | Environment (production/staging)                                                                              | `string` | n/a        |   yes    |
-| <a name="input_is_robots_indexing_allowed"></a> [is_robots_indexing_allowed](#input_is_robots_indexing_allowed) | Should allow search engine indexing in production?                                                            | `bool`   | `true`     |    no    |
-| <a name="input_subdomain"></a> [subdomain](#input_subdomain)                                                    | Subdomain where the app lives (e.g. 'hello' if the app lives at hello.example.com)                            | `string` | n/a        |   yes    |
-| <a name="input_zone_domain"></a> [zone_domain](#input_zone_domain)                                              | The domain where the app lives (e.g. 'example.com' if the app lives at hello.example.com)                     | `string` | n/a        |   yes    |
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_app_name"></a> [app\_name](#input\_app\_name) | Name of the app (kebab-case) | `string` | n/a | yes |
+| <a name="input_block_iframes"></a> [block\_iframes](#input\_block\_iframes) | Should add custom header blocking access via iframes? | `bool` | `true` | no |
+| <a name="input_bucket_prefix"></a> [bucket\_prefix](#input\_bucket\_prefix) | Prefix for the bucket name. Since S3 bucket live in global scope, it's good prefix it with e.g. your org name | `string` | n/a | yes |
+| <a name="input_default_repo_branch_name"></a> [default\_repo\_branch\_name](#input\_default\_repo\_branch\_name) | Name of the default branch of the project repo | `string` | `"master"` | no |
+| <a name="input_env"></a> [env](#input\_env) | Environment (production/staging) | `string` | n/a | yes |
+| <a name="input_is_robots_indexing_allowed"></a> [is\_robots\_indexing\_allowed](#input\_is\_robots\_indexing\_allowed) | Should allow search engine indexing in production? | `bool` | `true` | no |
+| <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Subdomain where the app lives (e.g. 'hello' if the app lives at hello.example.com) | `string` | n/a | yes |
+| <a name="input_zone_domain"></a> [zone\_domain](#input\_zone\_domain) | The domain where the app lives (e.g. 'example.com' if the app lives at hello.example.com) | `string` | n/a | yes |
 
 #### Outputs
 
-| Name                                                                                                                          | Description |
-| ----------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| <a name="output_bucket_deployer_iam_policy_arn"></a> [bucket_deployer_iam_policy_arn](#output_bucket_deployer_iam_policy_arn) | n/a         |
-
+| Name | Description |
+|------|-------------|
+| <a name="output_bucket_deployer_iam_policy_arn"></a> [bucket\_deployer\_iam\_policy\_arn](#output\_bucket\_deployer\_iam\_policy\_arn) | n/a |
 <!-- END_TF_DOCS -->
