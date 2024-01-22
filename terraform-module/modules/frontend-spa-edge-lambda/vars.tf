@@ -13,12 +13,6 @@ variable "role_arn" {
   type        = string
 }
 
-variable "is_localised" {
-  description = "Should fetch translation hash and add cookie & preload header for translation files?"
-  default     = true
-  type        = bool
-}
-
 variable "event_type" {
   description = "Type of the Lambda@Edge (viewer-request, viewer-response, origin-request, origin-response)"
   type        = string

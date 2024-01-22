@@ -23,7 +23,6 @@ module "lambdas" {
   event_type               = each.key
   role_arn                 = module.lambda_role.role_arn
   env                      = var.env
-  is_localised             = var.is_localised
   default_repo_branch_name = var.default_repo_branch_name
   bucket_name              = module.s3.bucket_name
   bucket_region            = module.s3.bucket_region

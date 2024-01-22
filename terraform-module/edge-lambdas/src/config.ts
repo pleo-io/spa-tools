@@ -15,5 +15,4 @@ export type Config = {
     originBucketRegion: string
     previewDeploymentPostfix?: string
     defaultBranchName?: string
-    isLocalised?: string
 }

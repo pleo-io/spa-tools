@@ -6,7 +6,6 @@ import {S3Client} from '@aws-sdk/client-s3'
 import {APP_VERSION_HEADER, getHeader, setHeader} from '../utils'
 import {fetchFileFromS3Bucket} from '../s3'
 import {Config} from '../config'
-import {addTranslationInfoToRequest, getTranslationVersion} from '../addons/translations'
 
 const DEFAULT_BRANCH_DEFAULT_NAME = 'master'
 
@@ -38,16 +37,10 @@ export function getHandler(config: Config, s3: S3Client) {
             // Get app version and translation version in parallel to avoid the double network penalty.
             // Translation hash is only fetched if translations are enabled. Fetching translation cursor
             // can never throw here, as in case of a failure we're returning a default value.
-            const [appVersion, translationVersion] = await Promise.all([
-                getAppVersion(request, config, s3),
-                getTranslationVersion(s3, config)
-            ])
+            const appVersion = await getAppVersion(request, config, s3)
 
             // Set app version header on request, so it can be picked up by the viewer response lambda
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion)
-
-            // If needed, pass the versions to the viewer response lambda via custom headers on the request
-            addTranslationInfoToRequest({request, translationVersion, config})
 
             // We instruct the CDN to return a file that corresponds to the app version calculated
             const uri = getUri(request, appVersion)

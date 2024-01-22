@@ -1,6 +1,5 @@
 import {CloudFrontRequest, CloudFrontResponse, CloudFrontResponseHandler} from 'aws-lambda'
 import {Config} from '../config'
-import {addTranslationInfoToResponse} from '../addons/translations'
 import {APP_VERSION_HEADER, getHeader, setHeader} from '../utils'
 /**
  * Edge Lambda handler triggered on "viewer-response" event, on the default CF behavior of the web app CF distribution.
@@ -17,7 +16,6 @@ export function getHandler(config: Config) {
         const request = event.Records[0].cf.request
 
         response = addVersionHeader(response, request)
-        response = addTranslationInfoToResponse(response, request, config)
 
         return response
     }
