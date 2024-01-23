@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.5.0...terraform-module-v3.0.0) (2024-01-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* Remove "Translation" addon ([#198](https://github.com/pleo-io/spa-tools/issues/198))
+
+### Miscellaneous Chores
+
+* Remove "Translation" addon ([#198](https://github.com/pleo-io/spa-tools/issues/198)) ([34f4d49](https://github.com/pleo-io/spa-tools/commit/34f4d49b32d7272713ab0f794021f13fa7eeaf2a))
+
 ## [2.5.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.4.2...terraform-module-v2.5.0) (2023-09-21)
 
 
