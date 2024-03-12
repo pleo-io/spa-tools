@@ -153,6 +153,7 @@ export function branchNameToHostnameLabel(ref: string) {
         .replace(/-{2,}/gi, '-') // get rid of multiple consecutive "-"
         .toLowerCase()
         .slice(0, 60)
+        ?.replace(/(-|_)$/gi, '') // get rid of trailing "-" and "_"
         .trim()
 
     if (!hostnameLabel) {

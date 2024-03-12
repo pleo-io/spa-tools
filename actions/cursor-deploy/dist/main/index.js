@@ -9737,8 +9737,8 @@ async function getDeploymentHash(deployMode, rollbackCommitHash) {
   return treeHash;
 }
 function branchNameToHostnameLabel(ref) {
-  var _a;
-  const hostnameLabel = (_a = ref == null ? void 0 : ref.split("refs/heads/").pop()) == null ? void 0 : _a.replace(/[^\w]/gi, "-").replace(/-{2,}/gi, "-").toLowerCase().slice(0, 60).trim();
+  var _a, _b;
+  const hostnameLabel = (_b = (_a = ref == null ? void 0 : ref.split("refs/heads/").pop()) == null ? void 0 : _a.replace(/[^\w]/gi, "-").replace(/-{2,}/gi, "-").toLowerCase().slice(0, 60)) == null ? void 0 : _b.replace(/(-|_)$/gi, "").trim();
   if (!hostnameLabel) {
     throw new Error("Could not get a valid hostname label from branch name");
   }

@@ -338,6 +338,33 @@ describe('Branch Sanitize - branchNameToHostnameLabel', () => {
         )
         expect(output).toBe('hello-my-very-weird_branch-100-original-whoooohoooooo-lets-d')
     })
+
+    it(`trims trailing hyphens when the branch name exceeds the max allowed length`, async () => {
+        const output = branchNameToHostnameLabel(
+            'refs/heads/feature-hello-0000-the-quick-brown-fox-jumped-over-the-lazy-dog' // the 60th character here (minus 'refs/heads/') is a hyphen
+        )
+        expect(output).toBe('feature-hello-0000-the-quick-brown-fox-jumped-over-the-lazy')
+    })
+
+    it(`trims trailing hyphens when the branch name does not exceed the max allowed length`, async () => {
+        const output = branchNameToHostnameLabel('refs/heads/feature-hello-0000-')
+        expect(output).toBe('feature-hello-0000')
+    })
+
+    it(`trims multiple hyphens`, async () => {
+        const output = branchNameToHostnameLabel('refs/heads/feature-hello-0000--')
+        expect(output).toBe('feature-hello-0000')
+    })
+
+    it(`trims trailing underscores`, async () => {
+        const output = branchNameToHostnameLabel('refs/heads/feature_hello_0000_')
+        expect(output).toBe('feature_hello_0000')
+    })
+
+    it(`trims whitespace`, async () => {
+        const output = branchNameToHostnameLabel(' refs/heads/feature-hello-0000 ')
+        expect(output).toBe('feature-hello-0000')
+    })
 })
 
 //#region Custom Assertions
