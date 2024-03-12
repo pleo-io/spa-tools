@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.1.0...reusable-workflows-v10.2.0) (2024-03-12)
+
+
+### Features
+
+* Update to latest spa-github-actions version ([#205](https://github.com/pleo-io/spa-tools/issues/205)) ([c5c5949](https://github.com/pleo-io/spa-tools/commit/c5c594927481efecef46e7f898e6b47d8b24d485))
+
 ## [10.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.0.0...reusable-workflows-v10.1.0) (2023-12-20)
 
 
