@@ -11,6 +11,13 @@
 
 -   chore: Use pnpm 8 internally
 
+## [8.2.1](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.2.0...spa-github-actions-v8.2.1) (2024-03-12)
+
+
+### Bug Fixes
+
+* Trim trailing non-word characters for hostname labels ([#200](https://github.com/pleo-io/spa-tools/issues/200)) ([5247b68](https://github.com/pleo-io/spa-tools/commit/5247b6883b37b6fa989635023b240672c434e27c))
+
 ## [8.2.0](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.1.2...spa-github-actions-v8.2.0) (2023-06-27)
 
 
