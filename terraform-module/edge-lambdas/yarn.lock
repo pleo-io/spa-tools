@@ -1622,10 +1622,10 @@
     "@jest/create-cache-key-function" "^27.4.2"
     jsonc-parser "^3.2.0"
 
-"@types/aws-lambda@8.10.126":
-  version "8.10.126"
-  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.126.tgz#be132de6e68353e240c88505940e67cd95d3066e"
-  integrity sha512-5eh4ffLdGYgGYI1Xr6W5L4IVse4RR7L2ns5OVUXA52nW5GFapIcGMcCzHAIMMOdpcQs3aGVxbvFlJNZH6IpgEQ==
+"@types/aws-lambda@8.10.136":
+  version "8.10.136"
+  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.136.tgz#12a2af86b9123f4e4549992b27e1bf0dcf60d9f9"
+  integrity sha512-cmmgqxdVGhxYK9lZMYYXYRJk6twBo53ivtXjIUEFZxfxe4TkZTZBK3RRWrY2HjJcUIix0mdifn15yjOAat5lTA==
 
 "@types/babel__core@^7.1.14":
   version "7.20.5"
