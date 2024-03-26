@@ -9655,6 +9655,9 @@ async function postPreviewUrls({
   const isFreshPR = !(prDescription == null ? void 0 : prDescription.includes(markerStart));
   const prDescriptionAbove = ((_a = prDescription == null ? void 0 : prDescription.split(markerStart)[0]) == null ? void 0 : _a.trim()) ?? "";
   const prDescriptionBelow = ((_b = prDescription == null ? void 0 : prDescription.split(markerEnd).pop()) == null ? void 0 : _b.trim()) ?? "";
+  const anyMarkerStart = new RegExp(`<!--.+-preview-urls-do-not-change-below-->`);
+  const prDescriptionAboveIncludesOtherApp = !!prDescriptionAbove.match(anyMarkerStart);
+  const descriptionAppendage = prDescriptionAboveIncludesOtherApp ? "" : "\n";
   const linksMessages = links.map((link) => {
     if (asLabels) {
       return `[${link.name}](${link.url})`;
@@ -9663,7 +9666,7 @@ async function postPreviewUrls({
   }).join(asLabels ? ", " : "\n");
   const heading = `**${appName} preview links**`;
   const body = [
-    prDescriptionAbove,
+    prDescriptionAbove + descriptionAppendage,
     markerStart,
     "---",
     heading,
