@@ -51,6 +51,10 @@ export async function postPreviewUrls({
     const prDescriptionAbove = prDescription?.split(markerStart)[0]?.trim() ?? ''
     const prDescriptionBelow = prDescription?.split(markerEnd).pop()?.trim() ?? ''
 
+    const anyMarkerStart = new RegExp(`<!--.+-preview-urls-do-not-change-below-->`)
+    const prDescriptionAboveIncludesOtherApp = !!prDescriptionAbove.match(anyMarkerStart)
+    const descriptionAppendage = prDescriptionAboveIncludesOtherApp ? '' : '\n'
+
     const linksMessages = links
         .map((link) => {
             if (asLabels) {
@@ -62,7 +66,7 @@ export async function postPreviewUrls({
     const heading = `**${appName} preview links**`
 
     const body = [
-        prDescriptionAbove,
+        prDescriptionAbove + descriptionAppendage,
         markerStart,
         '---',
         heading,
