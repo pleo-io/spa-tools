@@ -1,5 +1,12 @@
 # Changelog
 
+## [10.3.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.2.0...reusable-workflows-v10.3.0) (2024-03-26)
+
+
+### Features
+
+* update reusable-workflows ([baba061](https://github.com/pleo-io/spa-tools/commit/baba061d59b3950cc48d9eeb09b442f42661c420))
+
 ## [10.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.1.0...reusable-workflows-v10.2.0) (2024-03-12)
 
 

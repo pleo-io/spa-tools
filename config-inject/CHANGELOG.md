@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v3.0.0...spa-config-inject-v3.1.0) (2024-03-26)
+
+
+### Features
+
+* update reusable-workflows ([baba061](https://github.com/pleo-io/spa-tools/commit/baba061d59b3950cc48d9eeb09b442f42661c420))
+
 ## [3.0.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v2.0.0...spa-config-inject-v3.0.0) (2023-10-18)
 
 
