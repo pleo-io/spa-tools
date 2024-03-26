@@ -39,6 +39,7 @@ describe(`Post Preview URLs action`, () => {
                     body: strip`
                     Hello World!
                      Some indent
+
                     <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
@@ -89,6 +90,7 @@ describe(`Post Preview URLs action`, () => {
                     body: strip`
                     Hello World!
                      Some indent
+
                     <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
@@ -115,6 +117,7 @@ describe(`Post Preview URLs action`, () => {
                     body: strip`
                         Hello World!
                          Some indent
+
                         <!--app-preview-urls-do-not-change-below-->
                         ---
                         **🤖 App preview links**
@@ -142,6 +145,7 @@ describe(`Post Preview URLs action`, () => {
                     body: strip`
                     Hello World!
                      Some indent
+
                     <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
@@ -197,6 +201,7 @@ describe(`Post Preview URLs action`, () => {
                 {
                     body: strip`
                     Hello World!
+
                     <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
@@ -224,6 +229,7 @@ describe(`Post Preview URLs action`, () => {
                 data: {
                     body: strip`
                         Hello World!
+
                         <!--app-preview-urls-do-not-change-below-->
                         ---
                         **🤖 App preview links**
@@ -256,6 +262,7 @@ describe(`Post Preview URLs action`, () => {
                 {
                     body: strip`
                         Hello World!
+
                         <!--app-preview-urls-do-not-change-below-->
                         ---
                         **🤖 App preview links**
@@ -290,6 +297,7 @@ describe(`Post Preview URLs action`, () => {
                 data: {
                     body: strip`
                     Hello World!
+
                     <!--storybook-preview-urls-do-not-change-below-->
                     ---
                     **🤖 Storybook preview links**
@@ -326,6 +334,7 @@ describe(`Post Preview URLs action`, () => {
             expect(mockRequest).toBeCalledWith('PATCH /repos/{owner}/{repo}/pulls/{pull_number}', {
                 body: strip`
                 Hello World!
+
                 <!--storybook-preview-urls-do-not-change-below-->
                 ---
                 **📚 Storybook preview links**
@@ -343,6 +352,51 @@ describe(`Post Preview URLs action`, () => {
                 pull_number: 1,
                 repo: 'my-repo'
             })
+        }
+    )
+
+    test(
+        strip`
+        When there is no newline after PR description
+        It adds one before the preview links
+        And keeps the description and links in tact
+        `,
+        async () => {
+            const token = '1234'
+            const mockRequest = jest.fn().mockResolvedValueOnce({
+                data: {body: 'Hello World!\n Some indent'}
+            })
+            mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
+
+            await postPreviewUrls({
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature.app.example.com'}
+                ]),
+                token,
+                repo: {owner: 'my-org', repo: 'my-repo'},
+                prNumber: 1,
+                appName: '🤖 App'
+            })
+
+            expect(mockedGithub.getOctokit).toBeCalledWith(token)
+            expect(mockRequest).toHaveBeenLastCalledWith(
+                'PATCH /repos/{owner}/{repo}/pulls/{pull_number}',
+                {
+                    body: strip`
+                    Hello World!
+                     Some indent
+
+                    <!--app-preview-urls-do-not-change-below-->
+                    ---
+                    **🤖 App preview links**
+                    _Latest_: https://feature.app.example.com
+                    <!--app-preview-urls-do-not-change-above-->
+                `,
+                    owner: 'my-org',
+                    pull_number: 1,
+                    repo: 'my-repo'
+                }
+            )
         }
     )
 })
