@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.0.0...terraform-module-v3.1.0) (2024-03-26)
+
+
+### Features
+
+* update reusable-workflows ([baba061](https://github.com/pleo-io/spa-tools/commit/baba061d59b3950cc48d9eeb09b442f42661c420))
+
 ## [3.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v2.5.0...terraform-module-v3.0.0) (2024-01-22)
 
 

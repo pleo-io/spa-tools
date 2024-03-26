@@ -11,6 +11,18 @@
 
 -   chore: Use pnpm 8 internally
 
+## [8.3.0](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.2.1...spa-github-actions-v8.3.0) (2024-03-26)
+
+
+### Features
+
+* update reusable-workflows ([baba061](https://github.com/pleo-io/spa-tools/commit/baba061d59b3950cc48d9eeb09b442f42661c420))
+
+
+### Bug Fixes
+
+* links breaking due to img tag ([#206](https://github.com/pleo-io/spa-tools/issues/206)) ([65bcd58](https://github.com/pleo-io/spa-tools/commit/65bcd5883499f93a6a0b9fb59239bee5fbb4322e))
+
 ## [8.2.1](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.2.0...spa-github-actions-v8.2.1) (2024-03-12)
 
 
