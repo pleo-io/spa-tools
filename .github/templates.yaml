@@ -1,4 +1,4 @@
-version: v33.10.0
+version: v34.4.58
 
 files:
   - .github/workflows/codeql-analysis.yaml
