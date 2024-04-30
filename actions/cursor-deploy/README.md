@@ -78,7 +78,7 @@ jobs:
             - uses: actions/checkout@v4.1.4
               with:
                   fetch-depth: 10
-            - uses: aws-actions/configure-aws-credentials@v2.0.0
+            - uses: aws-actions/configure-aws-credentials@v4.0.2
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -102,7 +102,7 @@ jobs:
         runs-on: ubuntu-22.04
         steps:
             - uses: actions/checkout@v4.1.4
-            - uses: aws-actions/configure-aws-credentials@v2.0.0
+            - uses: aws-actions/configure-aws-credentials@v4.0.2
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
