@@ -1,6 +1,6 @@
 {
-  "actions": "8.3.0",
-  "reusable-workflows": "10.3.0",
+  "actions": "9.0.0",
+  "reusable-workflows": "11.0.0",
   "config-inject": "3.1.0",
   "terraform-module": "3.1.0"
 }
