@@ -48,9 +48,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4.1.4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - uses: actions/setup-node@v3.6.0
         with:
           node-version: "20"
@@ -75,9 +75,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4.1.4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - uses: actions/setup-node@v3.6.0
         with:
           node-version: "20"
@@ -102,9 +102,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4.1.4
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
       - uses: actions/setup-node@v3.6.0
         with:
           node-version: "20"
