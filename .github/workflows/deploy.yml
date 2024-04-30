@@ -58,7 +58,7 @@ jobs:
     outputs:
       deployment_url: ${{ steps.deployment-url.outputs.url }}
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.1.4
       - uses: actions/setup-node@v3.6.0
         with:
           node-version: "20"
@@ -82,8 +82,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2.0.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
       - name: Download & Unpack Bundle
@@ -122,12 +121,12 @@ jobs:
 
       - name: Update .well-known Files If Exists
         run: |
-           aws s3 cp \
-            s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
-            s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
-            --content-type 'application/json' \
-            --cache-control 'public,max-age=3600' \
-            --metadata-directive REPLACE || echo "Failed updating .well-known files"
+          aws s3 cp \
+           s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
+           s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
+           --content-type 'application/json' \
+           --cache-control 'public,max-age=3600' \
+           --metadata-directive REPLACE || echo "Failed updating .well-known files"
 
       - name: Update Cursor File
         id: cursor-update

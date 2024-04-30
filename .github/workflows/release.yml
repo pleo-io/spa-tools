@@ -16,8 +16,7 @@ jobs:
     name: Run "Release Please"
     runs-on: ubuntu-22.04
     outputs:
-      config_package_published:
-        ${{ steps.release.outputs.config-inject--release_created }}
+      config_package_published: ${{ steps.release.outputs.config-inject--release_created }}
     steps:
       - uses: google-github-actions/release-please-action@v3.7.8
         id: release
@@ -32,7 +31,7 @@ jobs:
       run:
         working-directory: config-inject
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.1.4
       - uses: pnpm/action-setup@v2.2.4
         with:
           version: 8
