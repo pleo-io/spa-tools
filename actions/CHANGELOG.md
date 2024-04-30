@@ -11,6 +11,22 @@
 
 -   chore: Use pnpm 8 internally
 
+## [9.0.0](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.3.0...spa-github-actions-v9.0.0) (2024-04-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* update actions in spa-tools to versions using node 20 ([#213](https://github.com/pleo-io/spa-tools/issues/213))
+
+### Bug Fixes
+
+* **deps:** update dependency @actions/github to v6 ([#163](https://github.com/pleo-io/spa-tools/issues/163)) ([80d4019](https://github.com/pleo-io/spa-tools/commit/80d40195863fcb869b3540c34435864fc0b42fbf))
+
+
+### Miscellaneous Chores
+
+* update actions in spa-tools to versions using node 20 ([#213](https://github.com/pleo-io/spa-tools/issues/213)) ([7aaba39](https://github.com/pleo-io/spa-tools/commit/7aaba39e91017408078c406d12bfd5d6b70cd5d6))
+
 ## [8.3.0](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v8.2.1...spa-github-actions-v8.3.0) (2024-03-26)
 
 

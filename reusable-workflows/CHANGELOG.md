@@ -1,5 +1,16 @@
 # Changelog
 
+## [11.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.3.0...reusable-workflows-v11.0.0) (2024-04-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* update actions in spa-tools to versions using node 20 ([#213](https://github.com/pleo-io/spa-tools/issues/213))
+
+### Miscellaneous Chores
+
+* update actions in spa-tools to versions using node 20 ([#213](https://github.com/pleo-io/spa-tools/issues/213)) ([7aaba39](https://github.com/pleo-io/spa-tools/commit/7aaba39e91017408078c406d12bfd5d6b70cd5d6))
+
 ## [10.3.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.2.0...reusable-workflows-v10.3.0) (2024-03-26)
 
 
