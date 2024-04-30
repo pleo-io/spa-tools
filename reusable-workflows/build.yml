@@ -58,7 +58,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         if: steps.s3-cache.outputs.processed == 'false'
         with:
           version: ${{ inputs.pnpm_version }}
