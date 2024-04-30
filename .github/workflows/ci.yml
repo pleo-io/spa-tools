@@ -31,7 +31,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.1.4
       - run: |
           for file in reusable-workflows/*.yml; do
             filename=$(basename $file)
@@ -47,7 +47,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.1.4
       - uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -74,7 +74,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.1.4
       - uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -101,7 +101,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.1.4
       - uses: pnpm/action-setup@v2
         with:
           version: 8

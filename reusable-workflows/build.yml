@@ -46,10 +46,10 @@ jobs:
       tree_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
     steps:
-      - uses: actions/checkout@v3.5.2
+      - uses: actions/checkout@v4.1.4
 
       - name: Check S3 Cache
-        uses: pleo-io/s3-cache-action@v2.0.2
+        uses: pleo-io/s3-cache-action@v3.0.0
         id: s3-cache
         with:
           bucket-name: ${{ inputs.bucket_name }}
@@ -86,7 +86,7 @@ jobs:
         run: |
           echo "uri=s3://${{ inputs.bucket_name }}/bundles/${{ github.repository }}/${{ inputs.app_name }}/${{ steps.s3-cache.outputs.hash }}.tar.gz" >> $GITHUB_OUTPUT
 
-      - uses: aws-actions/configure-aws-credentials@v2.0.0
+      - uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
