@@ -30,6 +30,7 @@ env:
   GRADLE_SCRIPT_PATH: ./gradlew
   setWizCliDepsScanPath: .
   setWizCliDepsPolicy: Pleo-Default-vulnerabilities-policy
+  runWizCliDepsScan: false
 
 jobs:
   preflight:
@@ -37,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_run_analyze: ${{ steps.maybe_skip_analyze.outputs.should_run_analyze }}
+      should_run_wiz_cli: ${{ steps.maybe_skip_wiz_cli.outputs.should_run_wiz_cli }}
       working_language: ${{steps.working_language_step.outputs.WORKING_LANGUAGE}}
     steps:
       - uses: winterjung/split@a211a1c46e35fcdc4097d59dd6282d4a9859651b # v2
@@ -67,12 +69,24 @@ jobs:
             echo "Running CodeQL analysis"
             echo "should_run_analyze=true" >> "$GITHUB_OUTPUT"
           fi
+      - id: maybe_skip_wiz_cli
+        name: Check if Wiz-CLI Deps Scan should run
+        shell: bash
+        run: |
+          if [[ "${{ env.runWizCliDepsScan }}" == "true" ]]; then
+            echo "should_run_wiz_cli=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "should_run_wiz_cli=false" >> "$GITHUB_OUTPUT"
+          fi
       - id: working_language_step
         name: We check if the repository language is supported by CodeQL
         run: echo "WORKING_LANGUAGE=${{env[format('language_{0}', github.event.repository.language)]}}" >> "$GITHUB_OUTPUT"
 
   wiz-cli:
     name: Scan Dependencies with Wiz CLI
+    if: ${{ needs.preflight.outputs.should_run_wiz_cli == 'true'}}
+    needs:
+      - preflight
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -115,7 +129,6 @@ jobs:
     if: ${{ (needs.preflight.outputs.should_run_analyze == 'true') && (needs.preflight.outputs.working_language != '')}}
     needs:
       - preflight
-      - wiz-cli
     runs-on: codeql-runner
     timeout-minutes: 30
     permissions:
