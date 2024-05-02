@@ -63,7 +63,7 @@ jobs:
         with:
           version: ${{ inputs.pnpm_version }}
 
-      - uses: actions/setup-node@v3.6.0
+      - uses: actions/setup-node@v4.0.2
         if: steps.s3-cache.outputs.processed == 'false'
         with:
           node-version: "20"
