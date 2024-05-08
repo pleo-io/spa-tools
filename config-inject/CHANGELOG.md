@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v3.1.0...spa-config-inject-v3.1.1) (2024-05-08)
+
+
+### Bug Fixes
+
+* bump vite from 4.2.1 to 4.2.3 in /config-inject/example ([#112](https://github.com/pleo-io/spa-tools/issues/112)) ([8f7afab](https://github.com/pleo-io/spa-tools/commit/8f7afab97618e948ecadd8b494af616e0db140b3))
+
 ## [3.1.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v3.0.0...spa-config-inject-v3.1.0) (2024-03-26)
 
 
