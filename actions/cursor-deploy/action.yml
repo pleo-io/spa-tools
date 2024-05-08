@@ -19,5 +19,5 @@ outputs:
     branch_label:
         description: The branch label used for deployment (e.g. the hostname label for preview URL)
 runs:
-    using: 'node16'
+    using: 'node20'
     main: 'dist/main/index.js'

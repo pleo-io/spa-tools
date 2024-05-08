@@ -59,7 +59,7 @@ jobs:
       deployment_url: ${{ steps.deployment-url.outputs.url }}
     steps:
       - uses: actions/checkout@v4.1.4
-      - uses: actions/setup-node@v3.6.0
+      - uses: actions/setup-node@v4.0.2
         with:
           node-version: "20"
           registry-url: "https://npm.pkg.github.com"
