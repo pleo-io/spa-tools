@@ -12,7 +12,7 @@
     },
     "devDependencies": {
         "typescript": "^5.0.4",
-        "vite": "^4.2.3"
+        "vite": "^5.0.0"
     },
     "spaConfig": {
         "configDir": "src/config",
