@@ -51,7 +51,7 @@
     "devDependencies": {
         "@swc/core": "1.5.3",
         "@swc/jest": "0.2.36",
-        "@tsconfig/node16": "^1.0.3",
+        "@tsconfig/node16": "^16.0.0",
         "@types/jest": "29.5.8",
         "@types/jsesc": "^3.0.1",
         "@types/lodash.merge": "^4.6.7",
