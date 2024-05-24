@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "local>pleo-io/renovate-config"
+    "github>pleo-io/renovate-config:default.json5"
   ],
   "force": {
     "constraints": {
