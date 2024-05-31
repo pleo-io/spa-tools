@@ -6,6 +6,9 @@ on:
       - edited
       - reopened
       - synchronize
+  merge_group:
+    types:
+      - checks_requested
 
 concurrency:
   group: ci-${{ github.ref }}
