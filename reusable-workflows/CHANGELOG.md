@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.0.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.0.0...reusable-workflows-v11.0.1) (2024-06-03)
+
+
+### Bug Fixes
+
+* **deps:** udpate actions/checkout to trigger a new release ([#226](https://github.com/pleo-io/spa-tools/issues/226)) ([b1c7753](https://github.com/pleo-io/spa-tools/commit/b1c775345fdd09c13b039dc3355dbf7b6192db66))
+
 ## [11.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.3.0...reusable-workflows-v11.0.0) (2024-04-30)
 
 
