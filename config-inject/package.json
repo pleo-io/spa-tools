@@ -26,7 +26,8 @@
     "bin": "./cli.js",
     "type": "module",
     "engines": {
-        "node": ">=16"
+        "node": ">=16",
+        "pnpm": "9.x"
     },
     "publishConfig": {
         "registry": "https://npm.pkg.github.com"
