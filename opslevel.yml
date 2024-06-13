@@ -4,7 +4,7 @@ version: 1
 service:
   name: Pleo SPA Tools
   lifecycle: generally_available
-  owner: webcore
+  owner: team-web-core
   language: TypeScript
   description: |-
     Reusable pieces of CICD pipelines for Single Page Applications
