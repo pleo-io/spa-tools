@@ -30,6 +30,10 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
+      turbo_force:
+        required: false
+        description: "Skip using Remote Cache when build task (still writes task output to cache)"
+        type: boolean
     outputs:
       tree_hash:
         description: "Tree hash of the code built"
@@ -79,7 +83,10 @@ jobs:
 
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'
-        run: ${{ inputs.build_cmd }}
+        run: echo "TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}" && ${{ inputs.build_cmd }}
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+          TURBO_FORCE: ${{ inputs.turbo_force }}
 
       - name: Get Bundle S3 URI
         id: bundle-uri
