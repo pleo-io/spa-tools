@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.0.2...reusable-workflows-v11.1.0) (2024-06-18)
+
+
+### Features
+
+* Add support for Turborepo Remote Cache to the build workflow ([#234](https://github.com/pleo-io/spa-tools/issues/234)) ([1a7335c](https://github.com/pleo-io/spa-tools/commit/1a7335cf85936f7af2754b1e892bc6b8c60ce606))
+
 ## [11.0.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.0.1...reusable-workflows-v11.0.2) (2024-06-03)
 
 
