@@ -83,7 +83,7 @@ jobs:
 
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'
-        run: echo "TURBO_TOKEN=${{ secrets.TURBO_TOKEN }}" && ${{ inputs.build_cmd }}
+        run: ${{ inputs.build_cmd }}
         env:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_FORCE: ${{ inputs.turbo_force }}
