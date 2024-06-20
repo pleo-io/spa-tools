@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.1.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.1...reusable-workflows-v11.1.2) (2024-06-20)
+
+
+### Bug Fixes
+
+* Avoid automatically using Remote Cache in all workflows ([#239](https://github.com/pleo-io/spa-tools/issues/239)) ([d193502](https://github.com/pleo-io/spa-tools/commit/d193502111b1f9fa6f39061cd914d9a976198d09))
+
 ## [11.1.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.0...reusable-workflows-v11.1.1) (2024-06-20)
 
 
