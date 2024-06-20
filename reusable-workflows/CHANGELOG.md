@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.2...reusable-workflows-v11.2.0) (2024-06-20)
+
+
+### Features
+
+* Cache node_modules/.pnpm instead of the global store ([#236](https://github.com/pleo-io/spa-tools/issues/236)) ([277902c](https://github.com/pleo-io/spa-tools/commit/277902c4c62552867f2f7252813e4b8bb351f3ca))
+
 ## [11.1.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.1...reusable-workflows-v11.1.2) (2024-06-20)
 
 
