@@ -89,7 +89,7 @@ jobs:
         if: steps.s3-cache.outputs.processed == 'false'
         run: ${{ inputs.build_cmd }}
         env:
-          TURBO_TOKEN: ${{ inputs.turbo_cache && secrets.TURBO_TOKEN || '' }}
+          TURBO_TOKEN: ${{ inputs.turbo_cache && secrets.TURBO_TOKEN || null }}
           TURBO_FORCE: ${{ inputs.turbo_force }}
 
       - name: Get Bundle S3 URI
