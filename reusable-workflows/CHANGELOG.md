@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.1.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.0...reusable-workflows-v11.1.1) (2024-06-20)
+
+
+### Bug Fixes
+
+* Remove debug log of turbo token ([#237](https://github.com/pleo-io/spa-tools/issues/237)) ([8301e60](https://github.com/pleo-io/spa-tools/commit/8301e60a3d4c67e046c304300bd5314e52e72e90))
+
 ## [11.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.0.2...reusable-workflows-v11.1.0) (2024-06-18)
 
 
