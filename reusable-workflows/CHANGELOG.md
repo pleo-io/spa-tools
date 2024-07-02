@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.3.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.2.0...reusable-workflows-v11.3.0) (2024-07-02)
+
+
+### Features
+
+* Use 16 core runner for build step ([#243](https://github.com/pleo-io/spa-tools/issues/243)) ([b1fee0d](https://github.com/pleo-io/spa-tools/commit/b1fee0df87324c64b9ca9fb411b3a2d935f7160a))
+
 ## [11.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.2...reusable-workflows-v11.2.0) (2024-06-20)
 
 
