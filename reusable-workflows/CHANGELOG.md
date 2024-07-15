@@ -1,5 +1,54 @@
 # Changelog
 
+## [11.3.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.2.0...reusable-workflows-v11.3.0) (2024-07-02)
+
+
+### Features
+
+* Use 16 core runner for build step ([#243](https://github.com/pleo-io/spa-tools/issues/243)) ([b1fee0d](https://github.com/pleo-io/spa-tools/commit/b1fee0df87324c64b9ca9fb411b3a2d935f7160a))
+
+## [11.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.2...reusable-workflows-v11.2.0) (2024-06-20)
+
+
+### Features
+
+* Cache node_modules/.pnpm instead of the global store ([#236](https://github.com/pleo-io/spa-tools/issues/236)) ([277902c](https://github.com/pleo-io/spa-tools/commit/277902c4c62552867f2f7252813e4b8bb351f3ca))
+
+## [11.1.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.1...reusable-workflows-v11.1.2) (2024-06-20)
+
+
+### Bug Fixes
+
+* Avoid automatically using Remote Cache in all workflows ([#239](https://github.com/pleo-io/spa-tools/issues/239)) ([d193502](https://github.com/pleo-io/spa-tools/commit/d193502111b1f9fa6f39061cd914d9a976198d09))
+
+## [11.1.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.1.0...reusable-workflows-v11.1.1) (2024-06-20)
+
+
+### Bug Fixes
+
+* Remove debug log of turbo token ([#237](https://github.com/pleo-io/spa-tools/issues/237)) ([8301e60](https://github.com/pleo-io/spa-tools/commit/8301e60a3d4c67e046c304300bd5314e52e72e90))
+
+## [11.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.0.2...reusable-workflows-v11.1.0) (2024-06-18)
+
+
+### Features
+
+* Add support for Turborepo Remote Cache to the build workflow ([#234](https://github.com/pleo-io/spa-tools/issues/234)) ([1a7335c](https://github.com/pleo-io/spa-tools/commit/1a7335cf85936f7af2754b1e892bc6b8c60ce606))
+
+## [11.0.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.0.1...reusable-workflows-v11.0.2) (2024-06-03)
+
+
+### Bug Fixes
+
+* **deps:** update spa-github-actions to latest ([#228](https://github.com/pleo-io/spa-tools/issues/228)) ([5270e3e](https://github.com/pleo-io/spa-tools/commit/5270e3e45bc5df8c59e0af36c0af43881c4c826b))
+
+## [11.0.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.0.0...reusable-workflows-v11.0.1) (2024-06-03)
+
+
+### Bug Fixes
+
+* **deps:** udpate actions/checkout to trigger a new release ([#226](https://github.com/pleo-io/spa-tools/issues/226)) ([b1c7753](https://github.com/pleo-io/spa-tools/commit/b1c775345fdd09c13b039dc3355dbf7b6192db66))
+
 ## [11.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v10.3.0...reusable-workflows-v11.0.0) (2024-04-30)
 
 

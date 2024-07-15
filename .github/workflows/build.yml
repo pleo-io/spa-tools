@@ -30,6 +30,14 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
+      turbo_cache:
+        required: false
+        description: "Use Turborepo Remote Cache"
+        type: boolean
+      turbo_force:
+        required: false
+        description: "Skip using Turborepo Remote Cache when build task (still writes task output to cache)"
+        type: boolean
     outputs:
       tree_hash:
         description: "Tree hash of the code built"
@@ -41,12 +49,12 @@ on:
 jobs:
   build:
     name: Build & Upload
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest-16-cores
     outputs:
       tree_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
     steps:
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.6
 
       - name: Check S3 Cache
         uses: pleo-io/s3-cache-action@v3.0.0
@@ -58,7 +66,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4.0.0
         if: steps.s3-cache.outputs.processed == 'false'
         with:
           version: ${{ inputs.pnpm_version }}
@@ -69,7 +77,15 @@ jobs:
           node-version: "20"
           registry-url: "https://npm.pkg.github.com"
           scope: ${{ inputs.registry_scope }}
-          cache: "pnpm"
+
+      - name: Cache node_modules/.pnpm
+        if: steps.s3-cache.outputs.processed == 'false'
+        uses: actions/cache@v4.0.2
+        with:
+          path: node_modules/.pnpm
+          key: pnpm-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-node-modules-
 
       - name: Install Dependencies
         if: steps.s3-cache.outputs.processed == 'false'
@@ -80,6 +96,9 @@ jobs:
       - name: Build
         if: steps.s3-cache.outputs.processed == 'false'
         run: ${{ inputs.build_cmd }}
+        env:
+          TURBO_TOKEN: ${{ inputs.turbo_cache && secrets.TURBO_TOKEN || null }}
+          TURBO_FORCE: ${{ inputs.turbo_force }}
 
       - name: Get Bundle S3 URI
         id: bundle-uri
