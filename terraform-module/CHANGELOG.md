@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.1.1...terraform-module-v3.2.0) (2024-08-22)
+
+
+### Features
+
+* Move github-deployment-env to spa terraform-modules ([#246](https://github.com/pleo-io/spa-tools/issues/246)) ([e0a2792](https://github.com/pleo-io/spa-tools/commit/e0a27924317d50e3e37a2a2359cc5bce92fcfa9c))
+
 ## [3.1.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.1.0...terraform-module-v3.1.1) (2024-06-14)
 
 
