@@ -8,8 +8,7 @@ into that new environment's secrets. See GitHub documentation on
 
 ```hcl
 module "deployment_env" {
-  source = "api.env0.com/ed3d7d49-aa1a-4456-8ccb-3b56dd0e7070/github-deployment-env/aws"
-  version = "1.0.0"
+  source = "git@github.com:pleo-io/spa-tools.git//terraform-module/modules/frontend-github-deployment-env?ref=terraform-module-v3.1.1"
 
   repo_name          = "my-repo"
   env_name           = "staging"
