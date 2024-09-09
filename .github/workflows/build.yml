@@ -30,6 +30,11 @@ on:
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
         type: string
+      runner:
+        required: false
+        default: ubuntu-latest-8-cores
+        description: "Use a specific size of job runner to run this workflow"
+        type: string
       turbo_cache:
         required: false
         description: "Use Turborepo Remote Cache"
@@ -49,7 +54,7 @@ on:
 jobs:
   build:
     name: Build & Upload
-    runs-on: ubuntu-latest-16-cores
+    runs-on: ${{ inputs.runner }}
     outputs:
       tree_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
