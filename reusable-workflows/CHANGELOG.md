@@ -1,5 +1,12 @@
 # Changelog
 
+## [11.3.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.3.0...reusable-workflows-v11.3.1) (2024-09-09)
+
+
+### Bug Fixes
+
+* Change default runner for build reusable workflow ([#249](https://github.com/pleo-io/spa-tools/issues/249)) ([1268317](https://github.com/pleo-io/spa-tools/commit/12683172fe9f268380e0416079d1efd90b78896f))
+
 ## [11.3.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.2.0...reusable-workflows-v11.3.0) (2024-07-02)
 
 
