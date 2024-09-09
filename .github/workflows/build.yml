@@ -22,13 +22,19 @@ on:
         description: "Command for building the deploy bundle"
         type: string
       pnpm_version:
-        required: true
-        description: "pnpm version to configure"
+        required: false
+        default: 0
+        description: "pnpm version to install. If ommitted, the project needs to have the version specified in the 'packageManager' field in its package.json"
         type: number
       registry_scope:
         required: false
         default: "@pleo-io"
         description: "Org scope for the GitHub Package Registry"
+        type: string
+      runner:
+        required: false
+        default: ubuntu-latest-8-cores
+        description: "Use a specific size of job runner to run this workflow"
         type: string
       turbo_cache:
         required: false
@@ -49,7 +55,7 @@ on:
 jobs:
   build:
     name: Build & Upload
-    runs-on: ubuntu-latest-16-cores
+    runs-on: ${{ inputs.runner }}
     outputs:
       tree_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
@@ -69,7 +75,7 @@ jobs:
       - uses: pnpm/action-setup@v4.0.0
         if: steps.s3-cache.outputs.processed == 'false'
         with:
-          version: ${{ inputs.pnpm_version }}
+          version: ${{ inputs.pnpm_version != 0 && inputs.pnpm_version || null }}
 
       - uses: actions/setup-node@v4.0.2
         if: steps.s3-cache.outputs.processed == 'false'
