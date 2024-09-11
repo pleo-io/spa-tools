@@ -20,11 +20,11 @@ const DEFAULT_BRANCH_DEFAULT_NAME = 'master'
  * based on the host name specified by the request, and sets that file as the URI of the request.
  * The options are:
  * - HTML for latest app version on the main branch
- *   e.g. app.staging.example.com and app.example.com
+ *   e.g. app.dev.example.com and app.example.com
  * - HTML for latest app version on a feature branch (branch preview deployment)
- *   e.g. my-branch.staging.example.com
+ *   e.g. my-branch.dev.example.com
  * - HTML for a specific app version (hash preview deployment)
- *   e.g. preview-b104213fc39ecca4f237a7bd6544d428ad46ec7e.app.staging.example.com
+ *   e.g. preview-b104213fc39ecca4f237a7bd6544d428ad46ec7e.app.dev.example.com
  *
  * If the translations are enabled via configuration, this lambda will also fetch the current translation
  * version from S3 and pass it to the response lambda via custom headers on the request object.
@@ -34,9 +34,6 @@ export function getHandler(config: Config, s3: S3Client) {
         const request = event.Records[0].cf.request
 
         try {
-            // Get app version and translation version in parallel to avoid the double network penalty.
-            // Translation hash is only fetched if translations are enabled. Fetching translation cursor
-            // can never throw here, as in case of a failure we're returning a default value.
             const appVersion = await getAppVersion(request, config, s3)
 
             // Set app version header on request, so it can be picked up by the viewer response lambda
@@ -83,7 +80,7 @@ function getUri(request: CloudFrontRequest, appVersion: string) {
 async function getAppVersion(request: CloudFrontRequest, config: Config, s3: S3Client) {
     const host = getHeader(request, 'host') ?? null
 
-    // Preview name is the first segment of the url e.g. my-branch for my-branch.app.staging.example.com
+    // Preview name is the first segment of the url e.g. my-branch for my-branch.app.dev.example.com
     // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
     let previewName: string
 
@@ -105,11 +102,11 @@ async function getAppVersion(request: CloudFrontRequest, config: Config, s3: S3C
 }
 
 /**
- * We serve a preview for each app version at e.g.preview-[hash].app.staging.example.com
+ * We serve a preview for each app version at e.g.preview-[hash].app.dev.example.com
  * If the preview name matches that pattern, we assume it's a hash preview link
  */
 function getPreviewHash(previewName?: string) {
-    const matchHash = /^preview-(?<hash>[a-z0-9]{40})$/.exec(previewName || '')
+    const matchHash = /^preview-(?<hash>[a-z0-9]{16}|[a-z0-9]{40})$/.exec(previewName || '')
     return matchHash?.groups?.hash
 }
 

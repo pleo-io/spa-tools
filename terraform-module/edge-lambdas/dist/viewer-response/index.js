@@ -70,10 +70,12 @@ function getConfig() {
  * @returns A new, modified CloudFront header maps
  */
 function setHeader(headers, headerName, headerValue, options = {}) {
-    var _a;
     const headerKey = headerName.toLowerCase();
-    const previousHeader = options.merge ? (_a = headers[headerKey]) !== null && _a !== void 0 ? _a : [] : [];
-    return Object.assign(Object.assign({}, headers), { [headerKey]: [...previousHeader, { key: headerName, value: headerValue }] });
+    const previousHeader = options.merge ? headers[headerKey] ?? [] : [];
+    return {
+        ...headers,
+        [headerKey]: [...previousHeader, { key: headerName, value: headerValue }]
+    };
 }
 /**
  * Retrieve a header value (first if multiple values set) for a passed CloudFront request
@@ -82,8 +84,7 @@ function setHeader(headers, headerName, headerValue, options = {}) {
  * @returns The first found value of the specified header, if available
  */
 function getHeader(request, headerName) {
-    var _a, _b, _c;
-    return (_c = (_b = (_a = request.headers) === null || _a === void 0 ? void 0 : _a[headerName.toLowerCase()]) === null || _b === void 0 ? void 0 : _b[0]) === null || _c === void 0 ? void 0 : _c.value;
+    return request.headers?.[headerName.toLowerCase()]?.[0]?.value;
 }
 /**
  * Extract the value of a specific cookie from CloudFront headers map, if present
@@ -110,15 +111,6 @@ function getCookie(headers, cookieName) {
 const APP_VERSION_HEADER = 'X-Pleo-SPA-Version';
 
 ;// CONCATENATED MODULE: ./src/viewer-response/viewer-response.ts
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 
 /**
  * Edge Lambda handler triggered on "viewer-response" event, on the default CF behavior of the web app CF distribution.
@@ -130,12 +122,12 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
  * We're going via a getHandler method to aid testing with dependency injection
  */
 function getHandler(config) {
-    const handler = (event) => __awaiter(this, void 0, void 0, function* () {
+    const handler = async (event) => {
         let response = event.Records[0].cf.response;
         const request = event.Records[0].cf.request;
         response = addVersionHeader(response, request);
         return response;
-    });
+    };
     return handler;
 }
 // Add a custom version header to the response (used e.g. for checking for new SPA versions)
@@ -143,7 +135,7 @@ function getHandler(config) {
 function addVersionHeader(response, request) {
     const appVersion = getHeader(request, APP_VERSION_HEADER);
     let headers = setHeader(response.headers, APP_VERSION_HEADER, appVersion);
-    return Object.assign(Object.assign({}, response), { headers });
+    return { ...response, headers };
 }
 
 ;// CONCATENATED MODULE: ./src/viewer-response/index.ts
