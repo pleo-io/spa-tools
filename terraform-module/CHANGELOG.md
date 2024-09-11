@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.2.0...terraform-module-v3.2.1) (2024-09-11)
+
+
+### Bug Fixes
+
+* Support turbo hash in preview deploy URLs ([#251](https://github.com/pleo-io/spa-tools/issues/251)) ([c18a89d](https://github.com/pleo-io/spa-tools/commit/c18a89d130d94842dd598d38047ad6e7846a3f6a))
+
 ## [3.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.1.1...terraform-module-v3.2.0) (2024-08-22)
 
 
