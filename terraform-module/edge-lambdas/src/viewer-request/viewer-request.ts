@@ -34,9 +34,6 @@ export function getHandler(config: Config, s3: S3Client) {
         const request = event.Records[0].cf.request
 
         try {
-            // Get app version and translation version in parallel to avoid the double network penalty.
-            // Translation hash is only fetched if translations are enabled. Fetching translation cursor
-            // can never throw here, as in case of a failure we're returning a default value.
             const appVersion = await getAppVersion(request, config, s3)
 
             // Set app version header on request, so it can be picked up by the viewer response lambda
