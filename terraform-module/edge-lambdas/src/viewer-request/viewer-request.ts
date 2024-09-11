@@ -109,7 +109,7 @@ async function getAppVersion(request: CloudFrontRequest, config: Config, s3: S3C
  * If the preview name matches that pattern, we assume it's a hash preview link
  */
 function getPreviewHash(previewName?: string) {
-    const matchHash = /^preview-(?<hash>[a-z0-9]{40})$/.exec(previewName || '')
+    const matchHash = /^preview-(?<hash>[a-z0-9]{16}|[a-z0-9]{40})$/.exec(previewName || '')
     return matchHash?.groups?.hash
 }
 
