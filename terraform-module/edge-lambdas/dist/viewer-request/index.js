@@ -74,10 +74,12 @@ const external_path_namespaceObject = require("path");
  * @returns A new, modified CloudFront header maps
  */
 function setHeader(headers, headerName, headerValue, options = {}) {
-    var _a;
     const headerKey = headerName.toLowerCase();
-    const previousHeader = options.merge ? (_a = headers[headerKey]) !== null && _a !== void 0 ? _a : [] : [];
-    return Object.assign(Object.assign({}, headers), { [headerKey]: [...previousHeader, { key: headerName, value: headerValue }] });
+    const previousHeader = options.merge ? headers[headerKey] ?? [] : [];
+    return {
+        ...headers,
+        [headerKey]: [...previousHeader, { key: headerName, value: headerValue }]
+    };
 }
 /**
  * Retrieve a header value (first if multiple values set) for a passed CloudFront request
@@ -86,8 +88,7 @@ function setHeader(headers, headerName, headerValue, options = {}) {
  * @returns The first found value of the specified header, if available
  */
 function getHeader(request, headerName) {
-    var _a, _b, _c;
-    return (_c = (_b = (_a = request.headers) === null || _a === void 0 ? void 0 : _a[headerName.toLowerCase()]) === null || _b === void 0 ? void 0 : _b[0]) === null || _c === void 0 ? void 0 : _c.value;
+    return request.headers?.[headerName.toLowerCase()]?.[0]?.value;
 }
 /**
  * Extract the value of a specific cookie from CloudFront headers map, if present
@@ -114,15 +115,6 @@ function getCookie(headers, cookieName) {
 const APP_VERSION_HEADER = 'X-Pleo-SPA-Version';
 
 ;// CONCATENATED MODULE: ./src/s3.ts
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 
 /**
  * Fetches a file from the S3 origin bucket and returns its content
@@ -131,28 +123,17 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
  * @param s3 S3 instance
  * @returns content of the file
  */
-function fetchFileFromS3Bucket(key, bucket, s3) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const command = new client_s3_namespaceObject.GetObjectCommand({ Bucket: bucket, Key: key });
-        const response = yield s3.send(command);
-        if (!response.Body) {
-            throw new Error(`Empty response from S3 for ${key} in ${bucket} bucket`);
-        }
-        const fileContents = yield response.Body.transformToString();
-        return fileContents.trim();
-    });
+async function fetchFileFromS3Bucket(key, bucket, s3) {
+    const command = new client_s3_namespaceObject.GetObjectCommand({ Bucket: bucket, Key: key });
+    const response = await s3.send(command);
+    if (!response.Body) {
+        throw new Error(`Empty response from S3 for ${key} in ${bucket} bucket`);
+    }
+    const fileContents = await response.Body.transformToString();
+    return fileContents.trim();
 }
 
 ;// CONCATENATED MODULE: ./src/viewer-request/viewer-request.ts
-var viewer_request_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 
 
 
@@ -168,23 +149,20 @@ const DEFAULT_BRANCH_DEFAULT_NAME = 'master';
  * based on the host name specified by the request, and sets that file as the URI of the request.
  * The options are:
  * - HTML for latest app version on the main branch
- *   e.g. app.staging.example.com and app.example.com
+ *   e.g. app.dev.example.com and app.example.com
  * - HTML for latest app version on a feature branch (branch preview deployment)
- *   e.g. my-branch.staging.example.com
+ *   e.g. my-branch.dev.example.com
  * - HTML for a specific app version (hash preview deployment)
- *   e.g. preview-b104213fc39ecca4f237a7bd6544d428ad46ec7e.app.staging.example.com
+ *   e.g. preview-b104213fc39ecca4f237a7bd6544d428ad46ec7e.app.dev.example.com
  *
  * If the translations are enabled via configuration, this lambda will also fetch the current translation
  * version from S3 and pass it to the response lambda via custom headers on the request object.
  */
 function getHandler(config, s3) {
-    const handler = (event) => viewer_request_awaiter(this, void 0, void 0, function* () {
+    const handler = async (event) => {
         const request = event.Records[0].cf.request;
         try {
-            // Get app version and translation version in parallel to avoid the double network penalty.
-            // Translation hash is only fetched if translations are enabled. Fetching translation cursor
-            // can never throw here, as in case of a failure we're returning a default value.
-            const appVersion = yield getAppVersion(request, config, s3);
+            const appVersion = await getAppVersion(request, config, s3);
             // Set app version header on request, so it can be picked up by the viewer response lambda
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion);
             // We instruct the CDN to return a file that corresponds to the app version calculated
@@ -198,7 +176,7 @@ function getHandler(config, s3) {
             request.uri = '/404';
         }
         return request;
-    });
+    };
     return handler;
 }
 /**
@@ -221,49 +199,43 @@ function getUri(request, appVersion) {
  * It can be either a specific version requested via preview link with a hash, or the latest
  * version for a branch requested (preview or main), which we fetch from cursor files stored in S3
  */
-function getAppVersion(request, config, s3) {
-    var _a, _b;
-    return viewer_request_awaiter(this, void 0, void 0, function* () {
-        const host = (_a = getHeader(request, 'host')) !== null && _a !== void 0 ? _a : null;
-        // Preview name is the first segment of the url e.g. my-branch for my-branch.app.staging.example.com
-        // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
-        let previewName;
-        if (config.previewDeploymentPostfix && host && host.includes(config.previewDeploymentPostfix)) {
-            previewName = host.split('.')[0];
-            // If the request is for a specific hash of a preview deployment, we use that hash
-            const previewHash = getPreviewHash(previewName);
-            if (previewHash) {
-                return previewHash;
-            }
+async function getAppVersion(request, config, s3) {
+    const host = getHeader(request, 'host') ?? null;
+    // Preview name is the first segment of the url e.g. my-branch for my-branch.app.dev.example.com
+    // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
+    let previewName;
+    if (config.previewDeploymentPostfix && host && host.includes(config.previewDeploymentPostfix)) {
+        previewName = host.split('.')[0];
+        // If the request is for a specific hash of a preview deployment, we use that hash
+        const previewHash = getPreviewHash(previewName);
+        if (previewHash) {
+            return previewHash;
         }
-        const defaultBranchName = (_b = config.defaultBranchName) !== null && _b !== void 0 ? _b : DEFAULT_BRANCH_DEFAULT_NAME;
-        // Otherwise we fetch the current app version for requested branch from S3
-        const branchName = previewName || defaultBranchName;
-        return fetchAppVersion(branchName, config, s3);
-    });
+    }
+    const defaultBranchName = config.defaultBranchName ?? DEFAULT_BRANCH_DEFAULT_NAME;
+    // Otherwise we fetch the current app version for requested branch from S3
+    const branchName = previewName || defaultBranchName;
+    return fetchAppVersion(branchName, config, s3);
 }
 /**
- * We serve a preview for each app version at e.g.preview-[hash].app.staging.example.com
+ * We serve a preview for each app version at e.g.preview-[hash].app.dev.example.com
  * If the preview name matches that pattern, we assume it's a hash preview link
  */
 function getPreviewHash(previewName) {
-    var _a;
-    const matchHash = /^preview-(?<hash>[a-z0-9]{40})$/.exec(previewName || '');
-    return (_a = matchHash === null || matchHash === void 0 ? void 0 : matchHash.groups) === null || _a === void 0 ? void 0 : _a.hash;
+    const matchHash = /^preview-(?<hash>[a-z0-9]{16}|[a-z0-9]{40})$/.exec(previewName || '');
+    return matchHash?.groups?.hash;
 }
 /**
  * Fetch a cursor deploy file from the S3 bucket and returns its content, which is the current
  * active app version for that branch).
  */
-function fetchAppVersion(branch, config, s3) {
-    return viewer_request_awaiter(this, void 0, void 0, function* () {
-        try {
-            return yield fetchFileFromS3Bucket(`deploys/${branch}`, config.originBucketName, s3);
-        }
-        catch (error) {
-            throw new Error(`Cursor file not found for branch=${branch}`);
-        }
-    });
+async function fetchAppVersion(branch, config, s3) {
+    try {
+        return await fetchFileFromS3Bucket(`deploys/${branch}`, config.originBucketName, s3);
+    }
+    catch (error) {
+        throw new Error(`Cursor file not found for branch=${branch}`);
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/viewer-request/index.ts
