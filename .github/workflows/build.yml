@@ -13,6 +13,10 @@ on:
         required: true
         description: "Name of the S3 registry bucket"
         type: string
+      custom_hash:
+        required: false
+        description: "Custom hash used to cache the action on successful build"
+        type: string
       build_dir:
         required: true
         description: "Location of the deploy bundle after running the build command"
@@ -63,11 +67,12 @@ jobs:
       - uses: actions/checkout@v4.1.6
 
       - name: Check S3 Cache
-        uses: pleo-io/s3-cache-action@v3.0.0
+        uses: pleo-io/s3-cache-action@v3.1.0
         id: s3-cache
         with:
           bucket-name: ${{ inputs.bucket_name }}
           key-prefix: build/${{ inputs.app_name }}
+          custom-hash: ${{ inputs.custom_hash }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1

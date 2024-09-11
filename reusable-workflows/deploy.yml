@@ -22,7 +22,7 @@ on:
         default: "dist"
         description: "Directory where the bundle should be unpacked"
         type: string
-      tree_hash:
+      deploy_hash:
         required: true
         description: "Tree hash of the code to deploy"
         type: string
@@ -65,6 +65,25 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
           scope: ${{ inputs.registry_scope }}
 
+      - name: Setup AWS Credentials for Origin Bucket Access
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Check version already deployed
+        id: is-version-already-deployed
+        run: |
+            DEPLOY_EXISTS=$(aws s3 ls s3://${{ inputs.bucket_name }}/html/${{ inputs.deploy_hash }}/ || true)
+            if [ -z "$DEPLOY_EXISTS" ]; then
+              echo "Version ${{ inputs.deploy_hash }} not yet deployed"
+              echo "is_deployed=false" >> $GITHUB_OUTPUT
+            else
+              echo "Version ${{ inputs.deploy_hash }} already deployed"
+              echo "is_deployed=true" >> $GITHUB_OUTPUT
+            fi
+
       # For feature preview deployments we're using the permalink as the deploy URL for the GitHub deployment
       # For deployments on the default branch we're using the domain name passed via inputs.
       - name: Get Deployment URL
@@ -75,17 +94,19 @@ jobs:
               echo "Could not determine default branch"
               exit 1
           fi
-          SUBDOMAIN=$([[ $GITHUB_REF = "refs/heads/$DEFAULT_BRANCH" || $GITHUB_REF = "refs/heads/change-freeze-emergency-deploy" ]] && echo "" || echo "preview-${{ inputs.tree_hash }}.")
+          SUBDOMAIN=$([[ $GITHUB_REF = "refs/heads/$DEFAULT_BRANCH" || $GITHUB_REF = "refs/heads/change-freeze-emergency-deploy" ]] && echo "" || echo "preview-${{ inputs.deploy_hash }}.")
           echo "url=https://${SUBDOMAIN}${{ inputs.domain_name }}" >> $GITHUB_OUTPUT
 
       - name: Setup AWS Credentials for Registry Bucket Access
         uses: aws-actions/configure-aws-credentials@v4.0.2
+        if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
 
       - name: Download & Unpack Bundle
+        if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         run: |
           aws s3 cp ${{ inputs.bundle_uri }} bundle.tar.gz
           mkdir ${{ inputs.bundle_dir }} && tar -xvzf bundle.tar.gz -C ${{ inputs.bundle_dir }}
@@ -98,45 +119,57 @@ jobs:
           aws-region: eu-west-1
 
       - name: Inject Environment Config
-        if: inputs.inject_config_cmd
+        if: inputs.inject_config_cmd && ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
           SPA_BUNDLE_DIR: ${{ inputs.bundle_dir }}
           SPA_ENV: ${{inputs.environment}}
-          SPA_TREE_HASH: ${{ inputs.tree_hash}}
+          SPA_TREE_HASH: ${{ inputs.deploy_hash}}
         run: ${{inputs.inject_config_cmd }}
 
       - name: Copy Static Files
+        if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         run: |
           aws s3 cp ${{ inputs.bundle_dir }}/static s3://${{ inputs.bucket_name }}/static \
             --cache-control 'public,max-age=31536000,immutable' \
             --recursive
 
       - name: Copy HTML Files
+        if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         run: |
-          aws s3 cp ${{ inputs.bundle_dir }}/ s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }} \
+          aws s3 cp ${{ inputs.bundle_dir }}/ s3://${{ inputs.bucket_name }}/html/${{ inputs.deploy_hash }} \
            --cache-control 'public,max-age=31536000,immutable' \
            --recursive \
            --exclude "static/*"
 
       - name: Update .well-known Files If Exists
+        if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         run: |
           aws s3 cp \
-           s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
-           s3://${{ inputs.bucket_name }}/html/${{ inputs.tree_hash }}/.well-known/apple-app-site-association \
+           s3://${{ inputs.bucket_name }}/html/${{ inputs.deploy_hash }}/.well-known/apple-app-site-association \
+           s3://${{ inputs.bucket_name }}/html/${{ inputs.deploy_hash }}/.well-known/apple-app-site-association \
            --content-type 'application/json' \
            --cache-control 'public,max-age=3600' \
            --metadata-directive REPLACE || echo "Failed updating .well-known files"
 
+      # We always copy deploy hash file even if we don't do an actual deployemnt as part of this commit
+      # This is used to identify which version of the deployed app is associated with the current commit
+      # In case we trigger rollback to this commit, we know what deployment to use based on the stored deploy_hash for this commit
+      - name: Copy Deploy Hash File
+        run: |
+          echo ${{ inputs.deploy_hash }} >> ${{ github.sha }}
+          aws s3 cp ${{ github.sha }} s3://${{ inputs.bucket_name }}/deploys/commits/${{ github.sha }}
+
       - name: Update Cursor File
         id: cursor-update
-        uses: pleo-io/spa-tools/actions/cursor-deploy@spa-github-actions-v9.0.2
+        uses: pleo-io/spa-tools/actions/cursor-deploy@spa-github-actions-v10.0.0
+        if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v9.0.2
-        if: github.event_name == 'pull_request'
+        uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v10.0.0
+        if: github.event_name == 'pull_request' && ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         with:
           app_name: ${{ inputs.app_name }}
           links: |
@@ -145,15 +178,9 @@ jobs:
               {"name": "Current Permalink", "url": "${{ steps.deployment-url.outputs.url }}"}
             ]
 
-      - name: Upload Deployed Bundle as Artifact
-        uses: actions/upload-artifact@v4.3.3
-        with:
-          name: bundle-${{ inputs.tree_hash }}-${{ inputs.environment }}
-          path: bundle.tar.gz
-
       - name: Verify app deployment
-        if: inputs.inject_config_cmd
+        if: inputs.inject_config_cmd && ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         # We expect the injection to insert the version in the HTML.
         run:
           curl --silent --show-error ${{ steps.deployment-url.outputs.url }} |
-          grep -q ${{ inputs.tree_hash }}
+          grep -q ${{ inputs.deploy_hash }}
