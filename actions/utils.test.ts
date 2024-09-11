@@ -27,29 +27,6 @@ describe(`Actions Utils`, () => {
         expect(output).toBe(false)
     })
 
-    test(`getTreeHashForCommitHash uses git CLI to check if the commit is part of the current branch, returns false when it is not`, async () => {
-        mockedExec.mockResolvedValue(0)
-        const hash = '5265ef99f1c8e18bcd282a11a4b752731cad5665'
-        const output = await utils.getTreeHashForCommitHash(hash)
-        expect(mockedExec).toHaveBeenCalledWith(
-            'git rev-parse',
-            ['5265ef99f1c8e18bcd282a11a4b752731cad5665:'],
-            {
-                listeners: {stdout: expect.any(Function)}
-            }
-        )
-        expect(output).toBe('')
-    })
-
-    test(`getCurrentRepoTreeHash uses git CLI to return the latest tree hash of the root of the repo`, async () => {
-        mockedExec.mockResolvedValue(0)
-        const output = await utils.getCurrentRepoTreeHash()
-        expect(mockedExec).toHaveBeenCalledWith('git rev-parse', ['HEAD:'], {
-            listeners: {stdout: expect.any(Function)}
-        })
-        expect(output).toBe('')
-    })
-
     test(`writeLineToFile creates a file using a shell script`, async () => {
         mockedExec.mockResolvedValue(0)
         await utils.writeLineToFile({path: '/some/file', text: 'hello world'})
@@ -65,6 +42,15 @@ describe(`Actions Utils`, () => {
                 '--key=my/key'
             ])
             expect(output).toBe(true)
+        })
+
+        test(`getCommitHashFromRef uses git CLI to return the latest tree hash of the root of the repo`, async () => {
+            mockedExec.mockResolvedValue(0)
+            const output = await utils.getCommitHashFromRef('HEAD')
+            expect(mockedExec).toHaveBeenCalledWith('git rev-parse', ['HEAD'], {
+                listeners: {stdout: expect.any(Function)}
+            })
+            expect(output).toBe('')
         })
 
         test(`fileExistsInS3 uses AWS CLI to check for of an object in S3 bucket, returns true if it exists`, async () => {
