@@ -1,5 +1,16 @@
 # Changelog
 
+## [12.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.3.1...reusable-workflows-v12.0.0) (2024-09-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Support using custom hash for build and deploy workflows ([#253](https://github.com/pleo-io/spa-tools/issues/253))
+
+### Features
+
+* Support using custom hash for build and deploy workflows ([#253](https://github.com/pleo-io/spa-tools/issues/253)) ([05514c0](https://github.com/pleo-io/spa-tools/commit/05514c0cd3129f89ab4d0c93cbf325e8b730821a))
+
 ## [11.3.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.3.0...reusable-workflows-v11.3.1) (2024-09-09)
 
 
