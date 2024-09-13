@@ -44,7 +44,7 @@ describe(`Actions Utils`, () => {
             expect(output).toBe(true)
         })
 
-        test(`getCommitHashFromRef uses git CLI to return the latest tree hash of the root of the repo`, async () => {
+        test(`getCommitHashFromRef uses git CLI to return the latest commit hash of the repo`, async () => {
             mockedExec.mockResolvedValue(0)
             const output = await utils.getCommitHashFromRef('HEAD')
             expect(mockedExec).toHaveBeenCalledWith('git rev-parse', ['HEAD'], {
