@@ -54,7 +54,7 @@ export async function writeLineToFile({text, path}: {text: string; path: string}
 }
 
 /**
- * Uploads a local file at a specified path to a S3 bucket at a given given
+ * Uploads a local file at a specified path to a S3 bucket at a given key
  * Executes "aws s3 cp"
  * @param options.path - The local path of the file (relative to working dir)
  * @param options.key - The key of a file to create in the S3 bucket
@@ -71,6 +71,24 @@ export async function copyFileToS3({
     bucket: string
 }) {
     await exec('aws s3 cp', [path, `s3://${bucket}/${key}`])
+}
+
+/**
+ * Read a file from the S3 bucket at a given key
+ * Executes "aws s3 cp"
+ * @param options.key - The key of a file to read from the S3 bucket
+ * @param options.bucket - The name of the S3 bucket (globally unique)
+ * @returns exitCode - shell command exit code
+ */
+export async function readFileFromS3({key, bucket}: {key: string; bucket: string}) {
+    // Download file and store it in temporary file
+    // Unfortunately we can't use pipes with @actions/exec
+    await exec('aws s3 cp', [`s3://${bucket}/${key}`, 'tmp'])
+    // Read content of the file
+    const data = await execReadOutput('cat', ['tmp'])
+    // Remove the temporary file
+    await exec('rm', ['tmp'])
+    return data
 }
 
 /**
@@ -111,20 +129,10 @@ export async function isHeadAncestor(commitHash: string) {
 }
 
 /**
- * Retrieve the root tree hash for the provided commit identifier
- * @param commit - commit identifier to lookup
- * @returns treeHash
+ * Retrieves the commit hash for the provided ref
+ * ref can be either a specific commit, or HEAD
+ * @returns SHA-1 of the commit hash
  */
-export async function getTreeHashForCommitHash(commit: string) {
-    return execReadOutput('git rev-parse', [`${commit}:`])
-}
-
-/**
- * Retrieves the current root tree hash of the git repository
- * Tree hash captures the state of the whole directory tree
- * of all the files in the repository.
- * @returns treeHash - SHA-1 root tree hash
- */
-export async function getCurrentRepoTreeHash() {
-    return getTreeHashForCommitHash('HEAD')
+export async function getCommitHashFromRef(ref: string) {
+    return execReadOutput(`git rev-parse`, [ref])
 }

@@ -15,9 +15,9 @@ import {
     fileExistsInS3,
     removeFileFromS3,
     runAction,
-    getCurrentRepoTreeHash,
     isHeadAncestor,
-    getTreeHashForCommitHash
+    readFileFromS3,
+    getCommitHashFromRef
 } from '../utils'
 
 const deployModes = ['default', 'rollback', 'unblock'] as const
@@ -35,7 +35,7 @@ runAction(async () => {
         ref: github.context.payload?.pull_request?.head.ref ?? github.context.ref
     })
 
-    core.setOutput('tree_hash', output.treeHash)
+    core.setOutput('deploy_hash', output.deployHash)
     core.setOutput('branch_label', output.branchLabel)
 })
 
@@ -54,7 +54,8 @@ export async function cursorDeploy({
 }: CursorDeployActionArgs) {
     const deployMode = getDeployMode(deployModeInput)
     const branchLabel = branchNameToHostnameLabel(ref)
-    const treeHash = await getDeploymentHash(deployMode, rollbackCommitHash)
+    const commitHash = await getDeployCommitHash(deployMode, rollbackCommitHash)
+    const deployHash = await getDeploymentHashFromCommitHash(bucket, commitHash)
 
     const rollbackKey = `rollbacks/${branchLabel}`
     const deployKey = `deploys/${branchLabel}`
@@ -77,10 +78,10 @@ export async function cursorDeploy({
     }
 
     // Perform the deployment by updating the cursor file for the current branch to point
-    // to the desired tree hash
-    await writeLineToFile({text: treeHash, path: branchLabel})
+    // to the desired deploy hash
+    await writeLineToFile({text: deployHash, path: branchLabel})
     await copyFileToS3({path: branchLabel, bucket, key: deployKey})
-    core.info(`Tree hash ${treeHash} is now the active deployment for ${branchLabel}.`)
+    core.info(`Deploy hash ${deployHash} is now the active deployment for ${branchLabel}.`)
 
     // If we're doing a rollback deployment we create a rollback file that blocks any following
     // deployments from going through.
@@ -96,7 +97,7 @@ export async function cursorDeploy({
         core.info(`${branchLabel} has automatic deploys resumed.`)
     }
 
-    return {treeHash, branchLabel}
+    return {deployHash, branchLabel}
 }
 
 /**
@@ -118,31 +119,31 @@ function getDeployMode(deployMode: string) {
     return deployMode
 }
 
-/**
- * Establish the tree hash of the code to be deployed. If we're doing a rollback,
- * we figure out the tree hash from the explicitly passed commit hash or the previous
- * commit on the branch. We additionally validate if the input commit hash is a commit from
- * the current branch, to make sure we can only rollback within the branch.
- * Otherwise we use the head root tree hash on the current branch.
- * @param deployMode - Deployment mode
- * @param rollbackCommitHash - In rollback deploy mode, optional explicit commit hash to roll back to
- * @returns treeHash
- */
-async function getDeploymentHash(deployMode: DeployMode, rollbackCommitHash?: string) {
+async function getDeployCommitHash(deployMode: DeployMode, rollbackCommitHash?: string) {
     if (deployMode === 'rollback') {
+        //  Validate if the input commit hash is a commit from
+        //  the current branch, to make sure we can only rollback within the branch.
         if (!!rollbackCommitHash && !(await isHeadAncestor(rollbackCommitHash))) {
             throw new Error('The selected rollback commit is not present on the branch')
         }
         // If no rollback commit is provided, we default to the previous commit on the branch
-        const commit = rollbackCommitHash || 'HEAD^'
-        const treeHash = await getTreeHashForCommitHash(commit)
-        core.info(`Rolling back to tree hash ${treeHash} (commit ${commit})`)
-        return treeHash
+        return getCommitHashFromRef(rollbackCommitHash || 'HEAD^')
     }
+    return getCommitHashFromRef('HEAD')
+}
 
-    const treeHash = await getCurrentRepoTreeHash()
-    core.info(`Using current root tree hash ${treeHash}`)
-    return treeHash
+// Get deploy hash for the provided commit hash
+async function getDeploymentHashFromCommitHash(bucket: string, commitHash: string) {
+    const commitKey = `deploys/commits/${commitHash}`
+    const deployHash = await readFileFromS3({
+        bucket: bucket,
+        key: commitKey
+    })
+    if (!deployHash) {
+        throw Error(`Deploy hash for commit ${commitHash} not found.`)
+    }
+    core.info(`Using deploy hash ${deployHash} (commit ${commitHash})`)
+    return deployHash
 }
 
 export function branchNameToHostnameLabel(ref: string) {

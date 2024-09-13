@@ -24280,6 +24280,12 @@ async function copyFileToS3({
 }) {
   await (0, import_exec.exec)("aws s3 cp", [path, `s3://${bucket}/${key}`]);
 }
+async function readFileFromS3({ key, bucket }) {
+  await (0, import_exec.exec)("aws s3 cp", [`s3://${bucket}/${key}`, "tmp"]);
+  const data = await execReadOutput("cat", ["tmp"]);
+  await (0, import_exec.exec)("rm", ["tmp"]);
+  return data;
+}
 async function removeFileFromS3({ key, bucket }) {
   await (0, import_exec.exec)("aws s3 rm", [`s3://${bucket}/${key}`]);
 }
@@ -24298,11 +24304,8 @@ async function runAction(action) {
 async function isHeadAncestor(commitHash) {
   return execIsSuccessful("git merge-base", [`--is-ancestor`, commitHash, `HEAD`]);
 }
-async function getTreeHashForCommitHash(commit) {
-  return execReadOutput("git rev-parse", [`${commit}:`]);
-}
-async function getCurrentRepoTreeHash() {
-  return getTreeHashForCommitHash("HEAD");
+async function getCommitHashFromRef(ref) {
+  return execReadOutput(`git rev-parse`, [ref]);
 }
 
 // cursor-deploy/index.ts
@@ -24318,7 +24321,7 @@ runAction(async () => {
     rollbackCommitHash,
     ref: ((_b = (_a2 = github.context.payload) == null ? void 0 : _a2.pull_request) == null ? void 0 : _b.head.ref) ?? github.context.ref
   });
-  core2.setOutput("tree_hash", output.treeHash);
+  core2.setOutput("deploy_hash", output.deployHash);
   core2.setOutput("branch_label", output.branchLabel);
 });
 async function cursorDeploy({
@@ -24329,7 +24332,8 @@ async function cursorDeploy({
 }) {
   const deployMode = getDeployMode(deployModeInput);
   const branchLabel = branchNameToHostnameLabel(ref);
-  const treeHash = await getDeploymentHash(deployMode, rollbackCommitHash);
+  const commitHash = await getDeployCommitHash(deployMode, rollbackCommitHash);
+  const deployHash = await getDeploymentHashFromCommitHash(bucket, commitHash);
   const rollbackKey = `rollbacks/${branchLabel}`;
   const deployKey = `deploys/${branchLabel}`;
   if (deployMode === "default" || deployMode === "unblock") {
@@ -24341,9 +24345,9 @@ async function cursorDeploy({
       throw new Error(`${branchLabel} does not have an active rollback, you can't unblock.`);
     }
   }
-  await writeLineToFile({ text: treeHash, path: branchLabel });
+  await writeLineToFile({ text: deployHash, path: branchLabel });
   await copyFileToS3({ path: branchLabel, bucket, key: deployKey });
-  core2.info(`Tree hash ${treeHash} is now the active deployment for ${branchLabel}.`);
+  core2.info(`Deploy hash ${deployHash} is now the active deployment for ${branchLabel}.`);
   if (deployMode === "rollback") {
     await copyFileToS3({ path: branchLabel, bucket, key: rollbackKey });
     core2.info(`${branchLabel} marked as rolled back, automatic deploys paused.`);
@@ -24352,7 +24356,7 @@ async function cursorDeploy({
     await removeFileFromS3({ bucket, key: rollbackKey });
     core2.info(`${branchLabel} has automatic deploys resumed.`);
   }
-  return { treeHash, branchLabel };
+  return { deployHash, branchLabel };
 }
 function getDeployMode(deployMode) {
   function assertDeployMode(value) {
@@ -24363,19 +24367,26 @@ function getDeployMode(deployMode) {
   assertDeployMode(deployMode);
   return deployMode;
 }
-async function getDeploymentHash(deployMode, rollbackCommitHash) {
+async function getDeployCommitHash(deployMode, rollbackCommitHash) {
   if (deployMode === "rollback") {
     if (!!rollbackCommitHash && !await isHeadAncestor(rollbackCommitHash)) {
       throw new Error("The selected rollback commit is not present on the branch");
     }
-    const commit = rollbackCommitHash || "HEAD^";
-    const treeHash2 = await getTreeHashForCommitHash(commit);
-    core2.info(`Rolling back to tree hash ${treeHash2} (commit ${commit})`);
-    return treeHash2;
+    return getCommitHashFromRef(rollbackCommitHash || "HEAD^");
   }
-  const treeHash = await getCurrentRepoTreeHash();
-  core2.info(`Using current root tree hash ${treeHash}`);
-  return treeHash;
+  return getCommitHashFromRef("HEAD");
+}
+async function getDeploymentHashFromCommitHash(bucket, commitHash) {
+  const commitKey = `deploys/commits/${commitHash}`;
+  const deployHash = await readFileFromS3({
+    bucket,
+    key: commitKey
+  });
+  if (!deployHash) {
+    throw Error(`Deploy hash for commit ${commitHash} not found.`);
+  }
+  core2.info(`Using deploy hash ${deployHash} (commit ${commitHash})`);
+  return deployHash;
 }
 function branchNameToHostnameLabel(ref) {
   var _a2, _b;

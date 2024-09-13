@@ -19,8 +19,8 @@ describe(`Cursor Deploy Action`, () => {
         And the tree hash used is the current repo tree hash
         `,
         async () => {
-            const treeHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
-            mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(treeHash)
+            const deployHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
+            mockedUtils.readFileFromS3.mockResolvedValue(deployHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(false)
 
             const output = await cursorDeploy({
@@ -33,13 +33,13 @@ describe(`Cursor Deploy Action`, () => {
             expectRollbackFileChecked('my-bucket', 'rollbacks/main')
 
             expectCursorFileUpdated({
-                treeHash: treeHash,
+                deployHash: deployHash,
                 branch: 'main',
                 bucket: 'my-bucket',
                 key: 'deploys/main'
             })
 
-            expect(output.treeHash).toBe(treeHash)
+            expect(output.deployHash).toBe(deployHash)
             expect(output.branchLabel).toBe('main')
         }
     )
@@ -53,9 +53,9 @@ describe(`Cursor Deploy Action`, () => {
         And the tree hash used is the current repo tree hash
         `,
         async () => {
-            const treeHash = '553b0cb96ac21ffc0583e5d8d72343b1faa90dfd'
+            const deployHash = '553b0cb96ac21ffc0583e5d8d72343b1faa90dfd'
             const sanitizedBranch = 'lol-my-feature-branch-30-better'
-            mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(treeHash)
+            mockedUtils.readFileFromS3.mockResolvedValue(deployHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(false)
 
             const output = await cursorDeploy({
@@ -68,13 +68,13 @@ describe(`Cursor Deploy Action`, () => {
             expectRollbackFileChecked('my-bucket', 'rollbacks/lol-my-feature-branch-30-better')
 
             expectCursorFileUpdated({
-                treeHash: treeHash,
+                deployHash: deployHash,
                 branch: sanitizedBranch,
                 bucket: 'my-bucket',
                 key: 'deploys/lol-my-feature-branch-30-better'
             })
 
-            expect(output.treeHash).toBe(treeHash)
+            expect(output.deployHash).toBe(deployHash)
             expect(output.branchLabel).toBe(sanitizedBranch)
         }
     )
@@ -87,8 +87,8 @@ describe(`Cursor Deploy Action`, () => {
         And the action returns a error
         `,
         async () => {
-            const treeHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
-            mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(treeHash)
+            const deployHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
+            mockedUtils.readFileFromS3.mockResolvedValue(deployHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(true)
 
             const promise = cursorDeploy({
@@ -118,12 +118,10 @@ describe(`Cursor Deploy Action`, () => {
         And the tree hash used is the previous commit tree hash
         `,
         async () => {
-            const currentTreeHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
-            const commitTreeHash = '32439d157a7e346d117a6a3c47d511526bd45012'
+            const currentDeployHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
 
-            mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(currentTreeHash)
+            mockedUtils.readFileFromS3.mockResolvedValue(currentDeployHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(false)
-            mockedUtils.getTreeHashForCommitHash.mockResolvedValue(commitTreeHash)
 
             const output = await cursorDeploy({
                 bucket: 'my-prod-bucket',
@@ -134,11 +132,11 @@ describe(`Cursor Deploy Action`, () => {
 
             expect(mockedUtils.fileExistsInS3).not.toHaveBeenCalled()
             expect(mockedUtils.isHeadAncestor).not.toHaveBeenCalled()
-            expect(mockedUtils.getTreeHashForCommitHash).toHaveBeenCalledWith('HEAD^')
+            expect(mockedUtils.getCommitHashFromRef).toHaveBeenCalledWith('HEAD^')
 
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledTimes(1)
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledWith({
-                text: commitTreeHash,
+                text: currentDeployHash,
                 path: 'main'
             })
 
@@ -155,7 +153,7 @@ describe(`Cursor Deploy Action`, () => {
                 key: 'rollbacks/main'
             })
 
-            expect(output.treeHash).toBe(commitTreeHash)
+            expect(output.deployHash).toBe(currentDeployHash)
             expect(output.branchLabel).toBe('main')
         }
     )
@@ -168,14 +166,12 @@ describe(`Cursor Deploy Action`, () => {
         And the tree hash used is the tree hash of the passed commit hash
         `,
         async () => {
-            const currentTreeHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
-            const commitTreeHash = 'b6e1c0468f4705b8cd0f18a04cd28ef7b9da7425'
+            const currentDeployHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
             const commitHash = 'fc24d309398cbf6d53237e05e4d2a8cd2de57cc7'
 
-            mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(currentTreeHash)
+            mockedUtils.readFileFromS3.mockResolvedValue(currentDeployHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(false)
             mockedUtils.isHeadAncestor.mockResolvedValue(true)
-            mockedUtils.getTreeHashForCommitHash.mockResolvedValue(commitTreeHash)
 
             const output = await cursorDeploy({
                 bucket: 'my-bucket',
@@ -186,11 +182,11 @@ describe(`Cursor Deploy Action`, () => {
 
             expect(mockedUtils.fileExistsInS3).not.toHaveBeenCalled()
             expect(mockedUtils.isHeadAncestor).toHaveBeenCalledWith(commitHash)
-            expect(mockedUtils.getTreeHashForCommitHash).toHaveBeenCalledWith(commitHash)
+            expect(mockedUtils.getCommitHashFromRef).toHaveBeenCalledWith(commitHash)
 
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledTimes(1)
             expect(mockedUtils.writeLineToFile).toHaveBeenCalledWith({
-                text: commitTreeHash,
+                text: currentDeployHash,
                 path: 'main'
             })
 
@@ -207,7 +203,7 @@ describe(`Cursor Deploy Action`, () => {
                 key: 'rollbacks/main'
             })
 
-            expect(output.treeHash).toBe(commitTreeHash)
+            expect(output.deployHash).toBe(currentDeployHash)
             expect(output.branchLabel).toBe('main')
         }
     )
@@ -221,9 +217,9 @@ describe(`Cursor Deploy Action`, () => {
         And the tree hash used is the tree hash of the passed commit hash
         `,
         async () => {
-            const treeHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
+            const deployHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
 
-            mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(treeHash)
+            mockedUtils.readFileFromS3.mockResolvedValue(deployHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(true)
             mockedUtils.isHeadAncestor.mockResolvedValue(true)
 
@@ -237,7 +233,7 @@ describe(`Cursor Deploy Action`, () => {
             expectRollbackFileChecked('my-bucket', 'rollbacks/main')
 
             expectCursorFileUpdated({
-                treeHash: treeHash,
+                deployHash: deployHash,
                 branch: 'main',
                 bucket: 'my-bucket',
                 key: 'deploys/main'
@@ -248,7 +244,7 @@ describe(`Cursor Deploy Action`, () => {
                 key: 'rollbacks/main'
             })
 
-            expect(output.treeHash).toBe(treeHash)
+            expect(output.deployHash).toBe(deployHash)
             expect(output.branchLabel).toBe('main')
         }
     )
@@ -282,14 +278,12 @@ describe(`Cursor Deploy Action`, () => {
         Then the action fails with an informative error
         `,
         async () => {
-            const currentTreeHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
+            const currentDeployHash = 'b017ebdf289ba78787da4e9c3291f0b7959e7059'
             const commitHash = 'fc24d309398cbf6d53237e05e4d2a8cd2de57cc7'
-            const commitTreeHash = 'b6e1c0468f4705b8cd0f18a04cd28ef7b9da7425'
 
-            mockedUtils.getCurrentRepoTreeHash.mockResolvedValue(currentTreeHash)
+            mockedUtils.readFileFromS3.mockResolvedValue(currentDeployHash)
             mockedUtils.fileExistsInS3.mockResolvedValue(false)
             mockedUtils.isHeadAncestor.mockResolvedValue(false)
-            mockedUtils.getTreeHashForCommitHash.mockResolvedValue(commitTreeHash)
 
             const promise = cursorDeploy({
                 bucket: 'my-bucket',
@@ -370,14 +364,14 @@ describe('Branch Sanitize - branchNameToHostnameLabel', () => {
 //#region Custom Assertions
 
 function expectCursorFileUpdated(args: {
-    treeHash: string
+    deployHash: string
     branch: string
     bucket: string
     key: string
 }) {
     expect(mockedUtils.writeLineToFile).toHaveBeenCalledTimes(1)
     expect(mockedUtils.writeLineToFile).toHaveBeenCalledWith({
-        text: args.treeHash,
+        text: args.deployHash,
         path: args.branch
     })
 

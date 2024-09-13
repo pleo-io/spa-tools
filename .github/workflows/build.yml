@@ -13,6 +13,10 @@ on:
         required: true
         description: "Name of the S3 registry bucket"
         type: string
+      custom_hash:
+        required: false
+        description: "Custom hash used to cache the action on successful build"
+        type: string
       build_dir:
         required: true
         description: "Location of the deploy bundle after running the build command"
@@ -45,9 +49,9 @@ on:
         description: "Skip using Turborepo Remote Cache when build task (still writes task output to cache)"
         type: boolean
     outputs:
-      tree_hash:
-        description: "Tree hash of the code built"
-        value: ${{ jobs.build.outputs.tree_hash }}
+      build_hash:
+        description: "Hash of the code built"
+        value: ${{ jobs.build.outputs.build_hash }}
       bundle_uri:
         description: "S3 URI of the bundle in the registry bucket"
         value: ${{ jobs.build.outputs.bundle_uri }}
@@ -57,17 +61,18 @@ jobs:
     name: Build & Upload
     runs-on: ${{ inputs.runner }}
     outputs:
-      tree_hash: ${{ steps.s3-cache.outputs.hash }}
+      build_hash: ${{ steps.s3-cache.outputs.hash }}
       bundle_uri: ${{ steps.bundle-uri.outputs.uri }}
     steps:
       - uses: actions/checkout@v4.1.6
 
       - name: Check S3 Cache
-        uses: pleo-io/s3-cache-action@v3.0.0
+        uses: pleo-io/s3-cache-action@v3.1.0
         id: s3-cache
         with:
           bucket-name: ${{ inputs.bucket_name }}
           key-prefix: build/${{ inputs.app_name }}
+          custom-hash: ${{ inputs.custom_hash }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_FRONTEND_REGISTRY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_FRONTEND_REGISTRY }}
           aws-region: eu-west-1
