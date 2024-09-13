@@ -119,7 +119,7 @@ jobs:
           aws-region: eu-west-1
 
       - name: Inject Environment Config
-        if: inputs.inject_config_cmd != "" && ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
+        if: ${{ inputs.inject_config_cmd && steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
           SPA_BUNDLE_DIR: ${{ inputs.bundle_dir }}
@@ -169,7 +169,7 @@ jobs:
 
       - name: Update PR Description
         uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v10.0.0
-        if: github.event_name == 'pull_request' && ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
+        if: ${{ github.event_name == 'pull_request' && steps.is-version-already-deployed.outputs.is_deployed == 'false' }}
         with:
           app_name: ${{ inputs.app_name }}
           links: |
