@@ -1,5 +1,12 @@
 # Changelog
 
+## [12.0.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.0...reusable-workflows-v12.0.1) (2024-09-13)
+
+
+### Bug Fixes
+
+* if statements in deploy reusable workflow ([#255](https://github.com/pleo-io/spa-tools/issues/255)) ([9ea7ea7](https://github.com/pleo-io/spa-tools/commit/9ea7ea78612df14b62905527b1a385deb07712a6))
+
 ## [12.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v11.3.1...reusable-workflows-v12.0.0) (2024-09-13)
 
 
