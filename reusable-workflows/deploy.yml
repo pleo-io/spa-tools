@@ -24,7 +24,7 @@ on:
         type: string
       deploy_hash:
         required: true
-        description: "Tree hash of the code to deploy"
+        description: "Hash of the code to deploy, this is usually the build hash provided from the build step"
         type: string
       bucket_name:
         required: true
