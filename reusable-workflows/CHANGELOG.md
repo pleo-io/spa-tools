@@ -1,5 +1,12 @@
 # Changelog
 
+## [12.0.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.1...reusable-workflows-v12.0.2) (2024-09-19)
+
+
+### Bug Fixes
+
+* Improve post cleanup job for caching node_modules ([#257](https://github.com/pleo-io/spa-tools/issues/257)) ([149ef6b](https://github.com/pleo-io/spa-tools/commit/149ef6b5cbb87e2c1f3c695b0833ba2b6676f7a0))
+
 ## [12.0.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.0...reusable-workflows-v12.0.1) (2024-09-13)
 
 
