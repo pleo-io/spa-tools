@@ -94,7 +94,7 @@ jobs:
         uses: actions/cache@v4.0.2
         with:
           path: node_modules/.pnpm
-          key: pnpm-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: pnpm-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-node-modules-
 
