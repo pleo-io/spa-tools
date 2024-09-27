@@ -1,5 +1,12 @@
 # Changelog
 
+## [12.0.3](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.2...reusable-workflows-v12.0.3) (2024-09-27)
+
+
+### Bug Fixes
+
+* Always deploy version when workflow runs on default branch ([#259](https://github.com/pleo-io/spa-tools/issues/259)) ([e88e4ab](https://github.com/pleo-io/spa-tools/commit/e88e4abaf5d58a6bfffc565b7ecb193db0ed1a98))
+
 ## [12.0.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.1...reusable-workflows-v12.0.2) (2024-09-19)
 
 
