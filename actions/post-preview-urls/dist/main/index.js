@@ -24270,10 +24270,11 @@ runAction(async () => {
   const token = core2.getInput("token", { required: true });
   const linksJSON = core2.getInput("links", { required: true });
   const appName = core2.getInput("app_name", { required: true });
+  const appIcon = core2.getInput("app_icon");
   const asLabels = core2.getInput("as_labels") === "true";
   const repo = github.context.repo;
   const prNumber = (_a2 = github.context.payload.pull_request) == null ? void 0 : _a2.number;
-  await postPreviewUrls({ linksJSON, token, prNumber, repo, appName, asLabels });
+  await postPreviewUrls({ linksJSON, token, prNumber, repo, appName, appIcon, asLabels });
 });
 async function postPreviewUrls({
   token,
@@ -24281,6 +24282,7 @@ async function postPreviewUrls({
   repo,
   prNumber,
   appName,
+  appIcon,
   asLabels
 }) {
   var _a2, _b;
@@ -24305,7 +24307,7 @@ async function postPreviewUrls({
     }
     return `_${link.name}_: ${link.url}`;
   }).join(asLabels ? ", " : "\n");
-  const heading = `**${appName} preview links**`;
+  const heading = `**${[appIcon, appName].join(" ").trim()} preview links**`;
   const body = [
     prDescriptionAbove + descriptionAppendage,
     markerStart,

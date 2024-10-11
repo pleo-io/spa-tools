@@ -13,6 +13,10 @@ on:
         required: false
         description: "Name of the app, displayed in PR description"
         type: string
+      app_icon:
+        required: false
+        description: "Icon of the app, displayed in PR description"
+        type: string
       bundle_uri:
         required: true
         description: "S3 URI of the bundle in the registry bucket"
@@ -172,6 +176,7 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && steps.is-version-already-deployed.outputs.is_deployed == 'false' }}
         with:
           app_name: ${{ inputs.app_name }}
+          app_icon: ${{ inputs.app_icon }}
           as_labels: true
           links: |
             [
