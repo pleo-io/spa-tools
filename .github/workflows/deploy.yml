@@ -172,9 +172,10 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && steps.is-version-already-deployed.outputs.is_deployed == 'false' }}
         with:
           app_name: ${{ inputs.app_name }}
+          as_labels: true
           links: |
             [
-              {"name": "Latest", "url": "https://${{ steps.cursor-update.outputs.branch_label }}.${{ inputs.domain_name }}"},
+              {"name": "${{ inputs.app_name }} preview", "url": "https://${{ steps.cursor-update.outputs.branch_label }}.${{ inputs.domain_name }}"},
               {"name": "Current Permalink", "url": "${{ steps.deployment-url.outputs.url }}"}
             ]
 
