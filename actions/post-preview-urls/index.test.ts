@@ -29,7 +29,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
-                appName: '🤖 App'
+                appIcon: '🤖',
+                appName: 'App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -79,7 +80,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
-                appName: '🤖 App',
+                appIcon: '🤖',
+                appName: 'App',
                 asLabels: true
             })
 
@@ -135,7 +137,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
-                appName: '🤖 App'
+                appIcon: '🤖',
+                appName: 'App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -192,7 +195,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
-                appName: '🤖 App'
+                appIcon: '🤖',
+                appName: 'App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -253,7 +257,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
-                appName: '🤖 Storybook'
+                appIcon: '🤖',
+                appName: 'Storybook'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -327,7 +332,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
-                appName: '📚 Storybook'
+                appIcon: '📚',
+                appName: 'Storybook'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -375,7 +381,8 @@ describe(`Post Preview URLs action`, () => {
                 token,
                 repo: {owner: 'my-org', repo: 'my-repo'},
                 prNumber: 1,
-                appName: '🤖 App'
+                appIcon: '🤖',
+                appName: 'App'
             })
 
             expect(mockedGithub.getOctokit).toBeCalledWith(token)
@@ -389,6 +396,50 @@ describe(`Post Preview URLs action`, () => {
                     <!--app-preview-urls-do-not-change-below-->
                     ---
                     **🤖 App preview links**
+                    _Latest_: https://feature.app.example.com
+                    <!--app-preview-urls-do-not-change-above-->
+                `,
+                    owner: 'my-org',
+                    pull_number: 1,
+                    repo: 'my-repo'
+                }
+            )
+        }
+    )
+
+    test(
+        strip`
+        When there is no app icon
+        There is no space before the app name
+        `,
+        async () => {
+            const token = '1234'
+            const mockRequest = jest.fn().mockResolvedValueOnce({
+                data: {body: 'Hello World!\n Some indent'}
+            })
+            mockedGithub.getOctokit.mockReturnValue({request: mockRequest} as any)
+
+            await postPreviewUrls({
+                linksJSON: JSON.stringify([
+                    {name: 'Latest', url: 'https://feature.app.example.com'}
+                ]),
+                token,
+                repo: {owner: 'my-org', repo: 'my-repo'},
+                prNumber: 1,
+                appName: 'App'
+            })
+
+            expect(mockedGithub.getOctokit).toBeCalledWith(token)
+            expect(mockRequest).toHaveBeenLastCalledWith(
+                'PATCH /repos/{owner}/{repo}/pulls/{pull_number}',
+                {
+                    body: strip`
+                    Hello World!
+                     Some indent
+
+                    <!--app-preview-urls-do-not-change-below-->
+                    ---
+                    **App preview links**
                     _Latest_: https://feature.app.example.com
                     <!--app-preview-urls-do-not-change-above-->
                 `,

@@ -11,11 +11,12 @@ runAction(async () => {
     const token = core.getInput('token', {required: true})
     const linksJSON = core.getInput('links', {required: true})
     const appName = core.getInput('app_name', {required: true})
+    const appIcon = core.getInput('app_icon')
     const asLabels = core.getInput('as_labels') === 'true'
     const repo = github.context.repo
     const prNumber = github.context.payload.pull_request?.number
 
-    await postPreviewUrls({linksJSON, token, prNumber, repo, appName, asLabels})
+    await postPreviewUrls({linksJSON, token, prNumber, repo, appName, appIcon, asLabels})
 })
 
 interface PostPreviewUrlsActionArgs {
@@ -23,6 +24,7 @@ interface PostPreviewUrlsActionArgs {
     prNumber?: number
     repo: typeof github.context.repo
     appName: string
+    appIcon?: string
     linksJSON: string
     asLabels?: boolean
 }
@@ -33,6 +35,7 @@ export async function postPreviewUrls({
     repo,
     prNumber,
     appName,
+    appIcon,
     asLabels
 }: PostPreviewUrlsActionArgs) {
     if (!prNumber) {
@@ -63,7 +66,7 @@ export async function postPreviewUrls({
             return `_${link.name}_: ${link.url}`
         })
         .join(asLabels ? ', ' : '\n')
-    const heading = `**${appName} preview links**`
+    const heading = `**${[appIcon, appName].join(' ').trim()} preview links**`
 
     const body = [
         prDescriptionAbove + descriptionAppendage,
