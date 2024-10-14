@@ -166,13 +166,13 @@ jobs:
 
       - name: Update Cursor File
         id: cursor-update
-        uses: pleo-io/spa-tools/actions/cursor-deploy@spa-github-actions-v10.0.0
+        uses: pleo-io/spa-tools/actions/cursor-deploy@spa-github-actions-v10.1.0
         if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false' || github.ref_name == github.event.repository.default_branch }}
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
       - name: Update PR Description
-        uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v10.0.0
+        uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v10.1.0
         if: ${{ github.event_name == 'pull_request' && steps.is-version-already-deployed.outputs.is_deployed == 'false' }}
         with:
           app_name: ${{ inputs.app_name }}

@@ -11,6 +11,13 @@
 
 -   chore: Use pnpm 8 internally
 
+## [10.1.0](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v10.0.0...spa-github-actions-v10.1.0) (2024-10-14)
+
+
+### Features
+
+* Adjust preview links name to integrate them with Linear ([#261](https://github.com/pleo-io/spa-tools/issues/261)) ([d058db3](https://github.com/pleo-io/spa-tools/commit/d058db37634c72a2407fbe483442a314bfeb5b8f))
+
 ## [10.0.0](https://github.com/pleo-io/spa-tools/compare/spa-github-actions-v9.0.2...spa-github-actions-v10.0.0) (2024-09-13)
 
 
