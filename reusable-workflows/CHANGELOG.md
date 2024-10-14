@@ -1,5 +1,12 @@
 # Changelog
 
+## [12.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.3...reusable-workflows-v12.1.0) (2024-10-14)
+
+
+### Features
+
+* Adjust preview links name to integrate them with Linear ([#261](https://github.com/pleo-io/spa-tools/issues/261)) ([d058db3](https://github.com/pleo-io/spa-tools/commit/d058db37634c72a2407fbe483442a314bfeb5b8f))
+
 ## [12.0.3](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.2...reusable-workflows-v12.0.3) (2024-09-27)
 
 
