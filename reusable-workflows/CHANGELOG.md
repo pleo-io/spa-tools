@@ -1,5 +1,12 @@
 # Changelog
 
+## [12.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.1.0...reusable-workflows-v12.2.0) (2024-10-16)
+
+
+### Features
+
+* support specifying rootDir in config inject script ([#263](https://github.com/pleo-io/spa-tools/issues/263)) ([686deb1](https://github.com/pleo-io/spa-tools/commit/686deb1379872c58c2d6f15f488a955a18e20f60))
+
 ## [12.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.0.3...reusable-workflows-v12.1.0) (2024-10-14)
 
 

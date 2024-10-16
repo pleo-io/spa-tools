@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v3.1.1...spa-config-inject-v3.2.0) (2024-10-16)
+
+
+### Features
+
+* support specifying rootDir in config inject script ([#263](https://github.com/pleo-io/spa-tools/issues/263)) ([686deb1](https://github.com/pleo-io/spa-tools/commit/686deb1379872c58c2d6f15f488a955a18e20f60))
+
 ## [3.1.1](https://github.com/pleo-io/spa-tools/compare/spa-config-inject-v3.1.0...spa-config-inject-v3.1.1) (2024-05-08)
 
 
