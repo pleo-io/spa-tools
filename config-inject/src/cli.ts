@@ -24,7 +24,8 @@ into the HTML template file.
 @param cliEnv - The environment of the config to inject, passed via CLI argument
 */
 async function run(cliEnv: string) {
-    const config = await loadConfig()
+    const rootDir = process.env.SPA_ROOT_DIR ?? process.cwd()
+    const config = await loadConfig(rootDir)
     const dynamicConfigJSON = process.env.SPA_CONFIG_OVERRIDE
     const buildDir = process.env.SPA_BUILD_DIR ?? config.buildDir
     const templateFileName = process.env.SPA_TEMPLATE_FILE_NAME ?? config.templateFileName
@@ -35,6 +36,7 @@ async function run(cliEnv: string) {
 
     await injectConfig({
         buildDir,
+        rootDir,
         templateFileName,
         outputFileName,
         configDir: config.configDir,
@@ -55,19 +57,21 @@ Injects the config into the HTML template file.
 */
 async function injectConfig(opts: {
     buildDir: string
+    rootDir: string
     templateFileName: string
     outputFileName: string
     configDir: string
     env: string
     dynamicConfigJSON?: string
 }) {
+    assertExists(opts.rootDir, {dir: true})
     assertExists(opts.buildDir, {dir: true})
     assertExists(opts.configDir, {dir: true})
 
-    const templatePath = path.join(opts.buildDir, opts.templateFileName)
+    const templatePath = path.join(opts.rootDir, opts.buildDir, opts.templateFileName)
     assertExists(templatePath)
 
-    const configPath = path.resolve(opts.configDir, `config.${opts.env}.mjs`)
+    const configPath = path.resolve(opts.rootDir, opts.configDir, `config.${opts.env}.mjs`)
     assertExists(configPath)
 
     const staticConfig = (await import(configPath)).config as unknown
@@ -90,7 +94,7 @@ async function injectConfig(opts: {
         throw new Error(`🛑 Could not inject runtime configuration: ${STRING_TO_REPLACE} not found`)
     }
 
-    const outputPath = path.resolve(opts.buildDir, opts.outputFileName)
+    const outputPath = path.resolve(opts.rootDir, opts.buildDir, opts.outputFileName)
     await fs.promises.writeFile(outputPath, htmlWithConfig)
 }
 
