@@ -21,6 +21,10 @@ on:
         required: true
         description: "S3 URI of the bundle in the registry bucket"
         type: string
+      root_dir:
+        required: false
+        description: "Directory where the project root is located"
+        type: string
       bundle_dir:
         required: false
         default: "dist"
@@ -126,6 +130,7 @@ jobs:
         if: ${{ inputs.inject_config_cmd && steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
+          SPA_ROOT_DIR: ${{ inputs.root_dir }}
           SPA_BUNDLE_DIR: ${{ inputs.bundle_dir }}
           SPA_ENV: ${{inputs.environment}}
           SPA_TREE_HASH: ${{ inputs.deploy_hash }}

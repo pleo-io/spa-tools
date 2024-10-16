@@ -15,13 +15,13 @@ Loads and validates the configuration from package.json.
 If the configuration is invalid, it logs the error and exits the process.
 @returns Returns the parsed and validated configuration object.
 */
-export async function loadConfig() {
-    const rawConfig = await getRawConfig()
+export async function loadConfig(rootDir?: string) {
+    const rawConfig = await getRawConfig(rootDir)
     return parseConfig(rawConfig)
 }
 
-async function getRawConfig() {
-    const pkgJSON = readFileSync(path.resolve('package.json'), 'utf-8')
+async function getRawConfig(rootDir?: string) {
+    const pkgJSON = readFileSync(path.resolve(rootDir ?? '', 'package.json'), 'utf-8')
     return JSON.parse(pkgJSON).spaConfig
 }
 
