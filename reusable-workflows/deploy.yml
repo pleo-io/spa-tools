@@ -67,11 +67,27 @@ jobs:
       deployment_url: ${{ steps.deployment-url.outputs.url }}
     steps:
       - uses: actions/checkout@v4.1.4
+
+      - uses: pnpm/action-setup@v4.0.0
+
       - uses: actions/setup-node@v4.0.2
         with:
           node-version: "20"
           registry-url: "https://npm.pkg.github.com"
           scope: ${{ inputs.registry_scope }}
+
+      - name: Cache node_modules/.pnpm
+        uses: actions/cache@v4.0.2
+        with:
+          path: node_modules/.pnpm
+          key: pnpm-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-node-modules-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
 
       - name: Setup AWS Credentials for Origin Bucket Access
         uses: aws-actions/configure-aws-credentials@v4.0.2
