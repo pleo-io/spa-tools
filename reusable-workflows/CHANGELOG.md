@@ -1,5 +1,12 @@
 # Changelog
 
+## [12.2.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.2.0...reusable-workflows-v12.2.1) (2024-10-18)
+
+
+### Bug Fixes
+
+* Install dependencies in deploy workflow ([#265](https://github.com/pleo-io/spa-tools/issues/265)) ([5de4ae4](https://github.com/pleo-io/spa-tools/commit/5de4ae40c8f35b40ab553590abcef6391d92078c))
+
 ## [12.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.1.0...reusable-workflows-v12.2.0) (2024-10-16)
 
 
