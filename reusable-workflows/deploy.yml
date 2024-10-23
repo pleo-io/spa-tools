@@ -7,7 +7,11 @@ on:
     inputs:
       environment:
         required: true
-        description: "Name of the deployment environment"
+        description: "Name of the deployment environment (product-{dev|staging|production})"
+        type: string
+      github_environment:
+        required: true
+        description: "Name of the Github deployment environment ({app_name}-{environment})"
         type: string
       app_name:
         required: false
@@ -61,7 +65,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-22.04
     environment:
-      name: ${{ inputs.environment  }}
+      name: ${{ inputs.github_environment  }}
       url: ${{ steps.deployment-url.outputs.url }}
     outputs:
       deployment_url: ${{ steps.deployment-url.outputs.url }}
@@ -148,9 +152,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GH_REGISTRY_NPM_TOKEN }}
           SPA_ROOT_DIR: ${{ inputs.root_dir }}
           SPA_BUNDLE_DIR: ${{ inputs.bundle_dir }}
-          SPA_ENV: ${{inputs.environment}}
+          SPA_ENV: ${{ inputs.environment }}
           SPA_TREE_HASH: ${{ inputs.deploy_hash }}
-        run: ${{inputs.inject_config_cmd }}
+        run: ${{ inputs.inject_config_cmd }}
 
       - name: Copy Static Files
         if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
