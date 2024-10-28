@@ -1,5 +1,16 @@
 # Changelog
 
+## [13.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.2.1...reusable-workflows-v13.0.0) (2024-10-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Distinguish between "Pleo" env and Github env in deployment ([#267](https://github.com/pleo-io/spa-tools/issues/267))
+
+### Bug Fixes
+
+* Distinguish between "Pleo" env and Github env in deployment ([#267](https://github.com/pleo-io/spa-tools/issues/267)) ([158c9ef](https://github.com/pleo-io/spa-tools/commit/158c9eff6d215e988eb56bf926b5e088826ba2e4))
+
 ## [12.2.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.2.0...reusable-workflows-v12.2.1) (2024-10-18)
 
 
