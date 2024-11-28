@@ -10,10 +10,6 @@
       "changelog-path": "CHANGELOG.md",
       "release-type": "simple"
     },
-    "config-inject": {
-      "changelog-path": "CHANGELOG.md",
-      "release-type": "node"
-    },
     "terraform-module": {
       "package-name": "terraform-module",
       "changelog-path": "CHANGELOG.md",

@@ -16,7 +16,6 @@ project on Linear (if you have access).
 
 - [Custom GitHub Actions](/actions)
 - [Reusable GitHub Workflows](/reusable-workflows)
-- [Runtime Config Injection Tooling](./config-inject)
 - [Terraform Module](./terraform-module)
 - [Lambda@Edge Lambdas](/terraform-module/edge-lambdas)
 
