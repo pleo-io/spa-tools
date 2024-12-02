@@ -15,35 +15,8 @@ jobs:
   release:
     name: Run "Release Please"
     runs-on: ubuntu-22.04
-    outputs:
-      config_package_published: ${{ steps.release.outputs.config-inject--release_created }}
     steps:
       - uses: google-github-actions/release-please-action@v3.7.8
         id: release
         with:
           command: manifest
-  publish:
-    name: Publish to GPR
-    runs-on: ubuntu-22.04
-    needs: release
-    if: ${{ needs.release.outputs.config_package_published }}
-    defaults:
-      run:
-        working-directory: config-inject
-    steps:
-      - uses: actions/checkout@v4.1.4
-      - uses: pnpm/action-setup@v4.0.0
-        with:
-          version: 9
-      - uses: actions/setup-node@v4.0.2
-        with:
-          node-version: "20"
-          scope: "@pleo-io"
-          cache: "pnpm"
-          registry-url: "https://npm.pkg.github.com"
-          cache-dependency-path: config-inject/pnpm-lock.yaml
-      - run: pnpm install --frozen-lockfile --ignore-scripts
-      - run: pnpm run build
-      - run: cd dist && npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
