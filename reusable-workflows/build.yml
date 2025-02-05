@@ -108,6 +108,7 @@ jobs:
         if: steps.s3-cache.outputs.processed == 'false'
         run: ${{ inputs.build_cmd }}
         env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           TURBO_TOKEN: ${{ inputs.turbo_cache && secrets.TURBO_TOKEN || null }}
           TURBO_FORCE: ${{ inputs.turbo_force }}
 
