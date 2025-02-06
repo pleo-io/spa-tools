@@ -69,6 +69,7 @@ jobs:
       url: ${{ steps.deployment-url.outputs.url }}
     outputs:
       deployment_url: ${{ steps.deployment-url.outputs.url }}
+      preview_url: ${{ steps.preview-url.outputs.url }}
     steps:
       - uses: actions/checkout@v4.1.4
 
@@ -196,16 +197,21 @@ jobs:
         with:
           bucket_name: ${{ inputs.bucket_name }}
 
+      - name: Get Preview Url
+        id: preview-url
+        run: |
+          echo "url=https://${{ steps.cursor-update.outputs.branch_label }}.${{ inputs.domain_name }}" >> $GITHUB_OUTPUT
+
       - name: Update PR Description
         uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v10.1.0
-        if: ${{ github.event_name == 'pull_request' && steps.is-version-already-deployed.outputs.is_deployed == 'false' }}
+        if: ${{ github.event_name == 'pull_request' && inputs.app_name && steps.is-version-already-deployed.outputs.is_deployed == 'false' }}
         with:
           app_name: ${{ inputs.app_name }}
           app_icon: ${{ inputs.app_icon }}
           as_labels: true
           links: |
             [
-              {"name": "${{ inputs.app_name }} preview", "url": "https://${{ steps.cursor-update.outputs.branch_label }}.${{ inputs.domain_name }}"},
+              {"name": "${{ inputs.app_name }} preview", "url": "${{ steps.preview-url.outputs.url }}"},
               {"name": "Current Permalink", "url": "${{ steps.deployment-url.outputs.url }}"}
             ]
 
