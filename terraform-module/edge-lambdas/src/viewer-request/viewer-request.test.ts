@@ -135,6 +135,31 @@ describe(`Viewer request Lambda@Edge`, () => {
         expect(request).toEqual(requestFromEvent(expectedEvent))
     })
 
+    test(`Handles requests for nested routes serveNestedIndexHtml is true`, async () => {
+        const appVersion = getRandomSha()
+        const host = 'my-feature.app.staging.example.com'
+        const event = mockRequestEvent({host, uri: '/home/home.landing', appVersion})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler(
+            {
+                ...originConfig,
+                previewDeploymentPostfix: '.app.staging.example.com',
+                serveNestedIndexHtml: true
+            },
+            mockS3
+        )
+        const request = await handler(event, mockContext, mockCallback)
+
+        expectAppVersionFetched('deploys/my-feature')
+        const expectedEvent = mockRequestEvent({
+            host,
+            uri: `/html/${appVersion}/home/home.landing/index.html`,
+            appVersion
+        })
+        expect(request).toEqual(requestFromEvent(expectedEvent))
+    })
+
     test(`Handles requests for well known files`, async () => {
         const appVersion = getRandomSha()
         const host = 'my-feature.app.staging.example.com'

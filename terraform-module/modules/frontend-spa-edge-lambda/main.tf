@@ -13,6 +13,7 @@ resource "local_file" "lambda_config" {
     "originBucketRegion"       = var.bucket_region
     "previewDeploymentPostfix" = var.env == "production" ? "" : ".${var.domain_name}"
     "defaultBranchName"        = var.default_repo_branch_name
+    "serveNestedIndexHtml"     = var.serve_nested_index_html
   })
   filename = "${path.root}/dist/${var.app_name}/${var.event_type}/config.json"
 }

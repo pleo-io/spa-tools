@@ -41,7 +41,7 @@ export function getHandler(config: Config, s3: S3Client) {
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion)
 
             // We instruct the CDN to return a file that corresponds to the app version calculated
-            const uri = getUri(request, appVersion)
+            const uri = getUri(request, appVersion, config.serveNestedIndexHtml)
             request.uri = uri
         } catch (error) {
             console.error(error)
@@ -59,16 +59,26 @@ export function getHandler(config: Config, s3: S3Client) {
 /**
  * We respond with a requested file, but prefix it with the hash of the current active deployment
  */
-function getUri(request: CloudFrontRequest, appVersion: string) {
-    // If the
-    // - request uri is for a specific file (e.g. "/iframe.html")
-    // - or is a request on one of the .well-known paths (like .well-known/apple-app-site-association)
-    // we serve the requested file.
-    // Otherwise, for requests uris like "/" or "my-page" we serve the top-level index.html file,
-    // which assumes the routing is handled client-side.
+function getUri(request: CloudFrontRequest, appVersion: string, serveNestedIndexHtml: boolean) {
     const isFileRequest = Boolean(mime.lookup(request.uri))
     const isWellKnownRequest = request.uri.startsWith('/.well-known/')
-    const filePath = isFileRequest || isWellKnownRequest ? request.uri : '/index.html'
+    const filePath = (() => {
+        // If the
+        // - request uri is for a specific file (e.g. "/iframe.html")
+        // - or is a request on one of the .well-known paths (like .well-known/apple-app-site-association)
+        // we serve the requested file.
+        if (isFileRequest || isWellKnownRequest) {
+            return request.uri
+        }
+        // Otherwise, for requests uris like "/" or "/my-page" we
+        // check the serveNestedIndexHtml config, if
+        // - true, we append index.html to the original request URI
+        // - false, we serve the top-level index.html file, as all the routing is handled client-side.
+        if (serveNestedIndexHtml) {
+            return request.uri.replace(/\/$/, '') + '/index.html'
+        }
+        return '/index.html'
+    })()
 
     return path.join('/html', appVersion, filePath)
 }

@@ -27,6 +27,7 @@ module "lambdas" {
   bucket_name              = module.s3.bucket_name
   bucket_region            = module.s3.bucket_region
   domain_name              = local.domain_name
+  serve_nested_index_html  = var.serve_nested_index_html
 
   providers = {
     aws.global = aws.global
