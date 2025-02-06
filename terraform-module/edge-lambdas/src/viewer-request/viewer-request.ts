@@ -2,6 +2,7 @@ import * as path from 'path'
 
 import {CloudFrontRequest, CloudFrontRequestHandler} from 'aws-lambda'
 import {S3Client} from '@aws-sdk/client-s3'
+import mime from 'mime-types'
 
 import {APP_VERSION_HEADER, getHeader, setHeader} from '../utils'
 import {fetchFileFromS3Bucket} from '../s3'
@@ -65,7 +66,7 @@ function getUri(request: CloudFrontRequest, appVersion: string) {
     // we serve the requested file.
     // Otherwise, for requests uris like "/" or "my-page" we serve the top-level index.html file,
     // which assumes the routing is handled client-side.
-    const isFileRequest = request.uri.split('/').pop().includes('.')
+    const isFileRequest = Boolean(mime.lookup(request.uri))
     const isWellKnownRequest = request.uri.startsWith('/.well-known/')
     const filePath = isFileRequest || isWellKnownRequest ? request.uri : '/index.html'
 
