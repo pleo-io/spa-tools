@@ -59,6 +59,9 @@ on:
       deployment_url:
         description: "URL where the deployment can be accessed"
         value: ${{ jobs.deploy.outputs.deployment_url }}
+      preview_url:
+        description: "Permanent URL where the deployment can be accessed"
+        value: ${{ jobs.deploy.outputs.preview_url }}
 
 jobs:
   deploy:
