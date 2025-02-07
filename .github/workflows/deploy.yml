@@ -203,7 +203,9 @@ jobs:
       - name: Get Preview Url
         id: preview-url
         run: |
-          echo "url=https://${{ steps.cursor-update.outputs.branch_label }}.${{ inputs.domain_name }}" >> $GITHUB_OUTPUT
+          preview_url="https://${{ steps.cursor-update.outputs.branch_label }}.${{ inputs.domain_name }}"
+          echo "Permanent preview url $preview_url"
+          echo "url=$preview_url" >> $GITHUB_OUTPUT
 
       - name: Update PR Description
         uses: pleo-io/spa-tools/actions/post-preview-urls@spa-github-actions-v10.1.0
