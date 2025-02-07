@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.2.1...terraform-module-v3.3.0) (2025-02-07)
+
+
+### Features
+
+* Add support for deploying Telescope using spa-tools ([#273](https://github.com/pleo-io/spa-tools/issues/273)) ([8992257](https://github.com/pleo-io/spa-tools/commit/89922576e825ba41027415754e7da6e10a913b5e))
+
 ## [3.2.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.2.0...terraform-module-v3.2.1) (2024-09-11)
 
 

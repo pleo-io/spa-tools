@@ -1,5 +1,12 @@
 # Changelog
 
+## [13.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v13.0.0...reusable-workflows-v13.1.0) (2025-02-07)
+
+
+### Features
+
+* Add support for deploying Telescope using spa-tools ([#273](https://github.com/pleo-io/spa-tools/issues/273)) ([8992257](https://github.com/pleo-io/spa-tools/commit/89922576e825ba41027415754e7da6e10a913b5e))
+
 ## [13.0.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v12.2.1...reusable-workflows-v13.0.0) (2024-10-28)
 
 
