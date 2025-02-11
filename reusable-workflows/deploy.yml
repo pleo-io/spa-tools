@@ -85,7 +85,7 @@ jobs:
           scope: ${{ inputs.registry_scope }}
 
       - name: Cache node_modules/.pnpm
-        uses: actions/cache@v4.0.2
+        uses: actions/cache@v4.2.0
         with:
           path: node_modules/.pnpm
           key: pnpm-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
