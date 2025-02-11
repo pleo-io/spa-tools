@@ -1,5 +1,12 @@
 # Changelog
 
+## [13.1.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v13.1.0...reusable-workflows-v13.1.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* update cache action in spa-tools too ([#275](https://github.com/pleo-io/spa-tools/issues/275)) ([e6c343d](https://github.com/pleo-io/spa-tools/commit/e6c343d5b0899affa0d3fb9ca3dd74e2a3cc1bb0))
+
 ## [13.1.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v13.0.0...reusable-workflows-v13.1.0) (2025-02-07)
 
 
