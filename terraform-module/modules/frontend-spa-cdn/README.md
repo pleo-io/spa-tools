@@ -1,6 +1,6 @@
 # Pleo SPA Terraform Module - CDN
 
-Creates a CloudFront CDN distribution for an SPA app.
+Creates a CloudFront CDN distribution for a SPA.
 
 ## How to use
 
