@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.3.0...terraform-module-v3.3.1) (2025-03-19)
+
+
+### Bug Fixes
+
+* **readme:** Update README.md ([#279](https://github.com/pleo-io/spa-tools/issues/279)) ([e03f406](https://github.com/pleo-io/spa-tools/commit/e03f406bb2cc0b9411b611236a11a6467824babf))
+
 ## [3.3.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.2.1...terraform-module-v3.3.0) (2025-02-07)
 
 
