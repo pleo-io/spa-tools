@@ -1,5 +1,12 @@
 # Changelog
 
+## [13.1.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v13.1.1...reusable-workflows-v13.1.2) (2025-03-26)
+
+
+### Bug Fixes
+
+* Fail verify app deployment if we get non-200 response ([#281](https://github.com/pleo-io/spa-tools/issues/281)) ([028188e](https://github.com/pleo-io/spa-tools/commit/028188e1e50e0ea15e7ffdcf49cc9cd25b6446f1))
+
 ## [13.1.1](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v13.1.0...reusable-workflows-v13.1.1) (2025-02-11)
 
 
