@@ -223,4 +223,4 @@ jobs:
       - name: Verify app deployment
         if: ${{ steps.is-version-already-deployed.outputs.is_deployed == 'false'}}
         # We expect the viewer-request lambda to add the version in the response headers
-        run: curl --silent --head --show-error ${{ steps.deployment-url.outputs.url }} | grep -q ${{ inputs.deploy_hash }}
+        run: curl --silent --head --show-error --fail ${{ steps.deployment-url.outputs.url }} | grep -q ${{ inputs.deploy_hash }}
