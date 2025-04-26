@@ -161,5 +161,15 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
       override = true
       value    = var.is_robots_indexing_allowed && var.env == "production" ? "all" : "noindex, nofollow"
     }
+
+    // If page is opened via window.open() or by navigating to a new page
+    // it will be opened in a new browsing context group
+    // unless opener has the same origin as the target page.
+    // This prevents sharing the browsing context group with potentially malicious opener page
+    items {
+      header   = "Cross-Origin-Opener-Policy"
+      override = true
+      value    = "same-origin"
+    }
   }
 }
