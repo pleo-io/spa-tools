@@ -169,7 +169,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
     items {
       header   = "Cross-Origin-Opener-Policy"
       override = true
-      value    = "same-origin"
+      value    = "same-origin-allow-popups"
     }
   }
 }
