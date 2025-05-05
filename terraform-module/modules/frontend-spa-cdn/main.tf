@@ -75,6 +75,14 @@ resource "aws_cloudfront_distribution" "this" {
       }
     }
 
+    dynamic "lambda_function_association" {
+      for_each = var.edge_lambdas
+      content {
+        event_type = lambda_function_association.value["event_type"]
+        lambda_arn = lambda_function_association.value["arn"]
+      }
+    }
+
     response_headers_policy_id = aws_cloudfront_response_headers_policy.loading_integration_behaviour_headers_policy.id
 
     compress               = true
