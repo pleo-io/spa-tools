@@ -204,7 +204,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
 // This page is used as an intermediate page for 3rd party integration connections
 // And it should have ability to share same browsing context group with the opener page
 resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour_headers_policy" {
-  name = "${var.app_name}-default-headers-policy"
+  name = "${var.app_name}-loading-integration-headers-policy"
   security_headers_config {
     content_type_options {
       override = true
