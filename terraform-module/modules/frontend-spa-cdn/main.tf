@@ -58,30 +58,6 @@ resource "aws_cloudfront_distribution" "this" {
     max_ttl                = 31536000
   }
 
-  # Cache behaviour applying to all files prefixed with /static
-  # To optimise latency we don't have any lambda assosiations and
-  # the TTL rules allow for optimal caching
-  ordered_cache_behavior {
-    path_pattern     = "/static/*"
-    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = local.s3_origin_id
-
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
-
-    min_ttl                = 1
-    default_ttl            = 86400
-    max_ttl                = 31536000
-    compress               = true
-    viewer_protocol_policy = "redirect-to-https"
-  }
-
   # Cache behaviour applying to specific path: /loading.html
   # To allow sharing the browsing context group with the opener page
   # This is needed to set up connection with 3rd party integrations
@@ -106,6 +82,30 @@ resource "aws_cloudfront_distribution" "this" {
     min_ttl                = 1
     default_ttl            = 86400
     max_ttl                = 31536000
+  }
+
+  # Cache behaviour applying to all files prefixed with /static
+  # To optimise latency we don't have any lambda assosiations and
+  # the TTL rules allow for optimal caching
+  ordered_cache_behavior {
+    path_pattern     = "/static/*"
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = local.s3_origin_id
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 1
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
   }
 
   # Serve a custom 404 error page when requesting a file that doesn't exist in the bucket 
