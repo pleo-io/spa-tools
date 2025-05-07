@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.3.1...terraform-module-v4.0.0) (2025-05-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* formatting & treat coop header as breaking change ([#285](https://github.com/pleo-io/spa-tools/issues/285))
+
+### Bug Fixes
+
+* formatting & treat coop header as breaking change ([#285](https://github.com/pleo-io/spa-tools/issues/285)) ([1714524](https://github.com/pleo-io/spa-tools/commit/17145247adfd0df8968b339b892306794b8ef457))
+* ME-7412 Pleo Account Takeover via stealing Google OAuth ([#283](https://github.com/pleo-io/spa-tools/issues/283)) ([dfeea54](https://github.com/pleo-io/spa-tools/commit/dfeea54ad4c369b48daa1e0d5e7ba0a97c804196))
+
 ## [3.3.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.3.0...terraform-module-v3.3.1) (2025-03-19)
 
 
