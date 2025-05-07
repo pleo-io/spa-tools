@@ -254,7 +254,7 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
     items {
       header   = "X-Robots-Tag"
       override = true
-      value    = var.is_robots_indexing_allowed && var.env == "production" ? "all" : "noindex, nofollow"
+      value    =  "noindex, nofollow"
     }
 
     // using unsafe-none to explicitly allow sharing the browsing context group with the opener page
