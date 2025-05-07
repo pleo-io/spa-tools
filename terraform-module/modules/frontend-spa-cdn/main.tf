@@ -250,7 +250,7 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
       value    = "max-age=0,no-cache,no-store,must-revalidate"
     }
 
-    // Adds robots tag HTTP header to the response to prevent indexing by bots (unless in production)
+    // Adds robots tag HTTP header to the response to prevent indexing by bots
     items {
       header   = "X-Robots-Tag"
       override = true
