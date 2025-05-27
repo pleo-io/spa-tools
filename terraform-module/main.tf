@@ -69,7 +69,7 @@ module "dns" {
 
   zone_domain = var.zone_domain
   domain_name = local.domain_name
-  app_name    = var.app_name
+  subdomain   = var.subdomain
 
   cf_hosted_zone_id = module.cdn.cf_hosted_zone_id
   cf_domain_name    = module.cdn.cf_domain_name

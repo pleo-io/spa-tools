@@ -13,8 +13,8 @@ variable "domain_name" {
   type        = string
 }
 
-variable "app_name" {
-  description = "Name of the app (kebab-case)"
+variable "subdomain" {
+  description = "Subdomain where the app lives (e.g. 'hello' if the app lives at hello.example.com)"
   type        = string
 }
 

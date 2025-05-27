@@ -40,13 +40,13 @@ resource "aws_route53_record" "dns_record" {
 }
 
 # Based on request SRE-7285 to provide better demo experience
-# Creates ${app_name}.demo.pleo.io record that redirects to the staging env
+# Creates ${subdomain}.demo.pleo.io record that redirects to the staging env
 # Records are created on product-production env, because we need to evaluate at pleo.io level (not staging.pleo.io).
 resource "aws_route53_record" "demo_dns_record" {
   for_each = lower(var.env) == "production" ? local.naked : {}
 
-  name    = "${var.app_name}.demo.${var.zone_domain}"
+  name    = "${var.subdomain}.demo.${var.zone_domain}"
   type    = "CNAME"
   zone_id = each.value[1]
-  records = ["${var.app_name}.staging.pleo.io"]
+  records = ["${var.subdomain}.staging.pleo.io"]
 }
