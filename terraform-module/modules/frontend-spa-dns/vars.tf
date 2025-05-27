@@ -13,6 +13,11 @@ variable "domain_name" {
   type        = string
 }
 
+variable "app_name" {
+  description = "Name of the app (kebab-case)"
+  type        = string
+}
+
 variable "cf_domain_name" {
   description = "The domain name corresponding to the CloudFront distribution."
   type        = string
