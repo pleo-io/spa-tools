@@ -38,3 +38,13 @@ resource "aws_route53_record" "dns_record" {
     evaluate_target_health = false
   }
 }
+
+// Request for app.demo.pleo.io from ask-SRE ticket SRE-7285
+resource "aws_route53_record" "demo_dns_record" {
+    for_each = lower(var.env) == "production" ? local.naked : {}
+    
+    name    = "app.demo.${var.zone_domain}"
+    type    = "CNAME"
+    zone_id = each.value[1]
+    records = ["app.staging.pleo.io"]
+}
