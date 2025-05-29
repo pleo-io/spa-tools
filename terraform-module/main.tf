@@ -42,7 +42,7 @@ module "certificate" {
   domain_name = local.domain_name
   
   // Support demo.pleo.io alternative for better demo experience
-  additional_subject_alternative_names = lower(var.env) == "staging" ? [] : ["demo.pleo.io"]
+  additional_subject_alternative_names = lower(var.env) == "staging" ? ["demo.pleo.io"] : []
 
   providers = {
     aws.global = aws.global
