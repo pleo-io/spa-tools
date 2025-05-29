@@ -41,8 +41,7 @@ module "certificate" {
   zone_domain = var.zone_domain
   domain_name = local.domain_name
   
-  // Support demo.pleo.io alternative for better demo experience
-  additional_subject_alternative_names = lower(var.env) == "staging" ? ["demo.pleo.io"] : []
+  additional_subject_alternative_names = var.certificate_additional_sans
 
   providers = {
     aws.global = aws.global
