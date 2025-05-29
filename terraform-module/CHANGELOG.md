@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.0.0...terraform-module-v4.1.0) (2025-05-29)
+
+
+### Features
+
+* **certificates:** Enable passing in additional SANs to certificates ([#287](https://github.com/pleo-io/spa-tools/issues/287)) ([2c24b24](https://github.com/pleo-io/spa-tools/commit/2c24b24c8dfad8486b1134fcaec983d569352778))
+
 ## [4.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v3.3.1...terraform-module-v4.0.0) (2025-05-07)
 
 
