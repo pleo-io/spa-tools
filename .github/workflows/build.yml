@@ -37,7 +37,7 @@ on:
         type: string
       runner:
         required: false
-        default: ubuntu-latest-8-cores
+        default: blacksmith-8vcpu-ubuntu-2204
         description: "Use a specific size of job runner to run this workflow"
         type: string
       turbo_cache:
