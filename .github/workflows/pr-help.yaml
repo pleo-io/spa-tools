@@ -31,7 +31,7 @@ env:
 
 jobs:
   auto-approve-pr:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     name: Auto-approve PR
     if: ${{ contains(fromJSON('["pleo-bot-renovate", "pleo-file-distributor[bot]"]'), github.actor) && contains(github.event.pull_request.labels.*.name, 'autoapprove') }}
     steps:

@@ -17,7 +17,7 @@ concurrency:
 jobs:
   semantic-title:
     name: Check PR Title for Semantic Release Type
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-4vcpu-ubuntu-2204
     permissions:
       pull-requests: read
     steps:
@@ -31,7 +31,7 @@ jobs:
 
   check-workflow:
     name: Check reusable workflow
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-4vcpu-ubuntu-2204
     permissions:
       contents: read
     steps:
@@ -44,7 +44,7 @@ jobs:
 
   test-actions:
     name: Check actions
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-4vcpu-ubuntu-2204
     defaults:
       run:
         working-directory: actions
@@ -55,7 +55,7 @@ jobs:
       - uses: pnpm/action-setup@v4.0.0
         with:
           version: 9
-      - uses: actions/setup-node@v4.0.2
+      - uses: useblacksmith/setup-node@v5
         with:
           node-version: "20"
           cache: "pnpm"
@@ -71,7 +71,7 @@ jobs:
 
   test-lambdas:
     name: Check Lambda@Edge Functions
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-4vcpu-ubuntu-2204
     defaults:
       run:
         working-directory: terraform-module/edge-lambdas
@@ -82,7 +82,7 @@ jobs:
       - uses: pnpm/action-setup@v4.0.0
         with:
           version: 9
-      - uses: actions/setup-node@v4.0.2
+      - uses: useblacksmith/setup-node@v5
         with:
           node-version: "20"
           cache: "pnpm"
