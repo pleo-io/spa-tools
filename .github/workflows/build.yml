@@ -82,7 +82,7 @@ jobs:
         with:
           version: ${{ inputs.pnpm_version != 0 && inputs.pnpm_version || null }}
 
-      - uses: actions/setup-node@v4.0.2
+      - uses: useblacksmith/setup-node@v5
         if: steps.s3-cache.outputs.processed == 'false'
         with:
           node-version: "20"
@@ -91,7 +91,7 @@ jobs:
 
       - name: Cache node_modules/.pnpm
         if: steps.s3-cache.outputs.processed == 'false'
-        uses: actions/cache@v4.2.0
+        uses: useblacksmith/cache@v5
         with:
           path: node_modules/.pnpm
           key: pnpm-node-modules-${{ hashFiles('pnpm-lock.yaml') }}
