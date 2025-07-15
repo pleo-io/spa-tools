@@ -17,7 +17,7 @@ concurrency:
 jobs:
   semantic-title:
     name: Check PR Title for Semantic Release Type
-    runs-on: ubicloud-standard-2
+    runs-on: ubicloud-standard-2-arm
     permissions:
       pull-requests: read
     steps:
@@ -31,7 +31,7 @@ jobs:
 
   check-workflow:
     name: Check reusable workflow
-    runs-on: ubicloud-standard-2
+    runs-on: ubicloud-standard-2-arm
     permissions:
       contents: read
     steps:
