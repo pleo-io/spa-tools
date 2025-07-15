@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "@pleo-io/spa-github-actions",
-    "version": "10.1.0",
+    "version": "10.2.0",
     "scripts": {
         "preinstall": "npx only-allow pnpm"
     },

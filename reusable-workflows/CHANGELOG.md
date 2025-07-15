@@ -1,5 +1,12 @@
 # Changelog
 
+## [13.2.0](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v13.1.2...reusable-workflows-v13.2.0) (2025-07-15)
+
+
+### Features
+
+* **ci:** poc ubicloud ([#292](https://github.com/pleo-io/spa-tools/issues/292)) ([4e0e44a](https://github.com/pleo-io/spa-tools/commit/4e0e44af51a3ddfbc2e8bbd0b389705dc80ad282))
+
 ## [13.1.2](https://github.com/pleo-io/spa-tools/compare/reusable-workflows-v13.1.1...reusable-workflows-v13.1.2) (2025-05-07)
 
 
