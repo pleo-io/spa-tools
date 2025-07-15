@@ -6,7 +6,7 @@ on:
 jobs:
   docs:
     name: Generate and Commit Terraform Modules Docs
-    runs-on: ubuntu-22.04
+    runs-on: ubicloud-standard-2-arm
     permissions:
       contents: write
     steps:

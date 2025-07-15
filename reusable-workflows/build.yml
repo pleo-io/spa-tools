@@ -37,7 +37,7 @@ on:
         type: string
       runner:
         required: false
-        default: ubuntu-latest-8-cores
+        default: ubicloud-standard-8
         description: "Use a specific size of job runner to run this workflow"
         type: string
       turbo_cache:
