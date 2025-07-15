@@ -66,7 +66,7 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: ubuntu-22.04
+    runs-on: ubicloud-standard-2
     environment:
       name: ${{ inputs.github_environment  }}
       url: ${{ steps.deployment-url.outputs.url }}

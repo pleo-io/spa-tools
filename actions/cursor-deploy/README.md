@@ -73,7 +73,7 @@ on:
                 required: false
 jobs:
     rollback:
-        runs-on: ubuntu-22.04
+        runs-on: ubicloud-standard-2
         steps:
             - uses: actions/checkout@v4.1.4
               with:
@@ -99,7 +99,7 @@ name: Unblock
 on: workflow_dispatch
 jobs:
     rollback:
-        runs-on: ubuntu-22.04
+        runs-on: ubicloud-standard-2
         steps:
             - uses: actions/checkout@v4.1.4
             - uses: aws-actions/configure-aws-credentials@v4.0.2

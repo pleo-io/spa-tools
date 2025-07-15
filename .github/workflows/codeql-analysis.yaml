@@ -35,7 +35,7 @@ env:
 jobs:
   preflight:
     name: Determine if CodeQL should run
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2
     outputs:
       should_run_analyze: ${{ steps.maybe_skip_analyze.outputs.should_run_analyze }}
       should_run_wiz_cli: ${{ steps.maybe_skip_wiz_cli.outputs.should_run_wiz_cli }}
@@ -87,7 +87,7 @@ jobs:
     if: ${{ needs.preflight.outputs.should_run_wiz_cli == 'true'}}
     needs:
       - preflight
-    runs-on: ubuntu-latest
+    runs-on: ubicloud-standard-2
     defaults:
       run:
         shell: bash

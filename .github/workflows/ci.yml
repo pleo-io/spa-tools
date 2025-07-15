@@ -17,7 +17,7 @@ concurrency:
 jobs:
   semantic-title:
     name: Check PR Title for Semantic Release Type
-    runs-on: ubuntu-22.04
+    runs-on: ubicloud-standard-2
     permissions:
       pull-requests: read
     steps:
@@ -31,7 +31,7 @@ jobs:
 
   check-workflow:
     name: Check reusable workflow
-    runs-on: ubuntu-22.04
+    runs-on: ubicloud-standard-2
     permissions:
       contents: read
     steps:
@@ -44,7 +44,7 @@ jobs:
 
   test-actions:
     name: Check actions
-    runs-on: ubuntu-22.04
+    runs-on: ubicloud-standard-2
     defaults:
       run:
         working-directory: actions
@@ -71,7 +71,7 @@ jobs:
 
   test-lambdas:
     name: Check Lambda@Edge Functions
-    runs-on: ubuntu-22.04
+    runs-on: ubicloud-standard-2
     defaults:
       run:
         working-directory: terraform-module/edge-lambdas
