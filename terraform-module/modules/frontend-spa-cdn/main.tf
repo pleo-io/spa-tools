@@ -14,12 +14,6 @@ resource "aws_cloudfront_distribution" "this" {
 
   aliases = lower(var.env) == "production" ? [var.domain_name] : [var.domain_name, "*.${var.domain_name}"]
 
-  logging_config {
-    bucket          = module.data_aws_core.s3_bucket_log.bucket_domain_name
-    prefix          = "cloudfront/{DistributionId}/${var.app_name}/{yyyy}/{MM}/{dd}/"
-    include_cookies = false
-  }
-
   # The distribution is served by the origin S3 bucket accessible only via OAI
   origin {
     domain_name = var.bucket_regional_domain_name
@@ -145,6 +139,36 @@ resource "aws_cloudfront_distribution" "this" {
     geo_restriction {
       restriction_type = "none"
     }
+  }
+}
+
+resource "aws_cloudwatch_log_delivery_source" "cloudfront_log_source" {
+  region = "eu-west-1"
+
+  name         = "cloudfront_log_source"
+  log_type     = "ACCESS_LOGS"
+  resource_arn = aws_cloudfront_distribution.this.arn
+}
+
+resource "aws_cloudwatch_log_delivery_destination" "cloudfront_log_destination" {
+  region = "eu-west-1"
+
+  name          = "cloudfront_log_destination"
+  output_format = "parquet"
+
+  delivery_destination_configuration {
+    destination_resource_arn = module.data_aws_core.s3_bucket_log.bucket_domain_name
+  }
+}
+
+resource "aws_cloudwatch_log_delivery" "cloudfront_log_delivery" {
+  region = "eu-west-1"
+
+  delivery_source_name     = aws_cloudwatch_log_delivery_source.cloudfront_log_source.name
+  delivery_destination_arn = aws_cloudwatch_log_delivery_destination.cloudfront_log_destination.arn
+
+  s3_delivery_configuration {
+    suffix_path = "/CloudFront/{DistributionId}/{yyyy}/{MM}/{dd}/{HH}"
   }
 }
 
