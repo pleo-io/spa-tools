@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.1.0...terraform-module-v4.2.0) (2025-07-18)
+
+
+### Features
+
+* **frontend-spa-cdn:** add logging config ([#294](https://github.com/pleo-io/spa-tools/issues/294)) ([05f1595](https://github.com/pleo-io/spa-tools/commit/05f159511a1625d6f8c684ceedea5821a367789a))
+
 ## [4.1.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.0.0...terraform-module-v4.1.0) (2025-05-29)
 
 
