@@ -14,6 +14,12 @@ resource "aws_cloudfront_distribution" "this" {
 
   aliases = lower(var.env) == "production" ? [var.domain_name] : [var.domain_name, "*.${var.domain_name}"]
 
+  logging_config {
+    bucket          = module.data_aws_core.s3_bucket_log.bucket_domain_name
+    prefix          = "cloudfront/{DistributionId}/${var.app_name}/{yyyy}/{MM}/{dd}/"
+    include_cookies = false
+  }
+
   # The distribution is served by the origin S3 bucket accessible only via OAI
   origin {
     domain_name = var.bucket_regional_domain_name
