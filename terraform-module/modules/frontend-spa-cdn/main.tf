@@ -142,33 +142,33 @@ resource "aws_cloudfront_distribution" "this" {
   }
 }
 
-resource "aws_cloudwatch_log_delivery_source" "cloudfront_log_source" {
-  region = "eu-west-1"
+resource "aws_cloudwatch_log_delivery_source" "this" {
+  region = module.data_aws_core.region
 
-  name         = "cloudfront_log_source"
+  name         = "cloudfront"
   log_type     = "ACCESS_LOGS"
   resource_arn = aws_cloudfront_distribution.this.arn
 }
 
-resource "aws_cloudwatch_log_delivery_destination" "cloudfront_log_destination" {
+resource "aws_cloudwatch_log_delivery_destination" "this" {
   region = "eu-west-1"
 
-  name          = "cloudfront_log_destination"
+  name          = "s3"
   output_format = "parquet"
 
   delivery_destination_configuration {
-    destination_resource_arn = module.data_aws_core.s3_bucket_log.bucket_domain_name
+    destination_resource_arn = module.data_aws_core.s3_bucket_log.arn
   }
 }
 
-resource "aws_cloudwatch_log_delivery" "cloudfront_log_delivery" {
-  region = "eu-west-1"
+resource "aws_cloudwatch_log_delivery" "this" {
+  region = module.data_aws_core.region
 
-  delivery_source_name     = aws_cloudwatch_log_delivery_source.cloudfront_log_source.name
-  delivery_destination_arn = aws_cloudwatch_log_delivery_destination.cloudfront_log_destination.arn
+  delivery_source_name     = aws_cloudwatch_log_delivery_source.this.name
+  delivery_destination_arn = aws_cloudwatch_log_delivery_destination.this.arn
 
   s3_delivery_configuration {
-    suffix_path = "/CloudFront/{DistributionId}/{yyyy}/{MM}/{dd}/{HH}"
+    suffix_path = "/cloudfront/{DistributionId}/{yyyy}/{MM}/{dd}/{HH}"
   }
 }
 
