@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.2.0...terraform-module-v4.3.0) (2025-07-29)
+
+
+### Features
+
+* **frontend-spa-cdn:** Move to V2 Cloudfront logging ([#296](https://github.com/pleo-io/spa-tools/issues/296)) ([b9c49f9](https://github.com/pleo-io/spa-tools/commit/b9c49f93a9abcea5d7efe471d30d052a35a4fd28))
+
 ## [4.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.1.0...terraform-module-v4.2.0) (2025-07-18)
 
 
