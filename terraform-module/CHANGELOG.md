@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.3.0...terraform-module-v4.4.0) (2025-08-04)
+
+
+### Features
+
+* **frontend-spa-cdn:** Move to V2 Cloudfront logging - remove region ([#298](https://github.com/pleo-io/spa-tools/issues/298)) ([bc6ea2d](https://github.com/pleo-io/spa-tools/commit/bc6ea2d217c7e80825c4b1132240f669bebf4161))
+
 ## [4.3.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.2.0...terraform-module-v4.3.0) (2025-07-29)
 
 
