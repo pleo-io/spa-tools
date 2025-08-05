@@ -143,6 +143,7 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 resource "aws_cloudwatch_log_delivery_source" "this" {
+  region	   = "us-east-1"
   name         = "cloudfront"
   log_type     = "ACCESS_LOGS"
   resource_arn = aws_cloudfront_distribution.this.arn
