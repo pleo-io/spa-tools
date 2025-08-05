@@ -181,7 +181,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
       override = true
     }
     frame_options {
-      frame_option = var.block_iframes ? "DENY" : "SAMEORIGIN"
+      frame_option = var.block_iframes
       override     = true
     }
     referrer_policy {
@@ -242,7 +242,7 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
       override = true
     }
     frame_options {
-      frame_option = var.block_iframes ? "DENY" : "SAMEORIGIN"
+      frame_option = var.block_iframes
       override     = true
     }
     referrer_policy {

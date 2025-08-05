@@ -75,7 +75,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_name"></a> [app\_name](#input\_app\_name) | Name of the app (kebab-case) | `string` | n/a | yes |
-| <a name="input_block_iframes"></a> [block\_iframes](#input\_block\_iframes) | Should add custom header blocking access via iframes? | `bool` | `true` | no |
+| <a name="input_block_iframes"></a> [block\_iframes](#input\_block\_iframes) | Level of iframe control. Sets X-Frame-Options header to DENY (block all), SAMEORIGIN (allow same origin), or ALLOWALL (allow all) | `string` | `DENY` | no |
 | <a name="input_bucket_prefix"></a> [bucket\_prefix](#input\_bucket\_prefix) | Prefix for the bucket name. Since S3 bucket live in global scope, it's good prefix it with e.g. your org name | `string` | n/a | yes |
 | <a name="input_certificate_additional_sans"></a> [certificate\_additional\_sans](#input\_certificate\_additional\_sans) | Additional subject alternative names to include in the certificate | `list(string)` | `[]` | no |
 | <a name="input_default_repo_branch_name"></a> [default\_repo\_branch\_name](#input\_default\_repo\_branch\_name) | Name of the default branch of the project repo | `string` | `"master"` | no |
