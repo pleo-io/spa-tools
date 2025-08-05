@@ -14,7 +14,7 @@ module "lambda" {
   env                      = "production"
   domain_name              = "hello.example.com"
   default_repo_branch_name = "master"
-  block_iframes            = "DENY"
+  block_iframes            = "all"
   role_arn                 = module.lambda_role.role_arn
   lambda_version           = var.lambdas_version
   bucket_name              = module.s3.bucket_name

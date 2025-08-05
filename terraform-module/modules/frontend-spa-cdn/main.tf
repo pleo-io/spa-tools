@@ -180,9 +180,12 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
     content_type_options {
       override = true
     }
-    frame_options {
-      frame_option = var.block_iframes
-      override     = true
+    dynamic "frame_options" {
+      for_each = var.block_iframes != "none" ? [1] : []
+      content {
+        frame_option = var.block_iframes == "all" ? "DENY" : "SAMEORIGIN"
+        override     = true
+      }
     }
     referrer_policy {
       referrer_policy = "same-origin"
@@ -241,9 +244,12 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
     content_type_options {
       override = true
     }
-    frame_options {
-      frame_option = var.block_iframes
-      override     = true
+    dynamic "frame_options" {
+      for_each = var.block_iframes != "none" ? [1] : []
+      content {
+        frame_option = var.block_iframes == "all" ? "DENY" : "SAMEORIGIN"
+        override     = true
+      }
     }
     referrer_policy {
       referrer_policy = "same-origin"

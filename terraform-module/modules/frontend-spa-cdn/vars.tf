@@ -48,12 +48,12 @@ variable "edge_lambdas" {
 }
 
 variable "block_iframes" {
-  description = "Level of iframe control. Sets X-Frame-Options header to DENY (block all), SAMEORIGIN (allow same origin), or ALLOWALL (allow all)"
-  default     = "DENY"
+  description = "Level of iframe control. 'all' blocks all iframes (X-Frame-Options: DENY), 'cross_origin' allows same-origin iframes only (X-Frame-Options: SAMEORIGIN), 'none' allows all iframes (no X-Frame-Options header)"
+  default     = "all"
   type        = string
   validation {
-    condition     = contains(["DENY", "SAMEORIGIN", "ALLOWALL"], var.block_iframes)
-    error_message = "block_iframes must be one of: DENY, SAMEORIGIN, or ALLOWALL."
+    condition     = contains(["all", "none", "cross_origin"], var.block_iframes)
+    error_message = "block_iframes must be one of: all, none, or cross_origin."
   }
 }
 
