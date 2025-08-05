@@ -143,13 +143,14 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 resource "aws_cloudwatch_log_delivery_source" "this" {
-  region	   = "us-east-1"
+  region       = "us-east-1"
   name         = "cloudfront"
   log_type     = "ACCESS_LOGS"
   resource_arn = aws_cloudfront_distribution.this.arn
 }
 
 resource "aws_cloudwatch_log_delivery_destination" "this" {
+  region        = "us-east-1"
   name          = "s3"
   output_format = "parquet"
 
@@ -159,6 +160,7 @@ resource "aws_cloudwatch_log_delivery_destination" "this" {
 }
 
 resource "aws_cloudwatch_log_delivery" "this" {
+  region                   = "us-east-1"
   delivery_source_name     = aws_cloudwatch_log_delivery_source.this.name
   delivery_destination_arn = aws_cloudwatch_log_delivery_destination.this.arn
 
