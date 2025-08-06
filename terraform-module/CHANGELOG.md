@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.4.0...terraform-module-v4.4.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* Move to V2 Cloudfront logging - bugfix ([#301](https://github.com/pleo-io/spa-tools/issues/301)) ([7c18e31](https://github.com/pleo-io/spa-tools/commit/7c18e318d2a557a384fa05ac4a52abf552582748))
+
 ## [4.4.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.3.0...terraform-module-v4.4.0) (2025-08-04)
 
 
