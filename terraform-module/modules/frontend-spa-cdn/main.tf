@@ -143,6 +143,7 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 resource "aws_cloudwatch_log_delivery_source" "this" {
+  count  = var.cloudwatch_access_logs ? 1 : 0
   region = "us-east-1"
 
   name         = "cloudfront-${aws_cloudfront_distribution.this.id}"
@@ -151,6 +152,7 @@ resource "aws_cloudwatch_log_delivery_source" "this" {
 }
 
 resource "aws_cloudwatch_log_delivery_destination" "this" {
+  count  = var.cloudwatch_access_logs ? 1 : 0
   region = "us-east-1"
 
   name          = "s3-${module.data_aws_core.s3_bucket_log.id}-${aws_cloudfront_distribution.this.id}"
@@ -162,6 +164,7 @@ resource "aws_cloudwatch_log_delivery_destination" "this" {
 }
 
 resource "aws_cloudwatch_log_delivery" "this" {
+  count  = var.cloudwatch_access_logs ? 1 : 0
   region = "us-east-1"
 
   delivery_source_name     = aws_cloudwatch_log_delivery_source.this.name
