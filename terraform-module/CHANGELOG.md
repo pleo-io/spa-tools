@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.4.2...terraform-module-v5.0.0) (2025-08-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* DO-4876: Update block_iframes in spa-tools terraform module to accept an enum ([#300](https://github.com/pleo-io/spa-tools/issues/300))
+
+### Features
+
+* DO-4876: Update block_iframes in spa-tools terraform module to accept an enum ([#300](https://github.com/pleo-io/spa-tools/issues/300)) ([902cb92](https://github.com/pleo-io/spa-tools/commit/902cb92401dc287ee691b19f1c26f5f1152fa5ee))
+* make cloudwatch access logs optional ([#305](https://github.com/pleo-io/spa-tools/issues/305)) ([dcb25a3](https://github.com/pleo-io/spa-tools/commit/dcb25a37731ad3b43347cce05d6c240eea9b3e79))
+
 ## [4.4.2](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.4.1...terraform-module-v4.4.2) (2025-08-07)
 
 
