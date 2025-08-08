@@ -58,3 +58,9 @@ variable "is_robots_indexing_allowed" {
   default     = true
   type        = bool
 }
+
+variable "cloudwatch_access_logs" {
+  description = "Enable CloudWatch access logs"
+  default     = true
+  type        = bool
+}
