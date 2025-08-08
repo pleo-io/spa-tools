@@ -167,8 +167,8 @@ resource "aws_cloudwatch_log_delivery" "this" {
   count  = var.cloudwatch_access_logs ? 1 : 0
   region = "us-east-1"
 
-  delivery_source_name     = aws_cloudwatch_log_delivery_source.this.name
-  delivery_destination_arn = aws_cloudwatch_log_delivery_destination.this.arn
+  delivery_source_name     = aws_cloudwatch_log_delivery_source.this[count.index].name
+  delivery_destination_arn = aws_cloudwatch_log_delivery_destination.this[count.index].arn
 
   s3_delivery_configuration {
     suffix_path = "/cloudfront/{DistributionId}/{yyyy}/{MM}/{dd}/{HH}"
