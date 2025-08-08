@@ -48,9 +48,13 @@ variable "edge_lambdas" {
 }
 
 variable "block_iframes" {
-  description = "Should add custom header blocking access via iframes?"
-  default     = true
-  type        = bool
+  description = "Level of iframe control. 'all' blocks all iframes (X-Frame-Options: DENY), 'cross_origin' allows same-origin iframes only (X-Frame-Options: SAMEORIGIN), 'none' allows all iframes (no X-Frame-Options header)"
+  default     = "all"
+  type        = string
+  validation {
+    condition     = contains(["all", "none", "cross_origin"], var.block_iframes)
+    error_message = "block_iframes must be one of: all, none, or cross_origin."
+  }
 }
 
 variable "is_robots_indexing_allowed" {
