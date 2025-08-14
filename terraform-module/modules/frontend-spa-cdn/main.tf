@@ -159,7 +159,7 @@ resource "aws_cloudwatch_log_delivery_destination" "this" {
   output_format = "plain"
 
   delivery_destination_configuration {
-    destination_resource_arn = "module.data_aws_core.s3_bucket_log.arn/cloudfront/${var.app_name}"
+    destination_resource_arn = "${module.data_aws_core.s3_bucket_log.arn}/cloudfront/${var.app_name}"
   }
 }
 
