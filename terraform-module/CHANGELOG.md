@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v5.0.0...terraform-module-v5.0.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* **frontend-spa-cdn:** Change log format to plain ([#307](https://github.com/pleo-io/spa-tools/issues/307)) ([5e91c61](https://github.com/pleo-io/spa-tools/commit/5e91c61d7fb0f72eca0e29476493c087a64e24e6))
+
 ## [5.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v4.4.2...terraform-module-v5.0.0) (2025-08-08)
 
 
