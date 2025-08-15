@@ -1,5 +1,5 @@
 {
   "actions": "10.2.0",
   "reusable-workflows": "13.2.0",
-  "terraform-module": "5.0.0"
+  "terraform-module": "5.0.1"
 }
