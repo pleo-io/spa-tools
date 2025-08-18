@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.2](https://github.com/pleo-io/spa-tools/compare/terraform-module-v5.0.1...terraform-module-v5.0.2) (2025-08-18)
+
+
+### Bug Fixes
+
+* race condition when creating lambda archive ([#309](https://github.com/pleo-io/spa-tools/issues/309)) ([ac37df5](https://github.com/pleo-io/spa-tools/commit/ac37df515b2c08643e2afdcf2037c71cd547d455))
+
 ## [5.0.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v5.0.0...terraform-module-v5.0.1) (2025-08-15)
 
 
