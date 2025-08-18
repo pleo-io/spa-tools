@@ -20,7 +20,7 @@ resource "local_file" "lambda_config" {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  depends_on  = [local_file.lambda_config]
+  depends_on  = [local_file.lambda_config, local_sensitive_file.lambda_source]
   output_path = "${path.root}/${var.app_name}.${var.event_type}.js.zip"
   source_dir  = "${path.root}/dist/${var.app_name}/${var.event_type}"
 }
