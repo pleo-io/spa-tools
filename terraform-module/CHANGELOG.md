@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v5.0.2...terraform-module-v6.0.0) (2025-08-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* use node 22 in spa-tools edge lambda ([#311](https://github.com/pleo-io/spa-tools/issues/311))
+
+### Features
+
+* use node 22 in spa-tools edge lambda ([#311](https://github.com/pleo-io/spa-tools/issues/311)) ([e5065bb](https://github.com/pleo-io/spa-tools/commit/e5065bbb1f915993eea02282b0949f71ea851734))
+
 ## [5.0.2](https://github.com/pleo-io/spa-tools/compare/terraform-module-v5.0.1...terraform-module-v5.0.2) (2025-08-18)
 
 
