@@ -14,7 +14,7 @@ locals {
 
 data "archive_file" "lambda" {
   type        = "zip"
-  output_path = "/tmp/${var.app_name}.${var.event_type}.zip"
+  output_path = "/tmp/${var.app_name}.${var.event_type}.js.zip"
 
   source {
     content  = local.lambda_source
