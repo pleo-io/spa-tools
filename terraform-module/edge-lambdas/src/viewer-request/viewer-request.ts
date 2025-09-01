@@ -95,7 +95,7 @@ async function getAppVersion(request: CloudFrontRequest, config: Config, s3: S3C
     // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
     let previewName: string
 
-    if (config.previewDeploymentPostfix && host && host.includes(config.previewDeploymentPostfix)) {
+    if (config.previewDeploymentPostfix && host && host.includes(config.previewDeploymentPostfix) && !host.startsWith('partner')) {
         previewName = host.split('.')[0]
 
         // If the request is for a specific hash of a preview deployment, we use that hash

@@ -9,16 +9,12 @@ data "aws_route53_zone" "public" {
   private_zone = false
 }
 
-locals {
-  wildcard_san = lower(var.env) == "production" ? [] : ["*.${var.domain_name}"]
-}
-
 resource "aws_acm_certificate" "this" {
   provider          = aws.global
   domain_name       = var.domain_name
   validation_method = "DNS"
 
-  subject_alternative_names = concat(local.wildcard_san, var.additional_subject_alternative_names)
+  subject_alternative_names = lower(var.env) == "production" ? [] : ["*.${var.domain_name}"]
 
   tags = {
     Environment = var.env

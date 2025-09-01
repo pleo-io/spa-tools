@@ -41,8 +41,6 @@ module "certificate" {
   zone_domain = var.zone_domain
   domain_name = local.domain_name
 
-  additional_subject_alternative_names = var.certificate_additional_sans
-
   providers = {
     aws.global = aws.global
   }
