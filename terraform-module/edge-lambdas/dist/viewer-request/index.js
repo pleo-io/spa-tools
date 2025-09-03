@@ -481,7 +481,10 @@ async function getAppVersion(request, config, s3) {
     // Preview name is the first segment of the url e.g. my-branch for my-branch.app.dev.example.com
     // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
     let previewName;
-    if (config.previewDeploymentPostfix && host && host.includes(config.previewDeploymentPostfix)) {
+    if (config.previewDeploymentPostfix &&
+        host &&
+        host.includes(config.previewDeploymentPostfix) &&
+        !host.startsWith('partner')) {
         previewName = host.split('.')[0];
         // If the request is for a specific hash of a preview deployment, we use that hash
         const previewHash = getPreviewHash(previewName);
