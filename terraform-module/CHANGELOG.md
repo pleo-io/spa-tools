@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.0.0...terraform-module-v6.1.0) (2025-09-03)
+
+
+### Features
+
+* **terraform-module:** support multiple subdomain starting with `partner` ([#313](https://github.com/pleo-io/spa-tools/issues/313)) ([4fb5ec6](https://github.com/pleo-io/spa-tools/commit/4fb5ec660fc471c530644b2939d398925e74cc97))
+
 ## [6.0.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v5.0.2...terraform-module-v6.0.0) (2025-08-27)
 
 
