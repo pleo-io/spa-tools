@@ -267,6 +267,13 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
         override     = true
       }
     }
+    dynamic "content_security_policy" {
+      for_each = var.content_frame_ancestors != "all" ? [1] : []
+      content {
+        frame_option = var.content_frame_ancestors == "none" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
+        override     = true
+      }
+    }
     referrer_policy {
       referrer_policy = "same-origin"
       override        = true
