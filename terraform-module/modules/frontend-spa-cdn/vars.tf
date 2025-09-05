@@ -57,6 +57,16 @@ variable "block_iframes" {
   }
 }
 
+variable "content_frame_ancestors" {
+  description = "Level of CSP header's frame-ancestors control. 'none' means there are no valid parents that may embed the page (Content-Security-Policy: frame-ancestors 'none'), 'same_origin' allows same-origin embedding only (Content-Security-Policy: frame-ancestors 'self'), 'all' allows all iframes (no Content-Security-Policy header)"
+  default     = "none"
+  type        = string
+  validation {
+    condition     = contains(["none", "same_origin", "all"], var.content_frame_ancestors)
+    error_message = "content_frame_ancestors must be one of: none, same_origin, or all."
+  }
+}
+
 variable "is_robots_indexing_allowed" {
   description = "Should allow search engine indexing in production?"
   default     = true
