@@ -199,7 +199,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
     dynamic "content_security_policy" {
       for_each = var.content_frame_ancestors != "all" ? [1] : []
       content {
-        frame_option = var.content_frame_ancestors == "none" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
+        content_security_policy = var.content_frame_ancestors == "none" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
         override     = true
       }
     }
@@ -270,7 +270,7 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
     dynamic "content_security_policy" {
       for_each = var.content_frame_ancestors != "all" ? [1] : []
       content {
-        frame_option = var.content_frame_ancestors == "none" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
+        content_security_policy = var.content_frame_ancestors == "none" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
         override     = true
       }
     }
