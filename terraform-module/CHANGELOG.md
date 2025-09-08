@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.1.0...terraform-module-v6.1.1) (2025-09-08)
+
+
+### Bug Fixes
+
+* **frontend-spa-edge-lambda:** store edge lambda in tf state ([#314](https://github.com/pleo-io/spa-tools/issues/314)) ([a3e6f40](https://github.com/pleo-io/spa-tools/commit/a3e6f40a12f81331be74d7a29c9fe4f9e1f7fb62))
+
 ## [6.1.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.0.0...terraform-module-v6.1.0) (2025-09-03)
 
 
