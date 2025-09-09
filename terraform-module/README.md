@@ -75,7 +75,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_name"></a> [app\_name](#input\_app\_name) | Name of the app (kebab-case) | `string` | n/a | yes |
-| <a name="input_block_iframes"></a> [block\_iframes](#input\_block\_iframes) | Level of iframe control. 'all' blocks all iframes (X-Frame-Options: DENY), 'cross\_origin' allows same-origin iframes only (X-Frame-Options: SAMEORIGIN), 'none' allows all iframes (no X-Frame-Options header) | `string` | `"all"` | no |
+| <a name="input_block_iframes"></a> [block\_iframes](#input\_block\_iframes) | Level of iframe control. 'all' blocks all iframes (Content-Security-Policy: frame-ancestors 'none'), 'cross\_origin' allows same-origin iframes only (Content-Security-Policy: frame-ancestors 'self'), 'none' allows all iframes (no Content-Security-Policy header) | `string` | `"all"` | no |
 | <a name="input_bucket_prefix"></a> [bucket\_prefix](#input\_bucket\_prefix) | Prefix for the bucket name. Since S3 bucket live in global scope, it's good prefix it with e.g. your org name | `string` | n/a | yes |
 | <a name="input_default_repo_branch_name"></a> [default\_repo\_branch\_name](#input\_default\_repo\_branch\_name) | Name of the default branch of the project repo | `string` | `"master"` | no |
 | <a name="input_env"></a> [env](#input\_env) | Environment (production/staging) | `string` | n/a | yes |

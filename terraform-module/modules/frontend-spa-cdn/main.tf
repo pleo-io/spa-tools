@@ -25,7 +25,7 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   # The default cache behaviour is used to serve HTML. The logic of which file from
-  # the origin bucket should be served is handled by the viewer-requst edge lambda. 
+  # the origin bucket should be served is handled by the viewer-requst edge lambda.
   # Additionally, response headers are added via a viewer response edge lambda,
   # including the caching headers to make sure we don't serve stale HTML.
   default_cache_behavior {
@@ -116,7 +116,7 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = "redirect-to-https"
   }
 
-  # Serve a custom 404 error page when requesting a file that doesn't exist in the bucket 
+  # Serve a custom 404 error page when requesting a file that doesn't exist in the bucket
   custom_error_response {
     error_caching_min_ttl = 10
     error_code            = 404
@@ -189,10 +189,10 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
     content_type_options {
       override = true
     }
-    dynamic "frame_options" {
+    dynamic "content_security_policy" {
       for_each = var.block_iframes != "none" ? [1] : []
       content {
-        frame_option = var.block_iframes == "all" ? "DENY" : "SAMEORIGIN"
+        content_security_policy = var.block_iframes == "all" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
         override     = true
       }
     }
@@ -253,10 +253,10 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
     content_type_options {
       override = true
     }
-    dynamic "frame_options" {
+    dynamic "content_security_policy" {
       for_each = var.block_iframes != "none" ? [1] : []
       content {
-        frame_option = var.block_iframes == "all" ? "DENY" : "SAMEORIGIN"
+        content_security_policy = var.block_iframes == "all" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
         override     = true
       }
     }

@@ -24,7 +24,7 @@ variable "subdomain" {
 }
 
 variable "block_iframes" {
-  description = "Level of iframe control. 'all' blocks all iframes (X-Frame-Options: DENY), 'cross_origin' allows same-origin iframes only (X-Frame-Options: SAMEORIGIN), 'none' allows all iframes (no X-Frame-Options header)"
+  description = "Level of iframe control. 'all' blocks all iframes (Content-Security-Policy: frame-ancestors 'none'), 'cross_origin' allows same-origin iframes only (Content-Security-Policy: frame-ancestors 'self'), 'none' allows all iframes (no Content-Security-Policy header)"
   default     = "all"
   type        = string
   validation {
