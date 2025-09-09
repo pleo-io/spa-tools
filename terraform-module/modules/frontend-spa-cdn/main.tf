@@ -189,17 +189,10 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
     content_type_options {
       override = true
     }
-    dynamic "frame_options" {
+    dynamic "content_security_policy" {
       for_each = var.block_iframes != "none" ? [1] : []
       content {
-        frame_option = var.block_iframes == "all" ? "DENY" : "SAMEORIGIN"
-        override     = true
-      }
-    }
-    dynamic "content_security_policy" {
-      for_each = var.content_frame_ancestors != "all" ? [1] : []
-      content {
-        content_security_policy = var.content_frame_ancestors == "none" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
+        content_security_policy = var.block_iframes == "all" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
         override     = true
       }
     }
@@ -260,17 +253,10 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
     content_type_options {
       override = true
     }
-    dynamic "frame_options" {
+    dynamic "content_security_policy" {
       for_each = var.block_iframes != "none" ? [1] : []
       content {
-        frame_option = var.block_iframes == "all" ? "DENY" : "SAMEORIGIN"
-        override     = true
-      }
-    }
-    dynamic "content_security_policy" {
-      for_each = var.content_frame_ancestors != "all" ? [1] : []
-      content {
-        content_security_policy = var.content_frame_ancestors == "none" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
+        content_security_policy = var.block_iframes == "all" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
         override     = true
       }
     }
