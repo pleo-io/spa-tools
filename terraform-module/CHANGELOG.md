@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.1.1...terraform-module-v6.2.0) (2025-09-09)
+
+
+### Features
+
+* introduce CSP header for frontend-spa-cdn ([#316](https://github.com/pleo-io/spa-tools/issues/316)) ([15edbcc](https://github.com/pleo-io/spa-tools/commit/15edbccbddee981407023a5f5a950ad35260e6f8))
+
 ## [6.1.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.1.0...terraform-module-v6.1.1) (2025-09-08)
 
 
