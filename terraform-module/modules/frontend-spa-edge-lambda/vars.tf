@@ -60,14 +60,3 @@ variable "cost_allocation_team" {
   description = "Cost allocation team for OTEL resource attributes"
   type        = string
 }
-
-variable "otel_collector_lambda_arn" {
-  description = "ARN of the Lambda function that processes logs for OTEL collector"
-  type        = string
-}
-
-variable "enable_log_forwarding" {
-  description = "Enable CloudWatch log subscription filter to forward logs to OTEL collector"
-  type        = bool
-  default     = true
-}
