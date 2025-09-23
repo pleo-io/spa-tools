@@ -44,3 +44,30 @@ variable "serve_nested_index_html" {
   description = "Applies to apps which build separate index.html files for sub-routes, e.g. using Gatsby SSG"
   type        = bool
 }
+
+variable "region" {
+  description = "AWS region for the lambda layers"
+  type        = string
+  default     = "us-east-1"
+}
+
+variable "steward_team" {
+  description = "Steward team name for OTEL resource attributes"
+  type        = string
+}
+
+variable "cost_allocation_team" {
+  description = "Cost allocation team for OTEL resource attributes"
+  type        = string
+}
+
+variable "otel_collector_lambda_arn" {
+  description = "ARN of the Lambda function that processes logs for OTEL collector"
+  type        = string
+}
+
+variable "enable_log_forwarding" {
+  description = "Enable CloudWatch log subscription filter to forward logs to OTEL collector"
+  type        = bool
+  default     = true
+}
