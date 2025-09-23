@@ -18,7 +18,7 @@ locals {
       AWS_LAMBDA_EXEC_WRAPPER      = "/opt/otel-handler",
       OTEL_EXPORTER_ENDPOINT       = "https://otlp.observability.pleo.io",
       OTEL_SERVICE_NAME            = local.service_name,
-      OTEL_RESOURCE_ATTRIBUTES     = "service.namespace=spa-edge,deployment.environment=${var.env},steward=${var.steward_team},cost_allocation=${var.cost_allocation_team}",
+      OTEL_RESOURCE_ATTRIBUTES     = "service.namespace=spa-edge,deployment.environment=${var.env},steward=${var.steward},cost_allocation=${var.steward}",
       # Sending logs through the aws_cloudwatch_log_subscription_filter
       OTEL_LOGS_EXPORTER           = "none"
       # OTEL Metrics aren't allowed right now for alloy-router
