@@ -64,38 +64,19 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
-# CloudWatch Log Group for the Lambda@Edge function
-# Note: Lambda@Edge logs are distributed across regions, this creates the log group in us-east-1
-resource "aws_cloudwatch_log_group" "lambda_logs" {
-  provider          = aws.global
-  name              = "/aws/lambda/${aws_lambda_function.lambda.function_name}"
+
+resource "aws_cloudwatch_log_group" "spa_edge_lambda_log_group" {
+  name              = "/aws/cloudfront/LambdaEdge/E1M4BA5P9QDIUL"
   retention_in_days = 7
-
-  tags = {
-    environment = lower(var.env)
-    app_name    = var.app_name
-  }
 }
 
-# CloudWatch Log Subscription Filter to forward logs to OTEL collector
-resource "aws_cloudwatch_log_subscription_filter" "otel_logs" {
-  count           = var.enable_log_forwarding ? 1 : 0
-  provider        = aws.global
-  name            = "${var.app_name}-${var.event_type}-otel-logs"
-  log_group_name  = aws_cloudwatch_log_group.lambda_logs.name
-  filter_pattern  = "" # Forward all logs
-  destination_arn = var.otel_collector_lambda_arn
+resource "aws_cloudwatch_log_subscription_filter" "spa_edge_cloudwatch_subscription_filter" {
+  name            = "spa-edge-lambda-grafana-loki-promtail-subscription"
+  log_group_name  = aws_cloudwatch_log_group.spa_edge_lambda_log_group.name
+  filter_pattern  = ""
+  destination_arn = data.aws_ssm_parameter.this.value
 
-  depends_on = [aws_lambda_function.lambda]
-}
-
-# Permission for CloudWatch Logs to invoke the OTEL collector Lambda
-resource "aws_lambda_permission" "cloudwatch_logs" {
-  count         = var.enable_log_forwarding ? 1 : 0
-  provider      = aws.global
-  statement_id  = "AllowExecutionFromCloudWatchLogs-${var.app_name}-${var.event_type}"
-  action        = "lambda:InvokeFunction"
-  function_name = var.otel_collector_lambda_arn
-  principal     = "logs.us-east-1.amazonaws.com"
-  source_arn    = "${aws_cloudwatch_log_group.lambda_logs.arn}:*"
+  depends_on = [
+    aws_cloudwatch_log_group.spa_edge_lambda_log_group
+  ]
 }
