@@ -51,7 +51,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
-variable "steward" {
-  description = "Name of the stewarding team"
+variable "steward_team" {
+  description = "Steward team name for OTEL resource attributes"
+  type        = string
+}
+
+variable "cost_allocation_team" {
+  description = "Cost allocation team for OTEL resource attributes"
   type        = string
 }
