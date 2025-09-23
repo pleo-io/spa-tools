@@ -1,33 +1,33 @@
 receivers:
-  otlp:
-    protocols:
-      http:
-        endpoint: localhost:4318
+    otlp:
+        protocols:
+            http:
+                endpoint: localhost:4318
 
 # Necessary to improve Lambda response times https://github.com/open-telemetry/opentelemetry-lambda/blob/main/collector/README.md#improving-lambda-responses-times
 processors:
-  batch:
-  decouple:
+    batch:
+    decouple:
 
 exporters:
-  debug:
-    verbosity: detailed
-  otlphttp:
-    endpoint: ${env:OTEL_EXPORTER_ENDPOINT}
-    retry_on_failure:
-      enabled: false
+    debug:
+        verbosity: detailed
+    otlphttp:
+        endpoint: ${env:OTEL_EXPORTER_ENDPOINT}
+        retry_on_failure:
+            enabled: false
 
 service:
-  pipelines:
-    logs:
-      receivers: [otlp]
-      processors: [batch, decouple]
-      exporters: [debug, otlphttp]
-    metrics:
-      receivers: [otlp]
-      processors: [batch, decouple]
-      exporters: [otlphttp]
-    traces:
-      receivers: [otlp]
-      processors: [batch, decouple]
-      exporters: [otlphttp]
+    pipelines:
+        logs:
+            receivers: [otlp]
+            processors: [batch, decouple]
+            exporters: [debug, otlphttp]
+        metrics:
+            receivers: [otlp]
+            processors: [batch, decouple]
+            exporters: [otlphttp]
+        traces:
+            receivers: [otlp]
+            processors: [batch, decouple]
+            exporters: [otlphttp]
