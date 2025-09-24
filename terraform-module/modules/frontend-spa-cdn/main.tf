@@ -12,10 +12,7 @@ resource "aws_cloudfront_distribution" "this" {
   price_class         = var.cloudfront_price_class
   comment             = "${var.app_name} - ${var.domain_name}"
 
-  dynamic "continuous_deployment_policy_id" {
-    for_each = var.continuous_deployment ? [1] : []
-    content  = aws_cloudfront_continuous_deployment_policy.this[0].id
-  }
+  continuous_deployment_policy_id = aws_cloudfront_continuous_deployment_policy.this[0].id
 
   aliases = lower(var.env) == "production" ? [var.domain_name] : [var.domain_name, "*.${var.domain_name}"]
 
