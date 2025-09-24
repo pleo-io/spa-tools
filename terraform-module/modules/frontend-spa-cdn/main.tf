@@ -148,7 +148,7 @@ resource "aws_cloudfront_distribution" "staging" {
   is_ipv6_enabled     = true
   wait_for_deployment = false
   price_class         = var.cloudfront_price_class
-  comment             = "${var.app_name} - ${var.domain_name}"
+  comment             = "${var.app_name} - ${var.domain_name} (staging)"
 
   aliases = lower(var.env) == "production" ? [var.domain_name] : [var.domain_name, "*.${var.domain_name}"]
 
@@ -276,6 +276,22 @@ resource "aws_cloudfront_distribution" "staging" {
   restrictions {
     geo_restriction {
       restriction_type = "none"
+    }
+  }
+}
+
+resource "aws_cloudfront_continuous_deployment_policy" "this" {
+  enabled = true
+
+  staging_distribution_dns_names {
+    items    = [aws_cloudfront_distribution.staging.domain_name]
+    quantity = 1
+  }
+
+  traffic_config {
+    type = "SingleWeight"
+    single_weight_config {
+      weight = "0.15"
     }
   }
 }
