@@ -143,6 +143,7 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 resource "aws_cloudfront_distribution" "staging" {
+  count               = var.continuous_deployment ? 1 : 0
   staging             = true
   enabled             = true
   is_ipv6_enabled     = true
@@ -281,6 +282,7 @@ resource "aws_cloudfront_distribution" "staging" {
 }
 
 resource "aws_cloudfront_continuous_deployment_policy" "this" {
+  count   = var.continuous_deployment ? 1 : 0
   enabled = true
 
   staging_distribution_dns_names {

@@ -68,3 +68,9 @@ variable "cloudwatch_access_logs" {
   default     = true
   type        = bool
 }
+
+variable "continuous_deployment" {
+  description = "Enable continuous deployment"
+  default     = false
+  type        = bool
+}
