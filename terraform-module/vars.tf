@@ -49,3 +49,9 @@ variable "serve_nested_index_html" {
   description = "Applies to apps which build separate index.html files for sub-routes, e.g. using Gatsby SSG"
   type        = bool
 }
+
+variable "continuous_deployment" {
+  description = "Enable continuous deployment"
+  default     = false
+  type        = bool
+}

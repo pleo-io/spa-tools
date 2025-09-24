@@ -57,6 +57,7 @@ module "cdn" {
   is_robots_indexing_allowed      = var.is_robots_indexing_allowed
   bucket_regional_domain_name     = module.s3.bucket_regional_domain_name
   cloudfront_access_identity_path = module.s3.cloudfront_access_identity_path
+  continuous_deployment           = var.continuous_deployment
   edge_lambdas = [
     for event_type, lambda in module.lambdas : { event_type = event_type, arn = lambda.lambda_arn }
   ]
