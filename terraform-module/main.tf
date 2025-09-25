@@ -31,7 +31,7 @@ module "lambdas" {
 
   steward_team         = "team-web-core"
   cost_allocation_team = "team-web-core"
-  region               = data.aws_region.current.name
+  region               = module.s3.bucket_region
 
   providers = {
     aws.global = aws.global

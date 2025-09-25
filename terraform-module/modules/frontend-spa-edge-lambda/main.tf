@@ -74,7 +74,6 @@ resource "aws_cloudwatch_log_subscription_filter" "spa_edge_cloudwatch_subscript
   name            = "spa-edge-lambda-grafana-loki-promtail-subscription"
   log_group_name  = aws_cloudwatch_log_group.spa_edge_lambda_log_group.name
   filter_pattern  = ""
-  destination_arn = data.aws_ssm_parameter.this.value
 
   depends_on = [
     aws_cloudwatch_log_group.spa_edge_lambda_log_group
