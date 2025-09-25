@@ -64,6 +64,10 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
+data "aws_ssm_parameter" "grafana" {
+  name = "/infrastructure/grafana/grafana-loki-promtail-aws-lambda-arn.terraform"
+}
+
 
 resource "aws_cloudwatch_log_group" "spa_edge_lambda_log_group" {
   name              = "/aws/cloudfront/LambdaEdge/E1M4BA5P9QDIUL"
@@ -74,6 +78,8 @@ resource "aws_cloudwatch_log_subscription_filter" "spa_edge_cloudwatch_subscript
   name            = "spa-edge-lambda-grafana-loki-promtail-subscription"
   log_group_name  = aws_cloudwatch_log_group.spa_edge_lambda_log_group.name
   filter_pattern  = ""
+  destination_arn = data.aws_ssm_parameter.grafana.value
+
 
   depends_on = [
     aws_cloudwatch_log_group.spa_edge_lambda_log_group
