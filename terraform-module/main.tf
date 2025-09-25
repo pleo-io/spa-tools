@@ -29,6 +29,10 @@ module "lambdas" {
   domain_name              = local.domain_name
   serve_nested_index_html  = var.serve_nested_index_html
 
+  steward_team         = "team-web-core"
+  cost_allocation_team = "team-web-core"
+  region               = data.aws_region.current.name
+
   providers = {
     aws.global = aws.global
   }
