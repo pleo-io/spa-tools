@@ -27,11 +27,15 @@ data "archive_file" "lambda" {
   }
 }
 
+locals {
+  function_name = "${var.app_name}-${var.event_type}"
+}
+
 resource "aws_lambda_function" "lambda" {
   provider         = aws.global
   description      = "${var.app_name} ${var.event_type} Lambda@Edge"
   filename         = data.archive_file.lambda.output_path
-  function_name    = "${var.app_name}-${var.event_type}"
+  function_name    = local.function_name
   handler          = "index.handler"
   source_code_hash = data.archive_file.lambda.output_base64sha256
   publish          = true
@@ -41,4 +45,11 @@ resource "aws_lambda_function" "lambda" {
   tags = {
     environment = lower(var.env)
   }
+
+  depends_on = [aws_cloudwatch_log_group.lambda]
+}
+
+resource "aws_cloudwatch_log_group" "lambda" {
+  name              = "/aws/lambda/us-east-1.${local.function_name}"
+  retention_in_days = module.data_aws_core.log_expiry_in_days
 }
