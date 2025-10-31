@@ -193,7 +193,7 @@ resource "aws_cloudfront_response_headers_policy" "default_behaviour_headers_pol
       for_each = var.block_iframes != "none" ? [1] : []
       content {
         content_security_policy = var.block_iframes == "all" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
-        override     = true
+        override                = true
       }
     }
     referrer_policy {
@@ -257,7 +257,7 @@ resource "aws_cloudfront_response_headers_policy" "loading_integration_behaviour
       for_each = var.block_iframes != "none" ? [1] : []
       content {
         content_security_policy = var.block_iframes == "all" ? "frame-ancestors 'none'" : "frame-ancestors 'self'"
-        override     = true
+        override                = true
       }
     }
     referrer_policy {
