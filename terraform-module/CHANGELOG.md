@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.2.0...terraform-module-v6.3.0) (2025-10-31)
+
+
+### Features
+
+* **terraform:** add missing cloudwatch log groups ([#321](https://github.com/pleo-io/spa-tools/issues/321)) ([1cf7098](https://github.com/pleo-io/spa-tools/commit/1cf7098d3c791748c8b87e8914b1a3ea21cf0819))
+
 ## [6.2.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.1.1...terraform-module-v6.2.0) (2025-09-09)
 
 
