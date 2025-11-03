@@ -52,4 +52,6 @@ resource "aws_lambda_function" "lambda" {
 resource "aws_cloudwatch_log_group" "lambda" {
   name              = "/aws/lambda/us-east-1.${local.function_name}"
   retention_in_days = module.data_aws_core.log_expiry_in_days
+
+  provider = aws.global
 }
