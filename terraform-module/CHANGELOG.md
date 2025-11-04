@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.3.0...terraform-module-v6.3.1) (2025-11-04)
+
+
+### Bug Fixes
+
+* **terrafrom:** point to us-east-1 region ([#323](https://github.com/pleo-io/spa-tools/issues/323)) ([49671b4](https://github.com/pleo-io/spa-tools/commit/49671b484ed9bab257dbf05201868902871ebc90))
+
 ## [6.3.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.2.0...terraform-module-v6.3.0) (2025-10-31)
 
 
