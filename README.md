@@ -2,8 +2,7 @@
   🔋 Pleo SPA Tools
 </h1>
 
-💡 A collection of reusable tools for delivering Single Page Applications,
-including AWS-based infrastructure, GitHub Actions CI/CD and runtime config.
+💡 Terraform modules for deploying Single Page Applications on AWS infrastructure.
 
 👨‍🔧 This repository is lovingly stewarded by Pleo's Web Core team.
 
@@ -14,10 +13,8 @@ project on Linear (if you have access).
 
 ## Contents
 
-- [Custom GitHub Actions](/actions)
-- [Reusable GitHub Workflows](/reusable-workflows)
-- [Terraform Module](./terraform-module)
-- [Lambda@Edge Lambdas](/terraform-module/edge-lambdas)
+- [Terraform Module](./terraform-module) - Main Terraform module for SPA deployment
+- [Lambda@Edge Functions](/terraform-module/edge-lambdas) - CloudFront Lambda@Edge functions
 
 ## Contributing
 

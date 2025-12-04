@@ -1,10 +1,6 @@
 {
   "bootstrap-sha": "d8a23fd8414bb51fcd8b66251270e3b4a46cf982",
   "packages": {
-    "actions": {
-      "changelog-path": "CHANGELOG.md",
-      "release-type": "node"
-    },
     "reusable-workflows": {
       "package-name": "reusable-workflows",
       "changelog-path": "CHANGELOG.md",
