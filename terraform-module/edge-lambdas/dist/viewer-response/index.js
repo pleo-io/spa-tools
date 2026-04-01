@@ -109,6 +109,7 @@ function getCookie(headers, cookieName) {
     return null;
 }
 const APP_VERSION_HEADER = 'X-Pleo-SPA-Version';
+const PARTNER_SLUG_HEADER = 'X-Partner-Slug';
 
 ;// CONCATENATED MODULE: ./src/viewer-response/viewer-response.ts
 
@@ -126,6 +127,7 @@ function getHandler(config) {
         let response = event.Records[0].cf.response;
         const request = event.Records[0].cf.request;
         response = addVersionHeader(response, request);
+        response = addPartnerThemeHeaders(response, request);
         return response;
     };
     return handler;
@@ -135,6 +137,20 @@ function getHandler(config) {
 function addVersionHeader(response, request) {
     const appVersion = getHeader(request, APP_VERSION_HEADER);
     let headers = setHeader(response.headers, APP_VERSION_HEADER, appVersion);
+    return { ...response, headers };
+}
+// Add partner theme headers to the response if a partner slug is present on the request.
+// The Link preload header hints the browser to load the CSS early; X-Partner-Theme tells
+// the SPA which partner theme to inject. The internal X-Partner-Slug header is stripped
+// so it is not exposed to the client.
+function addPartnerThemeHeaders(response, request) {
+    const partnerSlug = getHeader(request, PARTNER_SLUG_HEADER);
+    if (!partnerSlug)
+        return response;
+    let headers = setHeader(response.headers, 'Link', `</static/partner-themes/${partnerSlug}.css>; rel=preload; as=style`);
+    headers = setHeader(headers, 'X-Partner-Theme', partnerSlug);
+    // Strip the internal header so it is not forwarded to the client
+    delete headers[PARTNER_SLUG_HEADER.toLowerCase()];
     return { ...response, headers };
 }
 

@@ -16,4 +16,5 @@ export type Config = {
     previewDeploymentPostfix?: string
     defaultBranchName?: string
     serveNestedIndexHtml?: boolean
+    partners?: Record<string, {slug: string}>
 }

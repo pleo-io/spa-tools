@@ -61,3 +61,4 @@ export function getCookie(headers: CloudFrontHeaders, cookieName: string) {
 }
 
 export const APP_VERSION_HEADER = 'X-Pleo-SPA-Version'
+export const PARTNER_SLUG_HEADER = 'X-Partner-Slug'

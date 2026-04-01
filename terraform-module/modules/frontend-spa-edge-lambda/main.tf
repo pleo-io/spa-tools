@@ -9,6 +9,7 @@ locals {
     "previewDeploymentPostfix" = var.env == "production" ? "" : ".${var.domain_name}"
     "defaultBranchName"        = var.default_repo_branch_name
     "serveNestedIndexHtml"     = var.serve_nested_index_html
+    "partners"                 = var.partners
   })
 }
 

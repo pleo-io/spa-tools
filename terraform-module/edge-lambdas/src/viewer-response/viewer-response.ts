@@ -1,6 +1,6 @@
 import {CloudFrontRequest, CloudFrontResponse, CloudFrontResponseHandler} from 'aws-lambda'
 import {Config} from '../config'
-import {APP_VERSION_HEADER, getHeader, setHeader} from '../utils'
+import {APP_VERSION_HEADER, PARTNER_SLUG_HEADER, getHeader, setHeader} from '../utils'
 /**
  * Edge Lambda handler triggered on "viewer-response" event, on the default CF behavior of the web app CF distribution.
  * The default CF behaviour only handles requests for HTML documents and requests for static files (e.g. /, /bills, /settings/accounting etc.)
@@ -16,6 +16,7 @@ export function getHandler(config: Config) {
         const request = event.Records[0].cf.request
 
         response = addVersionHeader(response, request)
+        response = addPartnerThemeHeaders(response, request)
 
         return response
     }
@@ -27,5 +28,24 @@ export function getHandler(config: Config) {
 export function addVersionHeader(response: CloudFrontResponse, request: CloudFrontRequest) {
     const appVersion = getHeader(request, APP_VERSION_HEADER)
     let headers = setHeader(response.headers, APP_VERSION_HEADER, appVersion)
+    return {...response, headers}
+}
+
+// Add partner theme headers to the response if a partner slug is present on the request.
+// The Link preload header hints the browser to load the CSS early; X-Partner-Theme tells
+// the SPA which partner theme to inject. The internal X-Partner-Slug header is stripped
+// so it is not exposed to the client.
+export function addPartnerThemeHeaders(response: CloudFrontResponse, request: CloudFrontRequest) {
+    const partnerSlug = getHeader(request, PARTNER_SLUG_HEADER)
+    if (!partnerSlug) return response
+
+    let headers = setHeader(
+        response.headers,
+        'Link',
+        `</static/partner-themes/${partnerSlug}.css>; rel=preload; as=style`
+    )
+    headers = setHeader(headers, 'X-Partner-Theme', partnerSlug)
+    // Strip the internal header so it is not forwarded to the client
+    delete headers[PARTNER_SLUG_HEADER.toLowerCase()]
     return {...response, headers}
 }

@@ -1,43 +1,44 @@
 {
-    "private": true,
-    "version": "1.4.1",
-    "name": "@pleo-io/spa-edge-lambdas",
-    "dependencies": {
-        "@aws-sdk/client-s3": "^3.329.0",
-        "mime-types": "^2.1.35"
-    },
-    "devDependencies": {
-        "@swc/jest": "0.2.36",
-        "@types/aws-lambda": "8.10.126",
-        "@types/jest": "29.5.8",
-        "@types/mime-types": "^2.1.4",
-        "@types/node": "20.8.6",
-        "@vercel/ncc": "0.38.1",
-        "jest": "29.7.0",
-        "prettier": "3.2.5",
-        "typescript": "5.2.2"
-    },
-    "prettier": {
-        "printWidth": 100,
-        "tabWidth": 4,
-        "semi": false,
-        "singleQuote": true,
-        "bracketSpacing": false,
-        "arrowParens": "always",
-        "trailingComma": "none",
-        "proseWrap": "always"
-    },
-    "engines": {
-        "node": ">=18",
-        "pnpm": "9.x"
-    },
-    "jest": {
-        "clearMocks": true,
-        "testEnvironment": "node",
-        "transform": {
-            ".+\\.(t|j)sx?$": [
-                "@swc/jest"
-            ]
-        }
+  "private": true,
+  "version": "1.4.1",
+  "name": "@pleo-io/spa-edge-lambdas",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.329.0",
+    "mime-types": "^2.1.35"
+  },
+  "devDependencies": {
+    "@swc/core": "1.15.21",
+    "@swc/jest": "0.2.36",
+    "@types/aws-lambda": "8.10.126",
+    "@types/jest": "29.5.8",
+    "@types/mime-types": "^2.1.4",
+    "@types/node": "20.8.6",
+    "@vercel/ncc": "0.38.1",
+    "jest": "29.7.0",
+    "prettier": "3.2.5",
+    "typescript": "5.2.2"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "arrowParens": "always",
+    "trailingComma": "none",
+    "proseWrap": "always"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": "^10.26.0"
+  },
+  "jest": {
+    "clearMocks": true,
+    "testEnvironment": "node",
+    "transform": {
+      ".+\\.(t|j)sx?$": [
+        "@swc/jest"
+      ]
     }
+  }
 }

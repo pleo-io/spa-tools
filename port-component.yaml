@@ -11,7 +11,6 @@ steward: team-web-core
 
 # Any tags relevant to your components and/or mandated by platform teams
 tags:
-
   # Describes type of component the repository defines.
   #
   # Use:
@@ -24,7 +23,6 @@ tags:
   #  - `type: documentation` for repos that mostly contain documentation.
   #  - `type: hiring-challenge` for our hiring challenges.
   type: library
-
 # (optional) Relevant repositories which are relevant to this component excluding the repository hosting this file. The current repository will be linked by default in Port.
 # Example: Terraform folder which hosts the architecture definition for a backend service (moon)
 # related_repositories:
@@ -35,8 +33,6 @@ tags:
 
 # (optional) Any internal or external tool linked to this application such as monitors, logs, documentation, third-party apps, etc.
 # tools:
-#   - name: "Datadog logs: product-dev"
-#     url: https://app.datadoghq.eu/logs?query=env%3Aproduct-dev&agg_m=count&agg_m_source=base&agg_t=count&messageDisplay=inline&storage=hot&stream_sort=desc&viz=streams
 
 # (optional) The notion page related to this application or owning team
 # notion: https://www.notion.so/pleo/

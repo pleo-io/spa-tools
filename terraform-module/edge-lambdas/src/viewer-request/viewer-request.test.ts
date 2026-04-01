@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import {CloudFrontRequestEvent} from 'aws-lambda'
+import {CloudFrontRequest, CloudFrontRequestEvent} from 'aws-lambda'
 import {getHandler} from './viewer-request'
 import {fetchFileFromS3Bucket} from '../s3'
 import {S3Client} from '@aws-sdk/client-s3'
@@ -211,6 +211,84 @@ describe(`Viewer request Lambda@Edge`, () => {
             appVersion: requestedAppVersion
         })
         expect(request).toEqual(requestFromEvent(expectedEvent))
+    })
+
+    test(`
+        When requesting from a known partner subdomain (xero.app.example.com)
+        Then it sets the X-Partner-Slug header and serves the default branch HTML
+    `, async () => {
+        const appVersion = getRandomSha()
+        const host = 'xero.app.example.com'
+        const event = mockRequestEvent({host, appVersion})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler(
+            {...originConfig, partners: {xero: {slug: 'xero'}}},
+            mockS3
+        )
+        const request = await handler(event, mockContext, mockCallback) as CloudFrontRequest
+
+        expectAppVersionFetched('deploys/master')
+        expect(request.headers['x-partner-slug']).toEqual([{key: 'X-Partner-Slug', value: 'xero'}])
+        const expectedEvent = mockRequestEvent({
+            host,
+            uri: `/html/${appVersion}/index.html`,
+            appVersion
+        })
+        expect(request).toEqual({
+            ...requestFromEvent(expectedEvent),
+            headers: {
+                ...requestFromEvent(expectedEvent).headers,
+                'x-partner-slug': [{key: 'X-Partner-Slug', value: 'xero'}]
+            }
+        })
+    })
+
+    test(`
+        When requesting from a partner subdomain on a staging environment (xero.app.staging.example.com)
+        Then it sets the X-Partner-Slug header and does not treat it as a preview deployment
+    `, async () => {
+        const appVersion = getRandomSha()
+        const host = 'xero.app.staging.example.com'
+        const event = mockRequestEvent({host, appVersion})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler(
+            {
+                ...originConfig,
+                previewDeploymentPostfix: '.app.staging.example.com',
+                partners: {xero: {slug: 'xero'}}
+            },
+            mockS3
+        )
+        const request = await handler(event, mockContext, mockCallback) as CloudFrontRequest
+
+        // Should serve default branch (not a preview for 'xero' branch)
+        expectAppVersionFetched('deploys/master')
+        expect(request.headers['x-partner-slug']).toEqual([{key: 'X-Partner-Slug', value: 'xero'}])
+    })
+
+    test(`
+        When requesting from a non-partner subdomain with preview postfix
+        Then it does not set the X-Partner-Slug header
+    `, async () => {
+        const appVersion = getRandomSha()
+        const host = 'my-feature.app.staging.example.com'
+        const event = mockRequestEvent({host, appVersion})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler(
+            {
+                ...originConfig,
+                previewDeploymentPostfix: '.app.staging.example.com',
+                partners: {xero: {slug: 'xero'}}
+            },
+            mockS3
+        )
+        const request = await handler(event, mockContext, mockCallback) as CloudFrontRequest
+
+        expect(request.headers['x-partner-slug']).toBeUndefined()
+        expectAppVersionFetched('deploys/my-feature')
     })
 
     test(`

@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import {CloudFrontResponseEvent} from 'aws-lambda'
+import {CloudFrontResponse, CloudFrontResponseEvent} from 'aws-lambda'
 import {getHandler} from './viewer-response'
 
 const originConfig = {
@@ -12,7 +12,7 @@ const mockCallback = () => {}
 describe(`Viewer response Lambda@Edge`, () => {
     test(`
         When the translation module is off
-        Then it does not add a preload header 
+        Then it does not add a preload header
         And it does not add a translation cookie
     `, async () => {
         const appVersion = getRandomSha()
@@ -29,6 +29,44 @@ describe(`Viewer response Lambda@Edge`, () => {
             status: '200',
             statusDescription: 'OK'
         })
+    })
+
+    test(`
+        When the request has an X-Partner-Slug header
+        Then it adds a Link preload header and X-Partner-Theme header to the response
+        And it strips the X-Partner-Slug header from the response
+    `, async () => {
+        const appVersion = getRandomSha()
+        const event = mockResponseEvent({
+            host: 'xero.app.example.com',
+            appVersion,
+            partnerSlug: 'xero'
+        })
+
+        const handler = getHandler({...originConfig})
+        const response = await handler(event, mockContext, mockCallback) as CloudFrontResponse
+
+        expect(response.headers['link']).toEqual([
+            {key: 'Link', value: '</static/partner-themes/xero.css>; rel=preload; as=style'}
+        ])
+        expect(response.headers['x-partner-theme']).toEqual([
+            {key: 'X-Partner-Theme', value: 'xero'}
+        ])
+        expect(response.headers['x-partner-slug']).toBeUndefined()
+    })
+
+    test(`
+        When the request has no X-Partner-Slug header
+        Then it does not add partner theme headers to the response
+    `, async () => {
+        const appVersion = getRandomSha()
+        const event = mockResponseEvent({host: 'app.example.com', appVersion})
+
+        const handler = getHandler({...originConfig})
+        const response = await handler(event, mockContext, mockCallback) as CloudFrontResponse
+
+        expect(response.headers['link']).toBeUndefined()
+        expect(response.headers['x-partner-theme']).toBeUndefined()
     })
 })
 
@@ -47,13 +85,15 @@ export const mockResponseEvent = ({
     appVersion,
     uri = '/',
     languageForCookie,
-    languageForParam
+    languageForParam,
+    partnerSlug
 }: {
     host: string
     appVersion: string
     uri?: string
     languageForCookie?: string
     languageForParam?: string
+    partnerSlug?: string
 }): CloudFrontResponseEvent => ({
     Records: [
         {
@@ -84,6 +124,14 @@ export const mockResponseEvent = ({
                                   {
                                       key: 'Cookie',
                                       value: `x-pleo-language=${languageForCookie}`
+                                  }
+                              ]
+                            : undefined,
+                        'x-partner-slug': partnerSlug
+                            ? [
+                                  {
+                                      key: 'X-Partner-Slug',
+                                      value: partnerSlug
                                   }
                               ]
                             : undefined

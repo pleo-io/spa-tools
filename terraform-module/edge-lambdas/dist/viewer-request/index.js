@@ -379,6 +379,7 @@ function getCookie(headers, cookieName) {
     return null;
 }
 const APP_VERSION_HEADER = 'X-Pleo-SPA-Version';
+const PARTNER_SLUG_HEADER = 'X-Partner-Slug';
 
 ;// CONCATENATED MODULE: ./src/s3.ts
 
@@ -428,8 +429,15 @@ const DEFAULT_BRANCH_DEFAULT_NAME = 'master';
 function getHandler(config, s3) {
     const handler = async (event) => {
         const request = event.Records[0].cf.request;
+        // Detect partner subdomain and set partner slug header if matched
+        const host = getHeader(request, 'host') ?? '';
+        const subdomain = host.split('.')[0];
+        const partner = config.partners?.[subdomain];
+        if (partner) {
+            request.headers = setHeader(request.headers, PARTNER_SLUG_HEADER, partner.slug);
+        }
         try {
-            const appVersion = await getAppVersion(request, config, s3);
+            const appVersion = await getAppVersion(host, subdomain, partner, config, s3);
             // Set app version header on request, so it can be picked up by the viewer response lambda
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion);
             // We instruct the CDN to return a file that corresponds to the app version calculated
@@ -476,16 +484,15 @@ function getUri(request, appVersion, serveNestedIndexHtml) {
  * It can be either a specific version requested via preview link with a hash, or the latest
  * version for a branch requested (preview or main), which we fetch from cursor files stored in S3
  */
-async function getAppVersion(request, config, s3) {
-    const host = getHeader(request, 'host') ?? null;
+async function getAppVersion(host, subdomain, partner, config, s3) {
     // Preview name is the first segment of the url e.g. my-branch for my-branch.app.dev.example.com
     // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
     let previewName;
     if (config.previewDeploymentPostfix &&
         host &&
         host.includes(config.previewDeploymentPostfix) &&
-        !host.startsWith('partner')) {
-        previewName = host.split('.')[0];
+        !partner) {
+        previewName = subdomain;
         // If the request is for a specific hash of a preview deployment, we use that hash
         const previewHash = getPreviewHash(previewName);
         if (previewHash) {
