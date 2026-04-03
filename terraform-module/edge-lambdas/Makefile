@@ -4,12 +4,12 @@ dist/%/index.js: src/%/index.ts src/%/*.ts src/*.ts node_modules
 	node_modules/.bin/ncc build -e @aws-sdk/client-s3 $< -o $(dir $@)
 
 node_modules: package.json
-	if ! test -d node_modules; then pnpm install; fi
+	if ! test -d node_modules; then yarn; fi
 
 test: node_modules
 	node_modules/.bin/jest .
 
 lint: node_modules
-	pnpm prettier --check .
+	yarn prettier --check .
 
 .PHONY: test lint
