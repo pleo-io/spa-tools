@@ -147,7 +147,7 @@ function addPartnerThemeHeaders(response, request) {
     const partnerSlug = getHeader(request, PARTNER_SLUG_HEADER);
     if (!partnerSlug)
         return response;
-    let headers = setHeader(response.headers, 'Link', `</static/partner-themes/${partnerSlug}.css>; rel=preload; as=style`);
+    let headers = setHeader(response.headers, 'Link', `</static/partner-themes/${partnerSlug}.css>; rel=stylesheet`);
     headers = setHeader(headers, 'X-Partner-Theme', partnerSlug);
     // Strip the internal header so it is not forwarded to the client
     delete headers[PARTNER_SLUG_HEADER.toLowerCase()];

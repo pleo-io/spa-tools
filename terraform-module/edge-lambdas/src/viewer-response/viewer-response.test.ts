@@ -47,7 +47,7 @@ describe(`Viewer response Lambda@Edge`, () => {
         const response = await handler(event, mockContext, mockCallback) as CloudFrontResponse
 
         expect(response.headers['link']).toEqual([
-            {key: 'Link', value: '</static/partner-themes/xero.css>; rel=preload; as=style'}
+            {key: 'Link', value: '</static/partner-themes/xero.css>; rel=stylesheet'}
         ])
         expect(response.headers['x-partner-theme']).toEqual([
             {key: 'X-Partner-Theme', value: 'xero'}

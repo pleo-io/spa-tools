@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 426:
+/***/ 310:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /*!
@@ -15,12 +15,12 @@
  * Module exports.
  */
 
-module.exports = __nccwpck_require__(765)
+module.exports = __nccwpck_require__(558)
 
 
 /***/ }),
 
-/***/ 583:
+/***/ 739:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
@@ -38,7 +38,7 @@ module.exports = __nccwpck_require__(765)
  * @private
  */
 
-var db = __nccwpck_require__(426)
+var db = __nccwpck_require__(310)
 var extname = (__nccwpck_require__(17).extname)
 
 /**
@@ -224,7 +224,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 765:
+/***/ 558:
 /***/ ((module) => {
 
 "use strict";
@@ -328,8 +328,8 @@ function getConfig() {
 
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(17);
-// EXTERNAL MODULE: ./node_modules/mime-types/index.js
-var mime_types = __nccwpck_require__(583);
+// EXTERNAL MODULE: ./node_modules/.pnpm/mime-types@2.1.35/node_modules/mime-types/index.js
+var mime_types = __nccwpck_require__(739);
 ;// CONCATENATED MODULE: ./src/utils.ts
 /**
  * Appends a custom header to a passed CloudFront header map

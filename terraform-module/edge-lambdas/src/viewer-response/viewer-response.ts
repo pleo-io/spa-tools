@@ -42,7 +42,7 @@ export function addPartnerThemeHeaders(response: CloudFrontResponse, request: Cl
     let headers = setHeader(
         response.headers,
         'Link',
-        `</static/partner-themes/${partnerSlug}.css>; rel=preload; as=style`
+        `</static/partner-themes/${partnerSlug}.css>; rel=stylesheet`
     )
     headers = setHeader(headers, 'X-Partner-Theme', partnerSlug)
     // Strip the internal header so it is not forwarded to the client
