@@ -31,20 +31,13 @@ export function addVersionHeader(response: CloudFrontResponse, request: CloudFro
     return {...response, headers}
 }
 
-// Add partner theme headers to the response if a partner slug is present on the request.
-// The Link preload header hints the browser to load the CSS early; X-Partner-Theme tells
-// the SPA which partner theme to inject. The internal X-Partner-Slug header is stripped
-// so it is not exposed to the client.
+// Adds X-Partner-Theme response header so the SPA knows which partner context it's running in.
+// The internal X-Partner-Slug header is stripped so it is not exposed to the client.
 export function addPartnerThemeHeaders(response: CloudFrontResponse, request: CloudFrontRequest) {
     const partnerSlug = getHeader(request, PARTNER_SLUG_HEADER)
     if (!partnerSlug) return response
 
-    let headers = setHeader(
-        response.headers,
-        'Link',
-        `</static/partner-themes/${partnerSlug}.css>; rel=stylesheet`
-    )
-    headers = setHeader(headers, 'X-Partner-Theme', partnerSlug)
+    let headers = setHeader(response.headers, 'X-Partner-Theme', partnerSlug)
     // Strip the internal header so it is not forwarded to the client
     delete headers[PARTNER_SLUG_HEADER.toLowerCase()]
     return {...response, headers}

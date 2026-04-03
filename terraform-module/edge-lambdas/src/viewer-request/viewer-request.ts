@@ -49,7 +49,7 @@ export function getHandler(config: Config, s3: S3Client) {
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion)
 
             // We instruct the CDN to return a file that corresponds to the app version calculated
-            const uri = getUri(request, appVersion, config.serveNestedIndexHtml)
+            const uri = getUri(request, appVersion, config.serveNestedIndexHtml, partner?.slug)
             request.uri = uri
         } catch (error) {
             console.error(error)
@@ -67,7 +67,12 @@ export function getHandler(config: Config, s3: S3Client) {
 /**
  * We respond with a requested file, but prefix it with the hash of the current active deployment
  */
-function getUri(request: CloudFrontRequest, appVersion: string, serveNestedIndexHtml: boolean) {
+function getUri(
+    request: CloudFrontRequest,
+    appVersion: string,
+    serveNestedIndexHtml: boolean = false,
+    partnerSlug?: string
+) {
     const isFileRequest = Boolean(mime.lookup(request.uri))
     const isWellKnownRequest = request.uri.startsWith('/.well-known/')
     const filePath = (() => {
@@ -77,6 +82,10 @@ function getUri(request: CloudFrontRequest, appVersion: string, serveNestedIndex
         // we serve the requested file.
         if (isFileRequest || isWellKnownRequest) {
             return request.uri
+        }
+        // Partner subdomains are served a pre-built HTML file with the partner CSS already injected.
+        if (partnerSlug) {
+            return `/partners/${partnerSlug}/index.html`
         }
         // Otherwise, for requests uris like "/" or "/my-page" we
         // check the serveNestedIndexHtml config, if
@@ -105,7 +114,7 @@ async function getAppVersion(
 ) {
     // Preview name is the first segment of the url e.g. my-branch for my-branch.app.dev.example.com
     // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
-    let previewName: string
+    let previewName: string | undefined
 
     if (
         config.previewDeploymentPostfix &&

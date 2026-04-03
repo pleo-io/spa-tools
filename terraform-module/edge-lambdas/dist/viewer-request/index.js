@@ -441,7 +441,7 @@ function getHandler(config, s3) {
             // Set app version header on request, so it can be picked up by the viewer response lambda
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion);
             // We instruct the CDN to return a file that corresponds to the app version calculated
-            const uri = getUri(request, appVersion, config.serveNestedIndexHtml);
+            const uri = getUri(request, appVersion, config.serveNestedIndexHtml, partner?.slug);
             request.uri = uri;
         }
         catch (error) {
@@ -457,7 +457,7 @@ function getHandler(config, s3) {
 /**
  * We respond with a requested file, but prefix it with the hash of the current active deployment
  */
-function getUri(request, appVersion, serveNestedIndexHtml) {
+function getUri(request, appVersion, serveNestedIndexHtml = false, partnerSlug) {
     const isFileRequest = Boolean(mime_types.lookup(request.uri));
     const isWellKnownRequest = request.uri.startsWith('/.well-known/');
     const filePath = (() => {
@@ -467,6 +467,10 @@ function getUri(request, appVersion, serveNestedIndexHtml) {
         // we serve the requested file.
         if (isFileRequest || isWellKnownRequest) {
             return request.uri;
+        }
+        // Partner subdomains are served a pre-built HTML file with the partner CSS already injected.
+        if (partnerSlug) {
+            return `/partners/${partnerSlug}/index.html`;
         }
         // Otherwise, for requests uris like "/" or "/my-page" we
         // check the serveNestedIndexHtml config, if

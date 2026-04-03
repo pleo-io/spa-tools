@@ -232,7 +232,7 @@ describe(`Viewer request Lambda@Edge`, () => {
         expect(request.headers['x-partner-slug']).toEqual([{key: 'X-Partner-Slug', value: 'xero'}])
         const expectedEvent = mockRequestEvent({
             host,
-            uri: `/html/${appVersion}/index.html`,
+            uri: `/html/${appVersion}/partners/xero/index.html`,
             appVersion
         })
         expect(request).toEqual({

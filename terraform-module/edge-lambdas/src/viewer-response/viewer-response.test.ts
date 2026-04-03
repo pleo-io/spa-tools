@@ -46,13 +46,11 @@ describe(`Viewer response Lambda@Edge`, () => {
         const handler = getHandler({...originConfig})
         const response = await handler(event, mockContext, mockCallback) as CloudFrontResponse
 
-        expect(response.headers['link']).toEqual([
-            {key: 'Link', value: '</static/partner-themes/xero.css>; rel=stylesheet'}
-        ])
         expect(response.headers['x-partner-theme']).toEqual([
             {key: 'X-Partner-Theme', value: 'xero'}
         ])
         expect(response.headers['x-partner-slug']).toBeUndefined()
+        expect(response.headers['link']).toBeUndefined()
     })
 
     test(`
@@ -65,8 +63,8 @@ describe(`Viewer response Lambda@Edge`, () => {
         const handler = getHandler({...originConfig})
         const response = await handler(event, mockContext, mockCallback) as CloudFrontResponse
 
-        expect(response.headers['link']).toBeUndefined()
         expect(response.headers['x-partner-theme']).toBeUndefined()
+        expect(response.headers['link']).toBeUndefined()
     })
 })
 
