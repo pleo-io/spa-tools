@@ -13,7 +13,14 @@ locals {
   })
 }
 
+resource "terraform_data" "lambda_zip_dir" {
+  provisioner "local-exec" {
+    command = "mkdir -p ${path.root}/.lambda-zips"
+  }
+}
+
 data "archive_file" "lambda" {
+  depends_on  = [terraform_data.lambda_zip_dir]
   type        = "zip"
   output_path = "${path.root}/.lambda-zips/${var.app_name}.${var.event_type}.js.zip"
 
