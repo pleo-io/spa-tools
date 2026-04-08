@@ -289,6 +289,22 @@ describe(`Viewer request Lambda@Edge`, () => {
     })
 
     test(`
+        When a non-partner request includes a spoofed X-Partner-Slug header
+        Then it strips the header and does not treat it as a partner
+    `, async () => {
+        const appVersion = getRandomSha()
+        const host = 'app.example.com'
+        const event = mockRequestEvent({host, appVersion, partnerSlug: 'xero'})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler({...originConfig, partners: {xero: {slug: 'xero'}}}, mockS3)
+        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
+
+        expect(request.headers['x-partner-slug']).toBeUndefined()
+        expect(request.uri).toBe(`/html/${appVersion}/index.html`)
+    })
+
+    test(`
         When requesting a preview of an unknown branch,
         Then it requests the non-existing file to trigger a 404 error
     `, async () => {
@@ -324,12 +340,14 @@ const mockRequestEvent = ({
     host,
     translationVersion,
     appVersion,
-    uri = '/'
+    uri = '/',
+    partnerSlug
 }: {
     host: string
     appVersion: string
     translationVersion?: string
     uri?: string
+    partnerSlug?: string
 }): CloudFrontRequestEvent => ({
     Records: [
         {
@@ -374,6 +392,14 @@ const mockRequestEvent = ({
                                   {
                                       key: 'X-Pleo-SPA-Version',
                                       value: appVersion
+                                  }
+                              ]
+                            : undefined,
+                        'x-partner-slug': partnerSlug
+                            ? [
+                                  {
+                                      key: 'X-Partner-Slug',
+                                      value: partnerSlug
                                   }
                               ]
                             : undefined

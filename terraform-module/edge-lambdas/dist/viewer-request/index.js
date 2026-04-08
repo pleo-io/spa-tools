@@ -429,9 +429,11 @@ const DEFAULT_BRANCH_DEFAULT_NAME = 'master';
 function getHandler(config, s3) {
     const handler = async (event) => {
         const request = event.Records[0].cf.request;
+        // Strip any client-sent X-Partner-Slug to prevent spoofing
+        delete request.headers[PARTNER_SLUG_HEADER.toLowerCase()];
         // Detect partner subdomain and set partner slug header if matched
         const host = getHeader(request, 'host') ?? '';
-        const subdomain = host.split('.')[0];
+        const subdomain = host.split('.')[0].toLowerCase();
         const partner = config.partners?.[subdomain];
         if (partner) {
             request.headers = setHeader(request.headers, PARTNER_SLUG_HEADER, partner.slug);
