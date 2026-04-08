@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.3.1...terraform-module-v6.4.0) (2026-04-08)
+
+
+### Features
+
+* WEB-3515: Add partner subdomain detection and theme routing to Lambda@Edge ([#327](https://github.com/pleo-io/spa-tools/issues/327)) ([2fab33f](https://github.com/pleo-io/spa-tools/commit/2fab33f7e8b62db1740a1be36ce7f15d9a71e10e))
+
 ## [6.3.1](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.3.0...terraform-module-v6.3.1) (2025-11-04)
 
 
