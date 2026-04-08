@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import {CloudFrontRequestEvent} from 'aws-lambda'
+import {CloudFrontRequest, CloudFrontRequestEvent} from 'aws-lambda'
 import {getHandler} from './viewer-request'
 import {fetchFileFromS3Bucket} from '../s3'
 import {S3Client} from '@aws-sdk/client-s3'
@@ -211,6 +211,68 @@ describe(`Viewer request Lambda@Edge`, () => {
             appVersion: requestedAppVersion
         })
         expect(request).toEqual(requestFromEvent(expectedEvent))
+    })
+
+    test(`
+        When requesting from a known partner subdomain (xero.app.example.com)
+        Then it routes to the partner-specific HTML and serves the default branch
+    `, async () => {
+        const appVersion = getRandomSha()
+        const host = 'xero.app.example.com'
+        const event = mockRequestEvent({host, appVersion})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler({...originConfig, partners: {xero: {slug: 'xero'}}}, mockS3)
+        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
+
+        expectAppVersionFetched('deploys/master')
+        expect(request.uri).toBe(`/html/${appVersion}/partners/xero/index.html`)
+    })
+
+    test(`
+        When requesting from a partner subdomain on a staging environment (xero.app.staging.example.com)
+        Then it routes to partner HTML and does not treat it as a preview deployment
+    `, async () => {
+        const appVersion = getRandomSha()
+        const host = 'xero.app.staging.example.com'
+        const event = mockRequestEvent({host, appVersion})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler(
+            {
+                ...originConfig,
+                previewDeploymentPostfix: '.app.staging.example.com',
+                partners: {xero: {slug: 'xero'}}
+            },
+            mockS3
+        )
+        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
+
+        expectAppVersionFetched('deploys/master')
+        expect(request.uri).toBe(`/html/${appVersion}/partners/xero/index.html`)
+    })
+
+    test(`
+        When requesting from a non-partner subdomain with preview postfix
+        Then it serves preview HTML, not partner HTML
+    `, async () => {
+        const appVersion = getRandomSha()
+        const host = 'my-feature.app.staging.example.com'
+        const event = mockRequestEvent({host, appVersion})
+        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
+
+        const handler = getHandler(
+            {
+                ...originConfig,
+                previewDeploymentPostfix: '.app.staging.example.com',
+                partners: {xero: {slug: 'xero'}}
+            },
+            mockS3
+        )
+        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
+
+        expect(request.uri).toBe(`/html/${appVersion}/index.html`)
+        expectAppVersionFetched('deploys/my-feature')
     })
 
     test(`

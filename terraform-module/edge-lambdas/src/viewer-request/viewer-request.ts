@@ -34,14 +34,19 @@ export function getHandler(config: Config, s3: S3Client) {
     const handler: CloudFrontRequestHandler = async (event) => {
         const request = event.Records[0].cf.request
 
+        // Detect partner subdomain for routing to partner-specific HTML
+        const host = getHeader(request, 'host') ?? ''
+        const subdomain = host.split('.')[0].toLowerCase()
+        const partner = config.partners?.[subdomain]
+
         try {
-            const appVersion = await getAppVersion(request, config, s3)
+            const appVersion = await getAppVersion(host, subdomain, partner, config, s3)
 
             // Set app version header on request, so it can be picked up by the viewer response lambda
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion)
 
             // We instruct the CDN to return a file that corresponds to the app version calculated
-            const uri = getUri(request, appVersion, config.serveNestedIndexHtml)
+            const uri = getUri(request, appVersion, config.serveNestedIndexHtml, partner?.slug)
             request.uri = uri
         } catch (error) {
             console.error(error)
@@ -59,7 +64,12 @@ export function getHandler(config: Config, s3: S3Client) {
 /**
  * We respond with a requested file, but prefix it with the hash of the current active deployment
  */
-function getUri(request: CloudFrontRequest, appVersion: string, serveNestedIndexHtml: boolean) {
+function getUri(
+    request: CloudFrontRequest,
+    appVersion: string,
+    serveNestedIndexHtml: boolean = false,
+    partnerSlug?: string
+) {
     const isFileRequest = Boolean(mime.lookup(request.uri))
     const isWellKnownRequest = request.uri.startsWith('/.well-known/')
     const filePath = (() => {
@@ -69,6 +79,10 @@ function getUri(request: CloudFrontRequest, appVersion: string, serveNestedIndex
         // we serve the requested file.
         if (isFileRequest || isWellKnownRequest) {
             return request.uri
+        }
+        // Partner subdomains are served a pre-built HTML file with the partner CSS already injected.
+        if (partnerSlug) {
+            return `/partners/${partnerSlug}/index.html`
         }
         // Otherwise, for requests uris like "/" or "/my-page" we
         // check the serveNestedIndexHtml config, if
@@ -88,20 +102,24 @@ function getUri(request: CloudFrontRequest, appVersion: string, serveNestedIndex
  * It can be either a specific version requested via preview link with a hash, or the latest
  * version for a branch requested (preview or main), which we fetch from cursor files stored in S3
  */
-async function getAppVersion(request: CloudFrontRequest, config: Config, s3: S3Client) {
-    const host = getHeader(request, 'host') ?? null
-
+async function getAppVersion(
+    host: string,
+    subdomain: string,
+    partner: {slug: string} | undefined,
+    config: Config,
+    s3: S3Client
+) {
     // Preview name is the first segment of the url e.g. my-branch for my-branch.app.dev.example.com
     // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
-    let previewName: string
+    let previewName: string | undefined
 
     if (
         config.previewDeploymentPostfix &&
         host &&
         host.includes(config.previewDeploymentPostfix) &&
-        !host.startsWith('partner')
+        !partner
     ) {
-        previewName = host.split('.')[0]
+        previewName = subdomain
 
         // If the request is for a specific hash of a preview deployment, we use that hash
         const previewHash = getPreviewHash(previewName)

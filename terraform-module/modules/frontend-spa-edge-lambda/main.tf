@@ -9,12 +9,20 @@ locals {
     "previewDeploymentPostfix" = var.env == "production" ? "" : ".${var.domain_name}"
     "defaultBranchName"        = var.default_repo_branch_name
     "serveNestedIndexHtml"     = var.serve_nested_index_html
+    "partners"                 = var.partners
   })
 }
 
+resource "terraform_data" "lambda_zip_dir" {
+  provisioner "local-exec" {
+    command = "mkdir -p ${path.root}/.lambda-zips"
+  }
+}
+
 data "archive_file" "lambda" {
+  depends_on  = [terraform_data.lambda_zip_dir]
   type        = "zip"
-  output_path = "/tmp/${var.app_name}.${var.event_type}.js.zip"
+  output_path = "${path.root}/.lambda-zips/${var.app_name}.${var.event_type}.js.zip"
 
   source {
     content  = local.lambda_source

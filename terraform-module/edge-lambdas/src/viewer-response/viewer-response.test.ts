@@ -12,7 +12,7 @@ const mockCallback = () => {}
 describe(`Viewer response Lambda@Edge`, () => {
     test(`
         When the translation module is off
-        Then it does not add a preload header 
+        Then it does not add a preload header
         And it does not add a translation cookie
     `, async () => {
         const appVersion = getRandomSha()

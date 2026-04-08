@@ -428,12 +428,16 @@ const DEFAULT_BRANCH_DEFAULT_NAME = 'master';
 function getHandler(config, s3) {
     const handler = async (event) => {
         const request = event.Records[0].cf.request;
+        // Detect partner subdomain for routing to partner-specific HTML
+        const host = getHeader(request, 'host') ?? '';
+        const subdomain = host.split('.')[0].toLowerCase();
+        const partner = config.partners?.[subdomain];
         try {
-            const appVersion = await getAppVersion(request, config, s3);
+            const appVersion = await getAppVersion(host, subdomain, partner, config, s3);
             // Set app version header on request, so it can be picked up by the viewer response lambda
             request.headers = setHeader(request.headers, APP_VERSION_HEADER, appVersion);
             // We instruct the CDN to return a file that corresponds to the app version calculated
-            const uri = getUri(request, appVersion, config.serveNestedIndexHtml);
+            const uri = getUri(request, appVersion, config.serveNestedIndexHtml, partner?.slug);
             request.uri = uri;
         }
         catch (error) {
@@ -449,7 +453,7 @@ function getHandler(config, s3) {
 /**
  * We respond with a requested file, but prefix it with the hash of the current active deployment
  */
-function getUri(request, appVersion, serveNestedIndexHtml) {
+function getUri(request, appVersion, serveNestedIndexHtml = false, partnerSlug) {
     const isFileRequest = Boolean(mime_types.lookup(request.uri));
     const isWellKnownRequest = request.uri.startsWith('/.well-known/');
     const filePath = (() => {
@@ -459,6 +463,10 @@ function getUri(request, appVersion, serveNestedIndexHtml) {
         // we serve the requested file.
         if (isFileRequest || isWellKnownRequest) {
             return request.uri;
+        }
+        // Partner subdomains are served a pre-built HTML file with the partner CSS already injected.
+        if (partnerSlug) {
+            return `/partners/${partnerSlug}/index.html`;
         }
         // Otherwise, for requests uris like "/" or "/my-page" we
         // check the serveNestedIndexHtml config, if
@@ -476,16 +484,15 @@ function getUri(request, appVersion, serveNestedIndexHtml) {
  * It can be either a specific version requested via preview link with a hash, or the latest
  * version for a branch requested (preview or main), which we fetch from cursor files stored in S3
  */
-async function getAppVersion(request, config, s3) {
-    const host = getHeader(request, 'host') ?? null;
+async function getAppVersion(host, subdomain, partner, config, s3) {
     // Preview name is the first segment of the url e.g. my-branch for my-branch.app.dev.example.com
     // Preview name is either a sanitized branch name or it follows the preview-[hash] pattern
     let previewName;
     if (config.previewDeploymentPostfix &&
         host &&
         host.includes(config.previewDeploymentPostfix) &&
-        !host.startsWith('partner')) {
-        previewName = host.split('.')[0];
+        !partner) {
+        previewName = subdomain;
         // If the request is for a specific hash of a preview deployment, we use that hash
         const previewHash = getPreviewHash(previewName);
         if (previewHash) {

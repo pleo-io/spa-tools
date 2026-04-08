@@ -49,3 +49,9 @@ variable "serve_nested_index_html" {
   description = "Applies to apps which build separate index.html files for sub-routes, e.g. using Gatsby SSG"
   type        = bool
 }
+
+variable "partners" {
+  description = "Map of partner subdomains to their config (slug used for theme CSS filename)"
+  type        = map(object({slug = string}))
+  default     = {}
+}
