@@ -33,8 +33,9 @@ describe(`Viewer response Lambda@Edge`, () => {
 
     test(`
         When the request has an X-Partner-Slug header
-        Then it adds a Link preload header and X-Partner-Theme header to the response
+        Then it adds an X-Partner-Theme header to the response
         And it strips the X-Partner-Slug header from the response
+        And it does not add a Link preload header
     `, async () => {
         const appVersion = getRandomSha()
         const event = mockResponseEvent({
