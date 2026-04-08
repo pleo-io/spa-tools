@@ -222,11 +222,8 @@ describe(`Viewer request Lambda@Edge`, () => {
         const event = mockRequestEvent({host, appVersion})
         mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
 
-        const handler = getHandler(
-            {...originConfig, partners: {xero: {slug: 'xero'}}},
-            mockS3
-        )
-        const request = await handler(event, mockContext, mockCallback) as CloudFrontRequest
+        const handler = getHandler({...originConfig, partners: {xero: {slug: 'xero'}}}, mockS3)
+        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
 
         expectAppVersionFetched('deploys/master')
         expect(request.headers['x-partner-slug']).toEqual([{key: 'X-Partner-Slug', value: 'xero'}])
@@ -261,7 +258,7 @@ describe(`Viewer request Lambda@Edge`, () => {
             },
             mockS3
         )
-        const request = await handler(event, mockContext, mockCallback) as CloudFrontRequest
+        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
 
         // Should serve default branch (not a preview for 'xero' branch)
         expectAppVersionFetched('deploys/master')
@@ -285,7 +282,7 @@ describe(`Viewer request Lambda@Edge`, () => {
             },
             mockS3
         )
-        const request = await handler(event, mockContext, mockCallback) as CloudFrontRequest
+        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
 
         expect(request.headers['x-partner-slug']).toBeUndefined()
         expectAppVersionFetched('deploys/my-feature')

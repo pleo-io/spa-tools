@@ -44,7 +44,7 @@ describe(`Viewer response Lambda@Edge`, () => {
         })
 
         const handler = getHandler({...originConfig})
-        const response = await handler(event, mockContext, mockCallback) as CloudFrontResponse
+        const response = (await handler(event, mockContext, mockCallback)) as CloudFrontResponse
 
         expect(response.headers['x-partner-theme']).toEqual([
             {key: 'X-Partner-Theme', value: 'xero'}
@@ -61,7 +61,7 @@ describe(`Viewer response Lambda@Edge`, () => {
         const event = mockResponseEvent({host: 'app.example.com', appVersion})
 
         const handler = getHandler({...originConfig})
-        const response = await handler(event, mockContext, mockCallback) as CloudFrontResponse
+        const response = (await handler(event, mockContext, mockCallback)) as CloudFrontResponse
 
         expect(response.headers['x-partner-theme']).toBeUndefined()
         expect(response.headers['link']).toBeUndefined()
