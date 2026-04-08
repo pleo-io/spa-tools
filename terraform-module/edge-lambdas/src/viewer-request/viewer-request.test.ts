@@ -215,7 +215,7 @@ describe(`Viewer request Lambda@Edge`, () => {
 
     test(`
         When requesting from a known partner subdomain (xero.app.example.com)
-        Then it sets the X-Partner-Slug header and serves the default branch HTML
+        Then it routes to the partner-specific HTML and serves the default branch
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'xero.app.example.com'
@@ -226,24 +226,12 @@ describe(`Viewer request Lambda@Edge`, () => {
         const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
 
         expectAppVersionFetched('deploys/master')
-        expect(request.headers['x-partner-slug']).toEqual([{key: 'X-Partner-Slug', value: 'xero'}])
-        const expectedEvent = mockRequestEvent({
-            host,
-            uri: `/html/${appVersion}/partners/xero/index.html`,
-            appVersion
-        })
-        expect(request).toEqual({
-            ...requestFromEvent(expectedEvent),
-            headers: {
-                ...requestFromEvent(expectedEvent).headers,
-                'x-partner-slug': [{key: 'X-Partner-Slug', value: 'xero'}]
-            }
-        })
+        expect(request.uri).toBe(`/html/${appVersion}/partners/xero/index.html`)
     })
 
     test(`
         When requesting from a partner subdomain on a staging environment (xero.app.staging.example.com)
-        Then it sets the X-Partner-Slug header and does not treat it as a preview deployment
+        Then it routes to partner HTML and does not treat it as a preview deployment
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'xero.app.staging.example.com'
@@ -260,14 +248,13 @@ describe(`Viewer request Lambda@Edge`, () => {
         )
         const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
 
-        // Should serve default branch (not a preview for 'xero' branch)
         expectAppVersionFetched('deploys/master')
-        expect(request.headers['x-partner-slug']).toEqual([{key: 'X-Partner-Slug', value: 'xero'}])
+        expect(request.uri).toBe(`/html/${appVersion}/partners/xero/index.html`)
     })
 
     test(`
         When requesting from a non-partner subdomain with preview postfix
-        Then it does not set the X-Partner-Slug header
+        Then it serves preview HTML, not partner HTML
     `, async () => {
         const appVersion = getRandomSha()
         const host = 'my-feature.app.staging.example.com'
@@ -284,24 +271,8 @@ describe(`Viewer request Lambda@Edge`, () => {
         )
         const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
 
-        expect(request.headers['x-partner-slug']).toBeUndefined()
-        expectAppVersionFetched('deploys/my-feature')
-    })
-
-    test(`
-        When a non-partner request includes a spoofed X-Partner-Slug header
-        Then it strips the header and does not treat it as a partner
-    `, async () => {
-        const appVersion = getRandomSha()
-        const host = 'app.example.com'
-        const event = mockRequestEvent({host, appVersion, partnerSlug: 'xero'})
-        mockedFetchFileFromS3Bucket.mockResolvedValue(appVersion)
-
-        const handler = getHandler({...originConfig, partners: {xero: {slug: 'xero'}}}, mockS3)
-        const request = (await handler(event, mockContext, mockCallback)) as CloudFrontRequest
-
-        expect(request.headers['x-partner-slug']).toBeUndefined()
         expect(request.uri).toBe(`/html/${appVersion}/index.html`)
+        expectAppVersionFetched('deploys/my-feature')
     })
 
     test(`
@@ -340,14 +311,12 @@ const mockRequestEvent = ({
     host,
     translationVersion,
     appVersion,
-    uri = '/',
-    partnerSlug
+    uri = '/'
 }: {
     host: string
     appVersion: string
     translationVersion?: string
     uri?: string
-    partnerSlug?: string
 }): CloudFrontRequestEvent => ({
     Records: [
         {
@@ -392,14 +361,6 @@ const mockRequestEvent = ({
                                   {
                                       key: 'X-Pleo-SPA-Version',
                                       value: appVersion
-                                  }
-                              ]
-                            : undefined,
-                        'x-partner-slug': partnerSlug
-                            ? [
-                                  {
-                                      key: 'X-Partner-Slug',
-                                      value: partnerSlug
                                   }
                               ]
                             : undefined

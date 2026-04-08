@@ -4,7 +4,7 @@ import {CloudFrontRequest, CloudFrontRequestHandler} from 'aws-lambda'
 import {S3Client} from '@aws-sdk/client-s3'
 import mime from 'mime-types'
 
-import {APP_VERSION_HEADER, PARTNER_SLUG_HEADER, getHeader, setHeader} from '../utils'
+import {APP_VERSION_HEADER, getHeader, setHeader} from '../utils'
 import {fetchFileFromS3Bucket} from '../s3'
 import {Config} from '../config'
 
@@ -34,16 +34,10 @@ export function getHandler(config: Config, s3: S3Client) {
     const handler: CloudFrontRequestHandler = async (event) => {
         const request = event.Records[0].cf.request
 
-        // Strip any client-sent X-Partner-Slug to prevent spoofing
-        delete request.headers[PARTNER_SLUG_HEADER.toLowerCase()]
-
-        // Detect partner subdomain and set partner slug header if matched
+        // Detect partner subdomain for routing to partner-specific HTML
         const host = getHeader(request, 'host') ?? ''
         const subdomain = host.split('.')[0].toLowerCase()
         const partner = config.partners?.[subdomain]
-        if (partner) {
-            request.headers = setHeader(request.headers, PARTNER_SLUG_HEADER, partner.slug)
-        }
 
         try {
             const appVersion = await getAppVersion(host, subdomain, partner, config, s3)

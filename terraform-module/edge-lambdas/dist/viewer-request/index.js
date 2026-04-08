@@ -379,7 +379,6 @@ function getCookie(headers, cookieName) {
     return null;
 }
 const APP_VERSION_HEADER = 'X-Pleo-SPA-Version';
-const PARTNER_SLUG_HEADER = 'X-Partner-Slug';
 
 ;// CONCATENATED MODULE: ./src/s3.ts
 
@@ -429,15 +428,10 @@ const DEFAULT_BRANCH_DEFAULT_NAME = 'master';
 function getHandler(config, s3) {
     const handler = async (event) => {
         const request = event.Records[0].cf.request;
-        // Strip any client-sent X-Partner-Slug to prevent spoofing
-        delete request.headers[PARTNER_SLUG_HEADER.toLowerCase()];
-        // Detect partner subdomain and set partner slug header if matched
+        // Detect partner subdomain for routing to partner-specific HTML
         const host = getHeader(request, 'host') ?? '';
         const subdomain = host.split('.')[0].toLowerCase();
         const partner = config.partners?.[subdomain];
-        if (partner) {
-            request.headers = setHeader(request.headers, PARTNER_SLUG_HEADER, partner.slug);
-        }
         try {
             const appVersion = await getAppVersion(host, subdomain, partner, config, s3);
             // Set app version header on request, so it can be picked up by the viewer response lambda

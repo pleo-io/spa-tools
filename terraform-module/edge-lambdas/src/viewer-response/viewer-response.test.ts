@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import {CloudFrontResponse, CloudFrontResponseEvent} from 'aws-lambda'
+import {CloudFrontResponseEvent} from 'aws-lambda'
 import {getHandler} from './viewer-response'
 
 const originConfig = {
@@ -30,43 +30,6 @@ describe(`Viewer response Lambda@Edge`, () => {
             statusDescription: 'OK'
         })
     })
-
-    test(`
-        When the request has an X-Partner-Slug header
-        Then it adds an X-Partner-Theme header to the response
-        And it strips the X-Partner-Slug header from the response
-        And it does not add a Link preload header
-    `, async () => {
-        const appVersion = getRandomSha()
-        const event = mockResponseEvent({
-            host: 'xero.app.example.com',
-            appVersion,
-            partnerSlug: 'xero'
-        })
-
-        const handler = getHandler({...originConfig})
-        const response = (await handler(event, mockContext, mockCallback)) as CloudFrontResponse
-
-        expect(response.headers['x-partner-theme']).toEqual([
-            {key: 'X-Partner-Theme', value: 'xero'}
-        ])
-        expect(response.headers['x-partner-slug']).toBeUndefined()
-        expect(response.headers['link']).toBeUndefined()
-    })
-
-    test(`
-        When the request has no X-Partner-Slug header
-        Then it does not add partner theme headers to the response
-    `, async () => {
-        const appVersion = getRandomSha()
-        const event = mockResponseEvent({host: 'app.example.com', appVersion})
-
-        const handler = getHandler({...originConfig})
-        const response = (await handler(event, mockContext, mockCallback)) as CloudFrontResponse
-
-        expect(response.headers['x-partner-theme']).toBeUndefined()
-        expect(response.headers['link']).toBeUndefined()
-    })
 })
 
 const defaultHeaders = (appVersion: string) => ({
@@ -84,15 +47,13 @@ export const mockResponseEvent = ({
     appVersion,
     uri = '/',
     languageForCookie,
-    languageForParam,
-    partnerSlug
+    languageForParam
 }: {
     host: string
     appVersion: string
     uri?: string
     languageForCookie?: string
     languageForParam?: string
-    partnerSlug?: string
 }): CloudFrontResponseEvent => ({
     Records: [
         {
@@ -123,14 +84,6 @@ export const mockResponseEvent = ({
                                   {
                                       key: 'Cookie',
                                       value: `x-pleo-language=${languageForCookie}`
-                                  }
-                              ]
-                            : undefined,
-                        'x-partner-slug': partnerSlug
-                            ? [
-                                  {
-                                      key: 'X-Partner-Slug',
-                                      value: partnerSlug
                                   }
                               ]
                             : undefined
