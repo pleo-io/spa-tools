@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.4.0...terraform-module-v6.5.0) (2026-04-22)
+
+
+### Features
+
+* **frontend-github-deployment-env:** add BFF_DEPLOYER_ROLE_ARN var ([#330](https://github.com/pleo-io/spa-tools/issues/330)) ([c6b2fa3](https://github.com/pleo-io/spa-tools/commit/c6b2fa3bd18caa5bcecfdaf19da11d412a14f3d3))
+
 ## [6.4.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.3.1...terraform-module-v6.4.0) (2026-04-08)
 
 
