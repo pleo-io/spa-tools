@@ -29,3 +29,9 @@ variable "reviewer_teams" {
   type        = list(string)
   default     = []
 }
+
+variable "bff_deployer_role_arn" {
+  description = "ARN of the AWS IAM role to assume for BFF deployments via GitHub OIDC. When set, exposed to the GitHub environment as vars.BFF_DEPLOYER_ROLE_ARN so the BFF deploy workflow can use OIDC instead of the static AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY secrets."
+  type        = string
+  default     = null
+}
