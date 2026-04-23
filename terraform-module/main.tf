@@ -3,10 +3,11 @@ locals {
 }
 
 module "s3" {
-  source        = "./modules/frontend-spa-s3"
-  app_name      = var.app_name
-  bucket_prefix = var.bucket_prefix
-  env           = var.env
+  source                        = "./modules/frontend-spa-s3"
+  app_name                      = var.app_name
+  bucket_prefix                 = var.bucket_prefix
+  env                           = var.env
+  delete_old_deploys_after_days = var.delete_old_deploys_after_days
 }
 
 module "lambda_role" {

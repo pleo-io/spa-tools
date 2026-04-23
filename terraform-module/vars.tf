@@ -55,3 +55,10 @@ variable "partners" {
   type        = map(object({slug = string}))
   default     = {}
 }
+
+variable "delete_old_deploys_after_days" {
+  description = "Number of days after which old deployment files in S3 are deleted via a lifecycle rule. null (default) disables the rule."
+  type        = number
+  default     = null
+  nullable    = true
+}
