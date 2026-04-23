@@ -93,3 +93,17 @@ resource "aws_s3_bucket_policy" "oai_read" {
   bucket = aws_s3_bucket.origin.id
   policy = data.aws_iam_policy_document.s3_policy.json
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "old_deploys_cleanup" {
+  count  = var.delete_old_deploys_after_days != null ? 1 : 0
+  bucket = aws_s3_bucket.origin.id
+
+  rule {
+    id     = "delete-old-deploys"
+    status = "Enabled"
+
+    expiration {
+      days = var.delete_old_deploys_after_days
+    }
+  }
+}

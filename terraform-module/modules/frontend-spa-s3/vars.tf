@@ -12,3 +12,9 @@ variable "app_name" {
   type        = string
 }
 
+variable "delete_old_deploys_after_days" {
+  description = "Number of days after which old deployment files are deleted via a lifecycle rule. !!WARNING!! Avoid this in production environments - if there are no new deployments the latest deployment will be deleted"
+  type        = number
+  default     = null
+  nullable    = true
+}
