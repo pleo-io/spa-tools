@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.6.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.5.0...terraform-module-v6.6.0) (2026-04-23)
+
+
+### Features
+
+* add optional lifecycle rule to clean up old deploys ([#332](https://github.com/pleo-io/spa-tools/issues/332)) ([81d5823](https://github.com/pleo-io/spa-tools/commit/81d58232ef520dee16356cfd5f33f0d651736b04))
+
 ## [6.5.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.4.0...terraform-module-v6.5.0) (2026-04-22)
 
 
