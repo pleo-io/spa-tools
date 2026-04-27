@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.7.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.6.0...terraform-module-v6.7.0) (2026-04-27)
+
+
+### Features
+
+* **SRE-8084:** cloudwatch log group retention ([#334](https://github.com/pleo-io/spa-tools/issues/334)) ([9095daf](https://github.com/pleo-io/spa-tools/commit/9095dafd4d4d62b1560d22abc2d4715affeccf56))
+
 ## [6.6.0](https://github.com/pleo-io/spa-tools/compare/terraform-module-v6.5.0...terraform-module-v6.6.0) (2026-04-23)
 
 
