@@ -65,7 +65,7 @@ resource "aws_lambda_function" "lambda" {
 # To ensure PCI-DSS compliance (retention + tagging), we pre-provision these log groups  
 # across all regions covered by our CloudFront Price Class.
 locals {
-  # PriceClass_100 (see ../bff-cdn/vars.tf:L26) limits traffic to North America and Europe.
+  # PriceClass_100 limits traffic to North America and Europe.
   # We pre-deploy log groups in these specific AWS regions to prevent 
   # AWS from auto-creating them with "Infinite" retention.
   target_regions = [
